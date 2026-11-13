@@ -1,0 +1,102 @@
+name: Daily inventory run
+
+on:
+  schedule:
+    - cron: "23 10 * * *"        # 10:23 UTC = 4:23 AM CST / 5:23 AM CDT, ahead of the morning email
+  workflow_dispatch:
+    inputs:
+      sources:
+        description: "Comma-separated sources"
+        default: "porsche_finder,marketcheck"
+      max_dealers:
+        description: "Limit Porsche Finder dealer sitemaps (smoke test); blank = all"
+        default: ""
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: daily-inventory
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    outputs:
+      exit: ${{ steps.run.outputs.exit }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out the state branch (database, digests, photo archive)
+        run: |
+          if git ls-remote --exit-code --heads origin state >/dev/null 2>&1; then
+            git fetch origin state:state
+            git worktree add state state
+          else
+            git worktree add --orphan -b state state
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Collect, update database, queue digest, build site
+        id: run
+        env:
+          PGT_STATE: state
+          MARKETCHECK_API_KEY: ${{ secrets.MARKETCHECK_API_KEY }}
+          ALERT_RECIPIENT: ${{ secrets.ALERT_RECIPIENT }}
+          SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
+          EMAIL_MODE: ${{ vars.EMAIL_MODE || 'claude' }}
+          PHOTO_ARCHIVE: ${{ vars.PHOTO_ARCHIVE || 'off' }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+        run: |
+          set +e
+          ARGS="--sources ${{ github.event.inputs.sources || 'porsche_finder,marketcheck' }} --out _site"
+          if [ -n "${{ github.event.inputs.max_dealers }}" ]; then ARGS="$ARGS --max-dealers ${{ github.event.inputs.max_dealers }}"; fi
+          python -m pgt run $ARGS | tee run-summary.json
+          echo "exit=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Persist state (history survives every deployment)
+        run: |
+          cd state
+          git config user.name "gt-scout-bot"
+          git config user.email "gt-scout-bot@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -q -m "state: run ${{ github.run_id }} $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push origin state
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: run-summary
+          path: run-summary.json
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: ingest
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  verdict:
+    needs: [ingest, deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail the workflow when every source failed (site still shows stored data, flagged stale)
+        run: test "${{ needs.ingest.outputs.exit }}" = "0"

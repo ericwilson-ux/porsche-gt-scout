@@ -1,0 +1,531 @@
+"""Core data-processing tests.  The three Porsche Finder fixtures are real listings
+captured on 2026-11-13; everything labelled synthetic exists only inside these tests."""
+import json
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+import pytest
+
+from conftest import clone, example, finder_result, synthetic
+from pgt import alerts, classify as C, evaluate, export, ingest, otd, valuation, vin as V
+from pgt import db as D
+from pgt.http import Response
+from pgt.sources import marketcheck as mc, porsche_finder as pf
+from pgt.sources.base import SourceResult
+
+T0 = "2026-11-13T12:00:00Z"
+SYN_GT4RS = "WP0AE2A85SK270001"
+SYN_GT3 = "WP0AC2A98NS260002"
+
+
+def ts(days=0, hours=0):
+    return (datetime(2026, 11, 13, 12, tzinfo=timezone.utc) + timedelta(days=days, hours=hours)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def merged(con, key):
+    return json.loads(con.execute("SELECT merged FROM vehicles WHERE key=?", (key,)).fetchone()["merged"])
+
+
+# ---------------------------------------------------------------- identity ----
+def test_vin_check_digit_and_decoding():
+    assert V.is_valid("WP0AC2A98NS268519") and V.is_valid("WP0AE2A80SK271606") and V.is_valid("WP0CE2A80SK238226")
+    assert not V.is_valid("WP0AC2A98NS268510")            # one digit off
+    assert V.model_year("WP0AC2A98NS268519") == 2022 and V.porsche_type("WP0AC2A98NS268519") == "992"
+    assert V.model_year("WP0AE2A80SK271606") == 2025 and V.porsche_type("WP0AE2A80SK271606") == "982"
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("911 GT3", "gt3"), ("911 GT3 with Touring Package", "gt3_touring"), ("2023 Porsche 911 GT3 Touring", "gt3_touring"),
+    ("718 Cayman GT4 RS", "gt4rs"), ("718 Spyder RS", "spyder_rs"),
+    ("911 GT3 RS", None), ("911 Carrera GTS", None), ("911 Turbo S", None), ("718 Cayman GT4", None),
+    ("718 Spyder", None), ("911 GT3 Cup", None), ("718 Cayman GT4 RS Clubsport", None), ("911 Carrera T", None)])
+def test_only_the_four_targets_classify(text, expected):
+    assert C.classify_text(text) == expected
+
+
+def test_vin_contradiction_rejects_listing():
+    # a "GT3" title on a 991-generation VIN must not be accepted as a 992 GT3
+    out = C.classify("2018 Porsche 911 GT3", "WP0AC2A96JS170003", 2018)
+    assert out["variant"] is None and any("991" in i for i in out["issues"])
+    # a GT4 RS title on a 911 VIN is rejected too
+    assert C.classify("718 Cayman GT4 RS", "WP0AC2A98NS268519", 2022)["variant"] is None
+    assert C.classify("911 GT3", "WP0AC2A98NS268519", 2022) == {"variant": "gt3", "generation": "992.1", "year": 2022, "issues": []}
+    assert C.classify("911 GT3", "WP0AC2A98RS260006", 2024)["generation"] == "992.1"
+    assert C.generation_for("gt3", 2025) == "992.2" and C.generation_for("gt3", 2022, "992 I") == "992.1"
+
+
+# ------------------------------------------------------------ porsche finder ----
+def test_real_examples_parse_completely(examples):
+    by = {l.source_listing_id: l for l in examples}
+    g4, g3, sp = by["ZO80OE"], by["058WLN"], by["5007XV"]
+    assert (g4.vin, g4.variant, g4.year, g4.mileage, g4.price, g4.cpo) == ("WP0AE2A80SK271606", "gt4rs", 2025, 2088, 209093.0, True)
+    assert (g3.vin, g3.variant, g3.generation, g3.transmission, g3.cpo) == ("WP0AC2A98NS268519", "gt3", "992.1", "manual", False)
+    assert (sp.vin, sp.variant, sp.mileage, sp.transmission) == ("WP0CE2A80SK238226", "spyder_rs", 684, "pdk")
+    # advertised price before dealer fees is separated from the fee-inclusive headline
+    assert (g3.price, g3.price_as_listed, g3.dealer_fees_listed) == (239992.0, 240971.0, 979.0)
+    assert (sp.price, sp.dealer_fees_listed) == (212990.0, 172.0)
+    assert g4.seller["state"] == "NC" and g3.seller["zip"] == "23113" and sp.seller["city"] == "San Francisco"
+    assert g4.seller["phone"] == "336-252-5588"
+    assert {"474"} <= {o["code"] for o in g4.options} and {"2UH", "Q1J", "1LX"} <= {o["code"] for o in g3.options}
+    assert g4.documents["window_sticker_available"] and g4.documents["build_sheet_available"]
+    assert sp.seller_comment.startswith("[fixture: abbreviated]")     # '$72' RSC text reference resolved
+
+
+def test_full_galleries_no_truncation_and_no_duplicates(examples):
+    expect = {"ZO80OE": 32, "058WLN": 36, "5007XV": 47}
+    for l in examples:
+        ids = [p["id"] for p in l.photos]
+        assert len(ids) == expect[l.source_listing_id] == l.photos_advertised
+        assert len(set(ids)) == len(ids)                    # resolutions of one image never count twice
+        assert all(p["url"].startswith("https://images.finder.porsche.com/") for p in l.photos)
+    sp = next(l for l in examples if l.source_listing_id == "5007XV")
+    assert {p["category"] for p in sp.photos} == {"exterior", "interior", "highlights"}
+
+
+def test_sitemap_parsing():
+    idx = """<sitemapindex><sitemap><loc>https://finder.porsche.com/de/de-DE/sitemap.xml</loc></sitemap>
+    <sitemap><loc>https://finder.porsche.com/us/en-US/sitemap-dealer/9817/sitemap.xml</loc></sitemap>
+    <sitemap><loc>https://finder.porsche.com/us/en-US/sitemap-dealer/15000003161/sitemap.xml</loc></sitemap></sitemapindex>"""
+    assert pf.parse_sitemap_index(idx) == ["9817", "15000003161"]
+    sm = """<urlset>
+    <url><loc>https://finder.porsche.com/us/en-US/details/porsche-911-gt3-with-touring-package-preowned-4G4009</loc><lastmod>2026-11-12T08:00:00Z</lastmod></url>
+    <url><loc>https://finder.porsche.com/us/en-US/details/porsche-718-spyder-rs-preowned-4G24LQ</loc><lastmod>2026-11-13</lastmod></url>
+    <url><loc>https://finder.porsche.com/us/en-US/details/porsche-911-gt3-rs-preowned-AAAAA1</loc></url>
+    <url><loc>https://finder.porsche.com/us/en-US/details/porsche-911-carrera-cabriolet-preowned-82K2Z3</loc></url>
+    <url><loc>https://finder.porsche.com/us/en-US/details/porsche-taycan-4-new-70WOL4</loc></url></urlset>"""
+    entries = pf.parse_dealer_sitemap(sm)
+    assert len(entries) == 5
+    targets = {e["id"]: e["variant"] for e in entries if e["variant"]}
+    assert targets == {"4G4009": "gt3_touring", "4G24LQ": "spyder_rs"}
+    assert entries[0]["lastmod"] == "2026-11-12T08:00:00Z" and entries[4]["condition"] == "new"
+
+
+class FakeFetcher:
+    """Serves canned responses; anything unknown is a network failure (status 0)."""
+    def __init__(self, pages):
+        self.pages, self.requests, self.errors, self.calls = pages, 0, 0, []
+
+    def get(self, url, params=None, check_robots=True):
+        self.requests += 1
+        self.calls.append((url, params))
+        v = self.pages.get(url)
+        if callable(v):
+            v = v(params)
+        if v is None:
+            self.errors += 1
+            return Response(url, 0, error="timeout")
+        return Response(url, v[0], v[1])
+
+
+def _finder_site(listing_ids, dealer="15000003161", extra_dealer_status=None):
+    html = {i: (Path(__file__).parent / "fixtures" / f"finder_{i}.html").read_text(encoding="utf-8") for i in listing_ids}
+    urls = {i: f"https://finder.porsche.com/us/en-US/details/porsche-x-gt3-preowned-{i}" for i in listing_ids}
+    pages = {pf.SITEMAP_INDEX: (200, f"<sitemapindex><sitemap><loc>{pf.BASE}/us/en-US/sitemap-dealer/{dealer}/sitemap.xml</loc></sitemap>"
+                                     f"<sitemap><loc>{pf.BASE}/us/en-US/sitemap-dealer/777/sitemap.xml</loc></sitemap></sitemapindex>"),
+             f"{pf.BASE}/us/en-US/sitemap-dealer/{dealer}/sitemap.xml":
+                 (200, "<urlset>" + "".join(f"<url><loc>{u}</loc></url>" for u in urls.values()) + "</urlset>"),
+             f"{pf.BASE}/us/en-US/sitemap-dealer/777/sitemap.xml": extra_dealer_status or (200, "<urlset></urlset>")}
+    for i, u in urls.items():
+        pages[u] = (200, html[i])
+    return pages, urls
+
+
+def test_collect_discovers_via_sitemaps_and_flags_gone_only_on_404():
+    pages, urls = _finder_site(["058WLN"])
+    res = pf.collect(FakeFetcher(pages))
+    assert res.status == "ok" and [l.vin for l in res.listings] == ["WP0AC2A98NS268519"]
+    assert res.scopes_ok == {"15000003161", "777"} and res.detail["target_urls"] == 1
+    # the listing drops out of the dealer sitemap and its page 404s -> explicit gone signal
+    known = {"058WLN": {"url": urls["058WLN"], "scope": "15000003161"}}
+    pages[f"{pf.BASE}/us/en-US/sitemap-dealer/15000003161/sitemap.xml"] = (200, "<urlset></urlset>")
+    pages[urls["058WLN"]] = (404, "not found")
+    res = pf.collect(FakeFetcher(pages), known=known)
+    assert res.explicit_gone == {"058WLN"} and not res.listings
+    # same situation but the detail request times out -> inconclusive, never "gone"
+    pages[urls["058WLN"]] = None
+    res = pf.collect(FakeFetcher(pages), known=known)
+    assert res.explicit_gone == set() and res.inconclusive == {"058WLN"} and res.status == "partial"
+    # sitemap index unreachable -> failed, nothing inferred
+    assert pf.collect(FakeFetcher({}), known=known).status == "failed"
+
+
+# --------------------------------------------------------------- eligibility ----
+def test_real_examples_eligibility(con, cfg, examples):
+    ingest.process_results(con, cfg, [finder_result(examples)], now=T0)
+    g4, g3, sp = (merged(con, v) for v in ("WP0AE2A80SK271606", "WP0AC2A98NS268519", "WP0CE2A80SK238226"))
+    assert g4["eligibility"]["category"] == "confirmed"       # lift 474 verified, under cap, seller states clean Carfax
+    assert g4["equipment"]["lift"] == {**g4["equipment"]["lift"], "status": "verified", "value": True}
+    assert "474" in g4["equipment"]["lift"]["detail"] and "2UH" in g3["equipment"]["lift"]["detail"]
+    # lift is verified on both others, but accident history is undocumented -> lead, not confirmed
+    for m in (g3, sp):
+        assert m["eligibility"]["category"] == "lead" and m["eligibility"]["unverified"] == ["accident"]
+        assert m["equipment"]["lift"]["status"] == "verified"
+    assert g4["equipment"]["weissach"]["status"] == "verified_absent" and g4["equipment"]["seats"]["value"] == "bucket"
+    assert g3["equipment"]["seats"]["value"] == "adjustable" and g3["equipment"]["pccb"]["value"] is True
+    assert sp["equipment"]["pccb"]["value"] is True and g4["equipment"]["pccb"]["value"] is False
+
+
+def _elig(con, cfg, lst):
+    ingest.process_results(con, cfg, [finder_result([lst])], now=T0)
+    return merged(con, ingest.vehicle_key(lst))["eligibility"]
+
+
+def test_missing_lift_in_factory_list_excludes(con, cfg):
+    base = example("ZO80OE")
+    no_lift = clone(base, options=[o for o in base.options if o["code"] != "474"],
+                    seller_comment=base.seller_comment.replace("Front Axle Lift System", "x"))
+    e = _elig(con, cfg, no_lift)
+    assert e["category"] == "excluded" and e["failed"] == ["lift"]
+
+
+def test_unverified_lift_is_a_lead_never_confirmed(con, cfg):
+    base = example("ZO80OE")
+    # no equipment list at all (as from an aggregator): unknown lift
+    bare = clone(base, options=[], standard_equipment=[], highlights=[], has_equipment_list=False,
+                 seller_comment="Clean Carfax. Great car.")
+    e = _elig(con, cfg, bare)
+    assert e["category"] == "lead" and "lift" in e["unverified"]
+
+
+def test_seller_stated_lift_is_labelled_as_seller_statement(con, cfg):
+    base = example("ZO80OE")
+    stated = clone(base, options=[], standard_equipment=[], highlights=[], has_equipment_list=False,
+                   seller_comment="Clean Carfax. Equipped with front axle lift.")
+    ingest.process_results(con, cfg, [finder_result([stated])], now=T0)
+    m = merged(con, stated.vin)
+    chk = next(c for c in m["eligibility"]["checks"] if c["key"] == "lift")
+    assert (chk["status"], chk["provenance"]) == ("pass", "seller statement") and m["equipment"]["lift"]["status"] == "seller_stated"
+
+
+@pytest.mark.parametrize("lid,changes,category,failed", [
+    ("058WLN", {"price": 249999.0}, "lead", []),
+    ("058WLN", {"price": 250000.0}, "near_miss", ["price"]),          # "under $250,000" is strict
+    ("058WLN", {"price": 262000.0}, "near_miss", ["price"]),
+    ("058WLN", {"price": 275000.0}, "excluded", ["price"]),
+    ("058WLN", {"mileage": 35001}, "excluded", ["mileage"]),
+    ("058WLN", {"mileage": 35000}, "lead", []),
+    ("ZO80OE", {"price": 225000.0}, "near_miss", ["price"]),          # 718 cap is $225k
+    ("ZO80OE", {"price": 224999.0}, "confirmed", []),
+    ("ZO80OE", {"mileage": 60000}, "confirmed", []),                  # no hard mileage cap on the 718 RS cars
+    ("ZO80OE", {"seller_comment": "Clean Carfax. Used for track days with a half cage."}, "excluded", ["track"]),
+    ("ZO80OE", {"seller_comment": "Minor accident reported on Carfax."}, "excluded", ["accident"]),
+    ("ZO80OE", {"seller_comment": "Clean Carfax! Never tracked."}, "confirmed", []),
+])
+def test_hard_requirement_boundaries(con, cfg, lid, changes, category, failed):
+    e = _elig(con, cfg, clone(example(lid), **changes))
+    assert e["category"] == category and e["failed"] == failed
+
+
+def test_preference_score_is_independent_of_eligibility_and_price(con, cfg):
+    base = example("058WLN")
+    ingest.process_results(con, cfg, [finder_result([base])], now=T0)
+    s1 = merged(con, base.vin)["score"]
+    ingest.process_results(con, cfg, [finder_result([clone(base, price=400000.0)])], now=ts(1))
+    m2 = merged(con, base.vin)
+    assert m2["eligibility"]["category"] == "excluded" and m2["score"]["total"] == s1["total"]
+    keys = [i["key"] for i in s1["items"]]
+    assert "weissach" not in keys and {"mileage", "exterior_color", "transmission", "seats", "warranty", "distance"} <= set(keys)
+
+
+def test_preference_items_respond_to_spec(cfg):
+    from datetime import date
+    today = date(2026, 11, 13)
+    base = {"variant": "gt3", "year": 2022, "mileage": 12000, "exterior_family": "blue", "exterior_color": "Shark Blue",
+            "interior_family": "black", "interior_color": "Black", "transmission": "manual", "cpo": True,
+            "equipment": {"seats": {"value": "adjustable"}}, "seller": {"kind": "porsche_dealer"},
+            "documents": {"window_sticker_available": True}, "history": {"service_history": "yes", "one_owner": True},
+            "distance": {"road_miles_est": 180}, "warranty_summary": {}}
+    best = evaluate.preference_score(base, cfg, today)
+    assert best["total"] == 100
+    pdk = evaluate.preference_score({**base, "transmission": "pdk"}, cfg, today)
+    assert 0 < best["total"] - pdk["total"] <= 3                       # manual only slightly preferred
+    green = evaluate.preference_score({**base, "exterior_family": "green", "exterior_color": "Python Green"}, cfg, today)
+    far = evaluate.preference_score({**base, "distance": {"road_miles_est": 1500}}, cfg, today)
+    high = evaluate.preference_score({**base, "mileage": 34000}, cfg, today)
+    assert green["total"] < best["total"] and far["total"] < best["total"] and high["total"] < best["total"]
+    # lowest mileage is not "best": 3k and 12k miles score the same on a 2022 car
+    assert evaluate.preference_score({**base, "mileage": 3000}, cfg, today)["total"] == best["total"]
+    rs = {**base, "variant": "gt4rs", "year": 2024, "transmission": "pdk", "mileage": 4000,
+          "equipment": {"seats": {"value": "adjustable"}, "weissach": {"status": "verified", "value": True}}}
+    with_w = evaluate.preference_score(rs, cfg, today)
+    rs["equipment"]["weissach"] = {"status": "verified_absent", "value": False}
+    assert evaluate.preference_score(rs, cfg, today)["total"] > with_w["total"]
+    assert evaluate.preference_score({**rs, "mileage": 15000}, cfg, today)["total"] < evaluate.preference_score(rs, cfg, today)["total"]
+
+
+# --------------------------------------------------------- dedupe / history ----
+MC_RAW = {"id": "WP0AC2A98NS268519-abc", "vin": "WP0AC2A98NS268519", "heading": "2022 Porsche 911 GT3", "price": 244500,
+          "miles": 24150, "vdp_url": "https://dealer.example/vdp/1", "exterior_color": "Shark Blue", "interior_color": "Black",
+          "seller_type": "dealer", "inventory_type": "used", "carfax_clean_title": True, "source": "porscherichmond.example",
+          "dom_active": 41, "first_seen_at_date": "2026-10-03T10:00:00.000Z", "ref_price": 249900, "ref_price_dt": 1759485600,
+          "media": {"photo_links": ["https://img.example/a.jpg", "https://img.example/b.jpg", "https://img.example/a.jpg"]},
+          "dealer": {"id": 9, "name": "Porsche Richmond", "city": "Midlothian", "state": "VA", "zip": "23113",
+                     "phone": "804-555-0100", "website": "porscherichmond.example", "latitude": "37.51", "longitude": "-77.64"},
+          "build": {"year": 2022, "make": "Porsche", "model": "911", "trim": "GT3", "transmission": "Manual"}}
+
+
+def test_marketcheck_normalise_and_trim_selection():
+    l = mc.normalise(MC_RAW, "us-used")
+    assert (l.variant, l.generation, l.price, l.mileage, l.transmission, l.cpo) == ("gt3", "992.1", 244500.0, 24150, "manual", False)
+    assert len(l.photos) == 2 and l.has_equipment_list is False and l.seller["kind"] == "porsche_dealer"
+    assert mc.normalise({**MC_RAW, "heading": "2022 Porsche 911 Carrera S", "build": {"year": 2022, "trim": "Carrera S"}}, "x") is None
+    assert mc.normalise({**MC_RAW, "heading": "2023 Porsche 911 GT3 RS", "build": {"year": 2023, "trim": "GT3 RS"}}, "x") is None
+    trims = mc.pick_trims([{"item": "GT3", "count": 9}, {"item": "GT3 RS", "count": 5}, {"item": "GT3 Touring", "count": 4},
+                           {"item": "GT4 RS", "count": 3}, {"item": "Carrera", "count": 99}, {"item": "RS", "count": 2},
+                           {"item": "GT4 RS Clubsport", "count": 1}, {"item": "Spyder RS", "count": 2}])
+    assert trims == ["GT3", "GT3 Touring", "GT4 RS", "RS", "Spyder RS"]
+
+
+def test_marketcheck_collect_pages_and_reports_partial(monkeypatch):
+    def api(params):
+        if "facets" in params:
+            return (200, json.dumps({"num_found": 3, "listings": [], "facets": {"trim": [{"item": "GT3", "count": 3}]}}))
+        if params["start"] == 0:
+            return (200, json.dumps({"num_found": 60, "listings": [MC_RAW]}))
+        return (500, "upstream")
+    f = FakeFetcher({mc.ENDPOINT: api})
+    res = mc.collect(f, api_key="k")
+    assert res.status == "partial" and len(res.listings) == 1 and res.scopes_ok == set()
+    assert all("k" not in m for m in res.messages)                    # the key never appears in diagnostics
+    assert mc.collect(FakeFetcher({}), api_key=None).status == "skipped"
+
+
+def test_same_vin_from_two_sources_is_one_vehicle_with_conflicts(con, cfg):
+    finder = example("058WLN")
+    ingest.process_results(con, cfg, [finder_result([finder])], now=T0)
+    r2 = SourceResult("marketcheck", listings=[mc.normalise(MC_RAW, "us-used")], scopes_ok={"us-used"}, scopes_total=1)
+    ingest.process_results(con, cfg, [finder_result([finder]), r2], now=ts(1))
+    assert con.execute("SELECT COUNT(*) c FROM vehicles").fetchone()["c"] == 1
+    assert con.execute("SELECT COUNT(*) c FROM listings").fetchone()["c"] == 2
+    m = merged(con, finder.vin)
+    assert [s["source"] for s in m["sources"]] == ["porsche_finder", "marketcheck"]
+    assert m["price"] == 239992.0 and m["price_source"] == "Porsche Finder"          # manufacturer source wins
+    assert any(c["field"] == "price" for c in m["conflicts"])                         # $239,992 vs $244,500 is flagged
+    assert m["equipment"]["lift"]["status"] == "verified"                             # option data carried from Finder
+    assert m["seller"]["phone"] == "804-555-0100"                                     # gap filled from the second source
+    assert m["gallery"]["captured"] == 36                                             # richest gallery chosen
+    assert m["listed_since"].startswith("2026-10-03") and m["listed_since_basis"] == "source-reported"
+    # the feed's earlier price is kept as a labelled observation, not as our own
+    kinds = {p["kind"] for p in m["price_history"]}
+    assert kinds == {"asking", "source_reported_previous"}
+
+
+def test_price_changes_persist_across_runs(con, cfg):
+    base = example("058WLN")
+    ingest.process_results(con, cfg, [finder_result([base])], now=T0)
+    ingest.process_results(con, cfg, [finder_result([base])], now=ts(1))               # unchanged: no new observation
+    ingest.process_results(con, cfg, [finder_result([clone(base, price=234992.0)])], now=ts(2))
+    ingest.process_results(con, cfg, [finder_result([clone(base, price=229992.0)])], now=ts(5))
+    m = merged(con, base.vin)
+    assert [p["price"] for p in m["price_history"]] == [239992.0, 234992.0, 229992.0]
+    assert m["original_price"] == 239992.0 and m["price_change_total"] == -10000.0
+    assert m["last_price_change"]["delta"] == -5000.0 and m["last_price_change"]["at"] == ts(5)
+    ev = [r["event"] for r in con.execute("SELECT event FROM lifecycle_events WHERE vehicle_key=? ORDER BY id", (base.vin,))]
+    assert ev.count("price_change") == 2 and ev[0] == "discovered"
+    assert con.execute("SELECT COUNT(*) c FROM runs WHERE status='ok'").fetchone()["c"] == 4
+
+
+# ------------------------------------------------------------------ lifecycle ----
+def test_failed_or_partial_coverage_never_archives(con, cfg, examples):
+    ingest.process_results(con, cfg, [finder_result(examples)], now=T0)
+    # source down entirely
+    ingest.process_results(con, cfg, [SourceResult("porsche_finder", status="failed", messages=["HTTP 429"])], now=ts(1))
+    # source up, but the dealers' sitemaps did not load (no scopes ok) and details were inconclusive
+    partial = SourceResult("porsche_finder", status="partial", scopes_ok=set(), inconclusive={"ZO80OE", "058WLN", "5007XV"})
+    for d in range(2, 8):
+        ingest.process_results(con, cfg, [partial], now=ts(d))
+    assert {r["status"] for r in con.execute("SELECT status FROM listings")} == {"active"}
+    assert {r["status"] for r in con.execute("SELECT status FROM vehicles")} == {"active"}
+
+
+def test_removal_needs_repeat_confirmation_and_keeps_history(con, cfg, examples):
+    ingest.process_results(con, cfg, [finder_result(examples)], now=T0)
+    gone = example("058WLN")
+    rest = [l for l in examples if l.source_listing_id != "058WLN"]
+
+    def run(at):
+        r = finder_result(rest, explicit_gone={"058WLN"}, checked_ids={"058WLN"})
+        r.scopes_ok.add(gone.scope)
+        ingest.process_results(con, cfg, [r], now=at)
+        return con.execute("SELECT status FROM vehicles WHERE key=?", (gone.vin,)).fetchone()["status"]
+
+    assert run(ts(1)) == "unverified"                     # first 404: potentially inactive, not removed
+    assert run(ts(1, 2)) == "unverified"                  # a retry two hours later is not a second independent signal
+    assert run(ts(2)) == "removed"                        # second check on a later day confirms
+    m = merged(con, gone.vin)
+    assert m["status"] == "removed" and m["price"] == 239992.0 and len(m["photos"]) == 36 and len(m["options"]) == 13
+    assert "sale" not in m                                # the last asking price is never recorded as a sale
+    assert con.execute("SELECT COUNT(*) c FROM sales").fetchone()["c"] == 0
+    events = [r["event"] for r in con.execute("SELECT event FROM lifecycle_events WHERE vehicle_key=? ORDER BY id", (gone.vin,))]
+    assert events == ["discovered", "listing_unverified", "vehicle_unverified", "listing_removed", "vehicle_removed"]
+    # it comes back: relisted, history intact
+    ingest.process_results(con, cfg, [finder_result(examples)], now=ts(6))
+    assert merged(con, gone.vin)["status"] == "active"
+    assert con.execute("SELECT COUNT(*) c FROM lifecycle_events WHERE event='relisted'").fetchone()["c"] == 1
+
+
+def test_feed_listing_needs_three_silent_misses(con, cfg):
+    l = mc.normalise(MC_RAW, "us-used")
+    ok = lambda ls: SourceResult("marketcheck", listings=ls, scopes_ok={"us-used"}, scopes_total=1)
+    ingest.process_results(con, cfg, [ok([l])], now=T0)
+    st = lambda: con.execute("SELECT status FROM listings").fetchone()["status"]
+    ingest.process_results(con, cfg, [ok([])], now=ts(1)); assert st() == "unverified"
+    ingest.process_results(con, cfg, [ok([])], now=ts(2)); assert st() == "unverified"
+    ingest.process_results(con, cfg, [ok([])], now=ts(3)); assert st() == "removed"
+
+
+# ---------------------------------------------------------------------- sales ----
+def test_completed_sale_is_stored_apart_from_asking(con, cfg, tmp_path):
+    base = example("ZO80OE")
+    ingest.process_results(con, cfg, [finder_result([base])], now=T0)
+    csv = tmp_path / "sales.csv"
+    csv.write_text("sale_date,sale_price,kind,venue,url,title,vin,year,mileage,variant,generation,notes\n"
+                   "2026-11-20,\"201,500\",auction_sold,Test Auction,https://auction.example/lot/1,2025 Porsche 718 Cayman GT4 RS,"
+                   "WP0AE2A80SK271606,2025,2100,,,synthetic test row\n"
+                   "2026-10-01,198000,auction_sold,Test Auction,https://auction.example/lot/2,2024 Porsche 718 Cayman GT4 RS,,2024,5200,,,\n"
+                   "2026-10-02,,auction_sold,Test Auction,https://auction.example/lot/3,no price row,,,,,,\n", encoding="utf-8")
+    ingest.process_results(con, cfg, [finder_result([base])], now=ts(8), sales_csv=csv)
+    rows = con.execute("SELECT * FROM sales ORDER BY sale_date").fetchall()
+    assert [r["sale_price"] for r in rows] == [198000.0, 201500.0] and rows[0]["variant"] == "gt4rs"
+    m = merged(con, base.vin)
+    assert m["status"] == "sold" and m["sale"]["price"] == 201500.0 and m["price"] == 209093.0     # asking untouched
+    assert all(p["kind"] == "asking" for p in m["price_history"])
+    ingest.process_results(con, cfg, [finder_result([base])], now=ts(9), sales_csv=csv)             # re-import is idempotent
+    assert con.execute("SELECT COUNT(*) c FROM sales").fetchone()["c"] == 2
+
+
+# ------------------------------------------------------------------------ otd ----
+def test_texas_out_the_door(cfg):
+    o = otd.out_the_door(200000.0, "TX", 180, None, cfg)
+    assert o["dealer_fees"] == 225.0 and o["shipping"] == 0.0 and o["shipping_mode"] == "drive"
+    assert o["sales_tax"] == round((200000 + 225) * 0.0625, 2) == 12514.06
+    assert o["title_registration"] == 33 + 50.75 + 11.50 + 13.25
+    assert o["total"] == 200000 + 225 + 12514.06 + 108.5
+    far = otd.out_the_door(239992.0, "VA", 1466, 979.0, cfg)
+    assert far["dealer_fees"] == 979.0 and far["dealer_fees_basis"] == "published by dealer"
+    assert far["shipping"] == round(350 + 500 * 2.0 + 966 * 1.35, -1) == 2650.0
+    assert far["total"] == round(239992 + 979 + round((239992 + 979) * 0.0625, 2) + 108.5 + 2650, 2)
+    assert otd.out_the_door(None, "TX", 10, None, cfg) is None
+    assert otd.shipping_estimate(None, cfg["otd"])["amount"] is None
+
+
+# ------------------------------------------------------------------ valuation ----
+def test_valuation_shows_uncertainty_instead_of_inventing_precision():
+    subj = {"key": "s", "variant": "gt4rs", "generation": "982", "year": 2024, "mileage": 4000, "price": 205000}
+    few = [{"key": f"c{i}", "variant": "gt4rs", "generation": "982", "year": 2024, "mileage": 3000 + i * 500, "price": 210000}
+           for i in range(4)]
+    v = valuation.value(subj, few)
+    assert v["confidence"] == "insufficient" and "fair_mid" not in v and v["n"] == 4
+    # synthetic market: $2 per mile, subject priced 10% under the line
+    pool = [{"key": f"c{i}", "variant": "gt4rs", "generation": "982", "year": 2024, "mileage": m, "price": 230000 - 2 * m}
+            for i, m in enumerate(range(1000, 21000, 2000))]
+    pool.append({"key": "other", "variant": "gt3", "generation": "992.1", "year": 2022, "mileage": 5000, "price": 999999})
+    v = valuation.value({**subj, "price": (230000 - 8000) * 0.9}, pool)
+    assert v["n"] == 10 and v["confidence"] == "low" and v["slope_per_mile"] == -2.0
+    assert v["fair_mid"] == 222000 and v["rating"] == "great" and round(v["delta_pct"], 2) == -0.10
+    assert valuation.value({**subj, "price": 222000 * 1.08}, pool)["rating"] == "overpriced"
+    assert v["basis"] == "asking prices"
+    with_sales = valuation.value(subj, pool, [{"variant": "gt4rs", "generation": "982", "sale_price": 199000}])
+    assert with_sales["sales"]["n"] == 1 and with_sales["fair_mid"] == 222000      # sales reported separately, not mixed in
+
+
+# --------------------------------------------------------------------- alerts ----
+def _digest(con, cfg, state, at):
+    return alerts.prepare_digest(con, cfg, state, datetime.strptime(at, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc))
+
+
+def test_backfill_is_not_news_and_new_cars_alert_exactly_once(con, cfg, state, examples):
+    ingest.process_results(con, cfg, [finder_result(examples)], now=T0)
+    assert _digest(con, cfg, state, T0) is None                         # initial backfill: no email
+    assert json.loads((state / "digests" / "pending.json").read_text())["pending"] == []
+
+    new_car = synthetic(example("ZO80OE"), SYN_GT4RS, "NEW001")         # synthetic new confirmed match
+    ingest.process_results(con, cfg, [finder_result(examples + [new_car])], now=ts(1))
+    d = _digest(con, cfg, state, ts(1))
+    assert d and [c["vin"] for c in d["cars"]] == [SYN_GT4RS] and d["digest_date"] == "2026-11-14"
+    assert d["subject"].startswith("[PGT-2026-11-14] 1 new qualifying") and "confirmed" in d["subject"]
+    car = d["cars"][0]
+    assert car["detail_url"] == f"https://example.test/gt/#/v/{SYN_GT4RS}" and car["otd_total"] and car["score"] > 80
+    assert "images.finder.porsche.com" in car["photo"] and "CONFIRMED MATCH" in d["html"] and SYN_GT4RS not in d["text"][:0]
+
+    # retries / reruns the same day: same digest, same single car
+    again = _digest(con, cfg, state, ts(1, 3))
+    assert again["digest_date"] == d["digest_date"] and len(again["cars"]) == 1
+    assert con.execute("SELECT COUNT(*) c FROM digests").fetchone()["c"] == 1
+
+    assert alerts.mark_sent(con, state, d["digest_date"], "gmail", "msg-1") is True
+    assert alerts.mark_sent(con, state, d["digest_date"], "gmail", "msg-1") is False      # idempotent
+    assert _digest(con, cfg, state, ts(1, 5)) is None                    # nothing pending after sending
+
+    # the same car appears on a second source: no second notification
+    dup = mc.normalise({**MC_RAW, "id": "dup", "vin": SYN_GT4RS, "heading": "2025 Porsche 718 Cayman GT4 RS",
+                        "build": {"year": 2025, "trim": "GT4 RS"}, "price": 208000}, "us-used")
+    r2 = SourceResult("marketcheck", listings=[dup], scopes_ok={"us-used"}, scopes_total=1)
+    ingest.process_results(con, cfg, [finder_result(examples + [new_car]), r2], now=ts(2))
+    assert _digest(con, cfg, state, ts(2)) is None
+    assert con.execute("SELECT COUNT(*) c FROM alert_log").fetchone()["c"] == 1
+
+
+def test_first_run_of_a_second_source_is_also_backfill(con, cfg, state, examples):
+    ingest.process_results(con, cfg, [finder_result(examples)], now=T0)
+    feed_only = mc.normalise({**MC_RAW, "id": "f1", "vin": SYN_GT3, "carfax_clean_title": True}, "us-used")
+    r2 = SourceResult("marketcheck", listings=[feed_only], scopes_ok={"us-used"}, scopes_total=1)
+    ingest.process_results(con, cfg, [finder_result(examples), r2], now=ts(1))
+    assert con.execute("SELECT baseline FROM vehicles WHERE key=?", (SYN_GT3,)).fetchone()["baseline"] == 1
+    assert _digest(con, cfg, state, ts(1)) is None
+
+
+def test_one_email_per_day_and_excluded_cars_never_alert(con, cfg, state, examples):
+    ingest.process_results(con, cfg, [finder_result(examples)], now=T0)
+    a = synthetic(example("ZO80OE"), SYN_GT4RS, "NEW001")
+    too_dear = synthetic(example("058WLN"), SYN_GT3, "NEW002", price=289000.0)
+    ingest.process_results(con, cfg, [finder_result(examples + [a, too_dear])], now=ts(1))
+    d = _digest(con, cfg, state, ts(1))
+    assert [c["vin"] for c in d["cars"]] == [SYN_GT4RS]                  # the over-cap GT3 is not announced
+    alerts.mark_sent(con, state, d["digest_date"], "gmail")
+    # later the same local day the GT3 drops under the cap: it qualifies, but today's email already went
+    ingest.process_results(con, cfg, [finder_result(examples + [a, clone(too_dear, price=244000.0)])], now=ts(1, 6))
+    assert _digest(con, cfg, state, ts(1, 6)) is None
+    assert con.execute("SELECT COUNT(*) c FROM alert_log").fetchone()["c"] == 1
+    # next morning it goes out in its own digest
+    d2 = _digest(con, cfg, state, ts(2))
+    assert d2["digest_date"] == "2026-11-15" and [c["vin"] for c in d2["cars"]] == [SYN_GT3]
+    assert d2["cars"][0]["category"] == "lead" and "needs verification" in d2["subject"]
+
+
+def test_baseline_car_that_newly_qualifies_is_announced(con, cfg, state):
+    dear = clone(example("058WLN"), price=289000.0)
+    ingest.process_results(con, cfg, [finder_result([dear])], now=T0)
+    assert _digest(con, cfg, state, T0) is None
+    ingest.process_results(con, cfg, [finder_result([clone(dear, price=245000.0)])], now=ts(3))
+    d = _digest(con, cfg, state, ts(3))
+    assert d and d["cars"][0]["reason"].startswith("Now qualifies")
+
+
+def test_receipt_file_marks_digest_sent(con, cfg, state, examples):
+    ingest.process_results(con, cfg, [finder_result(examples)], now=T0)
+    ingest.process_results(con, cfg, [finder_result(examples + [synthetic(example("ZO80OE"), SYN_GT4RS, "NEW001")])], now=ts(1))
+    d = _digest(con, cfg, state, ts(1))
+    (state / "digests" / f"{d['digest_date']}.sent.json").write_text(json.dumps({"channel": "gmail", "message_id": "m9", "sent_at": ts(1, 1)}))
+    assert alerts.import_receipts(con, state) == 1 and alerts.import_receipts(con, state) == 0
+    row = con.execute("SELECT * FROM digests").fetchone()
+    assert (row["status"], row["channel"], row["message_id"]) == ("sent", "gmail", "m9")
+
+
+# --------------------------------------------------------------------- export ----
+def test_export_writes_site_data(con, cfg, tmp_path, examples):
+    ingest.process_results(con, cfg, [finder_result(examples)], now=T0)
+    stats = export.export(con, cfg, tmp_path / "data")
+    assert stats["vehicles"] == 3
+    idx = json.loads((tmp_path / "data" / "index.json").read_text())
+    assert idx["counts"] == {"confirmed": 1, "lead": 2, "archive": 0} and idx["last_success"]["porsche_finder"] == T0
+    c = next(v for v in idx["vehicles"] if v["key"] == "WP0CE2A80SK238226")
+    assert c["nphotos"] == 47 == c["nadv"] and c["gcomplete"] and len(c["thumbs"]) == 6 and c["thumbs"][0]["k"] == "pf"
+    assert c["deal"]["rating"] is None and c["deal"]["conf"] == "insufficient"       # 0 comps: no made-up valuation
+    det = json.loads((tmp_path / "data" / "v" / "WP0CE2A80SK238226.json").read_text())
+    assert len(det["photos"]) == 47 and det["events"][0]["event"] == "discovered" and det["evidence"]
+    health = json.loads((tmp_path / "data" / "health.json").read_text())
+    assert health["runs"][0]["sources"][0]["photos_captured"] == 115 == health["runs"][0]["sources"][0]["photos_advertised"]
+    assert any(n["source"] == "Cars.com" and n["state"] == "not covered" for n in health["coverage"])
+    market = json.loads((tmp_path / "data" / "market.json").read_text())
+    assert len(market["points"]) == 3 and market["sales"] == [] and len(market["snapshots"]) == 3

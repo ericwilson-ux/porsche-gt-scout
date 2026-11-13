@@ -1,0 +1,23 @@
+name: Probe one Porsche Finder listing
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "Listing URL (finder.porsche.com/us/en-US/details/...)"
+        required: true
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python -m pgt probe "${{ github.event.inputs.url }}" --save page.html | tee parsed.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: probe
+          path: |
+            page.html
+            parsed.json

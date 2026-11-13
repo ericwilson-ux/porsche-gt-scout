@@ -1,0 +1,6 @@
+_site/
+state/
+__pycache__/
+.pytest_cache/
+*.pyc
+tests/fixtures/finder_*.html

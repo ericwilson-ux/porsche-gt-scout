@@ -1,0 +1,2 @@
+requests>=2.31
+zipcodes>=1.2

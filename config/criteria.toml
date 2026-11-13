@@ -1,0 +1,97 @@
+# Buyer criteria. Edit here; every run re-evaluates all vehicles against this file.
+
+[buyer]
+home_zip = "78701"            # Austin, TX
+home_label = "Austin, TX"
+annual_miles_low = 2000
+annual_miles_high = 4000
+timezone = "America/Chicago"
+
+# ---- Target variants ---------------------------------------------------------
+[variants.gt3]
+label = "911 GT3"
+generations = ["992.1", "992.2"]
+max_price = 250000
+max_miles = 35000
+
+[variants.gt3_touring]
+label = "911 GT3 Touring"
+generations = ["992.1", "992.2"]
+max_price = 250000
+max_miles = 35000
+
+[variants.gt4rs]
+label = "718 Cayman GT4 RS"
+generations = ["982"]
+max_price = 225000
+preferred_max_miles = 10000
+
+[variants.spyder_rs]
+label = "718 Spyder RS"
+generations = ["982"]
+max_price = 225000
+preferred_max_miles = 10000
+
+# ---- Hard requirements -------------------------------------------------------
+[hard]
+require_front_lift = true
+require_clean_accident_history = true
+reject_documented_track_use = true
+# A car over its price cap by no more than this fraction is kept as a
+# "near miss" (asking prices move); anything further over is excluded.
+near_miss_price_over = 0.05
+
+# ---- Preference weights (points; normalised to 0-100 over applicable items) --
+[weights]
+mileage = 20
+exterior_color = 12
+interior_color = 8
+transmission = 10
+seats = 8
+weissach = 8          # 718 RS only
+warranty = 14
+documentation = 8
+distance = 12
+
+[preferences]
+exterior_families = ["white", "silver", "blue", "gray", "black"]
+interior_families = ["black", "beige", "tan"]
+gt3_manual_score = 1.0
+gt3_pdk_score = 0.85
+
+# ---- Out-the-door assumptions (Austin / Travis County, Texas) -----------------
+[otd]
+sales_tax_rate = 0.0625          # Texas motor vehicle sales/use tax
+title_fee = 33.00                # Travis County title application fee
+registration_fee = 50.75         # base passenger registration
+county_fee = 11.50               # Travis County optional registration fee
+state_misc_fees = 13.25          # TexasSure $1 + processing $4.75 + inspection replacement $7.50
+default_doc_fee_tx = 225.00      # used when the dealer does not publish fees
+default_doc_fee_other = 499.00
+drive_radius_miles = 250         # inside this, assume you drive it home (no shipping)
+ship_base = 350.00
+ship_rate_short = 2.00           # $/mile up to 500 mi
+ship_rate_mid = 1.35             # $/mile 500-1500 mi
+ship_rate_long = 1.05            # $/mile beyond 1500 mi
+ship_minimum = 600.00
+road_factor = 1.17               # great-circle -> road miles
+
+# ---- Alerts ------------------------------------------------------------------
+[alerts]
+recipient = "set-via-ALERT_RECIPIENT-secret"
+categories = ["confirmed", "lead"]   # which eligibility classes trigger the daily email
+site_url = ""                        # filled from SITE_URL env at run time
+
+# ---- Lifecycle ----------------------------------------------------------------
+[lifecycle]
+explicit_gone_checks_to_remove = 2   # separate runs where the source says "gone" (404 / delisted)
+silent_misses_to_remove = 3          # separate successful runs where the listing was simply absent
+min_hours_before_removed = 36
+
+# ---- Photos --------------------------------------------------------------------
+[photos]
+# "off": display source-hosted images only.  "repo": also keep copies in the state
+# branch for confirmed/lead vehicles so galleries survive delisting.
+# Copying dealer photos may be restricted by the source's terms; owner's decision.
+archive = "off"
+archive_width = 1280

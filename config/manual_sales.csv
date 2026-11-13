@@ -1,0 +1,4 @@
+# Publicly documented completed sales (realised prices). One row per sale; url must point to the public record.
+# kind: auction_sold | dealer_reported_sale.  variant (optional): gt3 | gt3_touring | gt4rs | spyder_rs.
+# A reserve-not-met high bid is NOT a sale and must not be entered here.
+sale_date,sale_price,kind,venue,url,title,vin,year,mileage,variant,generation,notes
