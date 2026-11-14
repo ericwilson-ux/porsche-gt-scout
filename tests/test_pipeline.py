@@ -722,12 +722,15 @@ def _gt3_991(vin, lid, **kw):
 
 @pytest.mark.parametrize("changes,category,failed,unverified", [
     ({}, "lead", [], ["lift", "accident"]),                                            # manual, $215k, 14k mi
-    ({"build": {"year": 2018, "trim": "GT3", "transmission": "Automatic"}}, "excluded", ["transmission"], ["lift", "accident"]),
+    # the feed's bare "Automatic" is a default value, not evidence: unverified, never a silent exclusion
+    ({"build": {"year": 2018, "trim": "GT3", "transmission": "Automatic"}}, "lead", [], ["lift", "transmission", "accident"]),
+    ({"build": {"year": 2018, "trim": "GT3", "transmission": "Automatic"}, "heading": "2018 Porsche 911 GT3 PDK"}, "excluded", ["transmission"], ["lift", "accident"]),
+    ({"build": {"year": 2018, "trim": "GT3", "transmission": "Automatic"}, "heading": "2018 Porsche 911 GT3 6-Speed"}, "lead", [], ["lift", "accident"]),
     ({"build": {"year": 2018, "trim": "GT3"}}, "lead", [], ["lift", "transmission", "accident"]),   # transmission not published
     ({"price": 250000}, "near_miss", ["price"], ["lift", "accident"]),                  # under $250,000 is strict
     ({"price": 249500}, "lead", [], ["lift", "accident"]),
     ({"miles": 36000}, "excluded", ["mileage"], ["lift", "accident"]),
-    ({"price": 251000, "build": {"year": 2018, "trim": "GT3", "transmission": "Automatic"}}, "excluded", ["transmission", "price"], ["lift", "accident"]),
+    ({"price": 251000, "heading": "2018 Porsche 911 GT3 PDK", "build": {"year": 2018, "trim": "GT3", "transmission": "Automatic"}}, "excluded", ["transmission", "price"], ["lift", "accident"]),
 ])
 def test_991_2_requires_manual_and_the_price_cap(con, cfg, changes, category, failed, unverified):
     lst = _gt3_991("WP0AC2A93JS174011", "g1", **changes)
@@ -742,3 +745,17 @@ def test_manual_rule_does_not_touch_992_cars(con, cfg):
     ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=[pdk_992], scopes_ok={"us-used:2022-2023"}, scopes_total=1)], now=T0)
     e = merged(con, pdk_992.vin)["eligibility"]
     assert e["category"] == "lead" and not any(c["key"] == "transmission" for c in e["checks"])
+
+
+def test_transmission_evidence_rules():
+    R = C.resolve_transmission
+    assert R("Automatic", "2019 Porsche 911 GT3 Touring", "gt3_touring", "991.2")[0] == "manual"      # manual-only model
+    assert R("Automatic", "2024 Porsche 718 Cayman GT4 RS", "gt4rs", "982")[0] == "pdk"               # PDK-only model
+    assert R("Manual", "2018 Porsche 911 GT3", "gt3", "991.2")[0] == "manual"
+    t, note = R("Automatic", "2018 Porsche 911 GT3 (991 II)", "gt3", "991.2")
+    assert t is None and "default" in note
+    assert R("Automatic", "2023 Porsche 911 GT3 Touring", "gt3_touring", "992.1")[0] is None          # 992 Touring came both ways
+    assert R("Automatic", "2022 Porsche 911 GT3 PDK", "gt3", "992.1")[0] == "pdk"
+    assert R(None, "Steering Column Casing In Leather I.C.W. Manual Steering Column", "gt3", "992.1")[0] is None
+    assert R(None, "6-speed GT Sport Manual Transmission | BOSE", "gt3", "992.1")[0] == "manual"
+    assert R("PDK (Automatic)", None, "gt3", "992.1", trusted=True)[0] == "pdk"                       # manufacturer data stands

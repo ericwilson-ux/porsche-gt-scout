@@ -58,7 +58,8 @@ def eligibility(v: dict, cfg: dict) -> dict:
         label = f"{need_trans.capitalize()} transmission ({v.get('generation')})"
         trans = v.get("transmission")
         if trans is None:
-            checks.append(_check("transmission", label, UNVERIFIED, "Transmission not published"))
+            checks.append(_check("transmission", label, UNVERIFIED,
+                                 v.get("transmission_note") or "Transmission not published; confirm with the seller"))
         elif trans == need_trans:
             checks.append(_check("transmission", label, PASS, v.get("transmission_raw") or trans, "listing"))
         else:
@@ -196,6 +197,8 @@ def preference_score(v: dict, cfg: dict, today: date | None = None) -> dict:
         frac, note = pref["gt3_manual_score"], "6-speed manual (your slight preference)"
     elif trans == "pdk":
         frac, note = pref["gt3_pdk_score"], "PDK (also highly desirable)"
+    elif v.get("transmission_note"):
+        frac, note = 0.75, "Listed as automatic by the feed, unconfirmed"
     else:
         frac, note = 0.6, "Transmission not published"
     items.append(_item("transmission", "Transmission", frac, w["transmission"], note))

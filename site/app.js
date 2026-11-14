@@ -113,7 +113,7 @@ function cardHTML(c, archive) {
   const flags = [c.new ? '<span class="flag new">New</span>' : '', c.drop && c.lpc ? `<span class="flag drop">${money(c.lpc.delta)}</span>` : '',
     c.status === 'unverified' ? '<span class="flag">Availability unconfirmed</span>' : '', c.status === 'sold' ? '<span class="flag">Sold</span>' : '', c.status === 'removed' ? '<span class="flag">Delisted</span>' : ''].join('');
   const pc = c.nphotos ? `<span class="pcount${c.gcomplete ? '' : ' warn'}" title="${esc(c.gnote || '')}">${c.gcomplete ? c.nphotos + ' photos' : c.nadv ? `${c.nphotos} of ${c.nadv} photos` : `${c.nphotos} photos, preview only`}</span>` : '';
-  const chips = [liftChip(c), c.cpo ? '<span class="chip ok">CPO</span>' : '', c.unver.includes('accident') ? '<span class="chip q">Accident history</span>' : '',
+  const chips = [liftChip(c), c.cpo ? '<span class="chip ok">CPO</span>' : '', c.unver.includes('accident') ? '<span class="chip q">Accident history</span>' : '', c.unver.includes('transmission') ? '<span class="chip q">Manual unconfirmed</span>' : '',
     c.seats ? `<span class="chip">${c.seats === 'bucket' ? 'Bucket seats' : 'Sport seats'}</span>` : '', c.weissach === true ? '<span class="chip">Weissach</span>' : '', c.pccb === true ? '<span class="chip">PCCB</span>' : '',
     c.locq ? '<span class="chip q">Location: dealer group</span>' : '',
     c.conflicts ? `<span class="chip q">${c.conflicts} source conflict${c.conflicts > 1 ? 's' : ''}</span>` : ''].join('');
@@ -127,7 +127,7 @@ function cardHTML(c, archive) {
   <div class="body">
     <div class="price-row">${priceLine}</div>
     <a class="title" href="#/v/${encodeURIComponent(c.key)}">${esc(title(c))}${c.gen && c.gen !== '982' ? ' <span class="muted">' + esc(c.gen) + '</span>' : ''}</a>
-    <div class="facts">${num(c.miles)} mi, ${TRANS[c.trans] || 'transmission n/a'}, ${esc(c.ext || 'colour n/a')} over ${esc(c.intf || 'n/a')}</div>
+    <div class="facts">${num(c.miles)} mi, ${TRANS[c.trans] || (c.transq ? 'gearbox unconfirmed' : 'transmission n/a')}, ${esc(c.ext || 'colour n/a')} over ${esc(c.intf || 'n/a')}</div>
     <div class="where"><span>${esc(c.seller || 'Seller n/a')}, ${esc([c.city, c.state].filter(Boolean).join(', '))}</span><span>${distText(c)}</span></div>
     <div class="chips">${chips}</div>
     <div class="foot"><span>${archive ? `Tracked ${day(c.first)} to ${day(c.last_seen)}` : `<span class="deal ${c.deal.rating || ''}">${dealText(c.deal)}</span><br><span class="muted">Out the door about ${money(o?.total)}</span>`}</span>
@@ -249,7 +249,7 @@ async function viewDetail(key) {
   const hits = new Set(['474', '2UH']);
   const evTxt = e => e.status.replace(/_/g, ' ');
   const spec = [['VIN', `${esc(m.vin || 'n/a')}${m.vin ? (m.vin_valid ? ' <span class="muted">check digit ok</span>' : ' <span class="chip bad">check digit fails</span>') : ''}`],
-    ['Model', `${esc(title(c))}, ${esc(m.generation || '')}`], ['Mileage', num(m.mileage) + ' mi'], ['Transmission', esc(m.transmission_raw || TRANS[m.transmission] || 'n/a')],
+    ['Model', `${esc(title(c))}, ${esc(m.generation || '')}`], ['Mileage', num(m.mileage) + ' mi'], ['Transmission', m.transmission ? TRANS[m.transmission] + (m.transmission_note ? ` <span class="muted">${esc(m.transmission_note)}</span>` : '') : `Unconfirmed <span class="muted">${esc(m.transmission_note || 'not published')}</span>`],
     ['Exterior', `${m.exterior_hex ? `<i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${esc(m.exterior_hex)};border:1px solid #0003"></i> ` : ''}${esc(m.exterior_color || 'n/a')}`], ['Interior', esc(m.interior_color || 'n/a')],
     ['Seats', eq.seats?.value ? (eq.seats.value === 'bucket' ? 'Full bucket seats' : 'Adjustable sport seats') + ` <span class="muted">${evTxt(eq.seats)}</span>` : 'Not documented'],
     ['Brakes', eq.pccb?.value == null ? 'Not documented' : (eq.pccb.value ? 'PCCB ceramic' : 'Steel') + ` <span class="muted">${evTxt(eq.pccb)}</span>`],
@@ -277,7 +277,7 @@ async function viewDetail(key) {
       ${m.sources.map(x => `<tr><td>${esc(x.label)}${x.origin_site ? ` <span class="muted">via ${esc(x.origin_site)}</span>` : ''}</td><td>${esc(x.status)}</td><td class="r">${money(x.price)}</td><td class="r">${num(x.mileage)}</td><td>${day(x.first_seen)}</td><td>${day(x.last_seen)}</td><td>${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">Original listing</a>` : ''}</td></tr>`).join('')}</tbody></table></div></section>
     <section class="sect"><h2>Record history</h2><ul class="timeline">${(m.events || []).slice().reverse().map(e => `<li><span class="muted">${new Date(e.at).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</span><span><b>${esc(e.event.replace(/_/g, ' '))}</b> ${e.detail && typeof e.detail === 'object' ? esc(Object.entries(e.detail).filter(([, v]) => v != null && typeof v !== 'object').map(([k, v]) => `${k.replace(/_/g, ' ')}: ${typeof v === 'number' && Math.abs(v) > 999 ? money(v) : v}`).join(', ')) : esc(e.detail || '')}</span></li>`).join('')}</ul></section>
   </div>
-  <aside class="side"><div><h1>${esc(title(c))}</h1><div class="muted">${num(m.mileage)} mi, ${TRANS[m.transmission] || 'n/a'}, ${esc(m.exterior_color || '')}</div></div>
+  <aside class="side"><div><h1>${esc(title(c))}</h1><div class="muted">${num(m.mileage)} mi, ${TRANS[m.transmission] || 'gearbox unconfirmed'}, ${esc(m.exterior_color || '')}</div></div>
     <div><div class="bigprice">${money(m.price)}</div>${m.dealer_fees_listed ? `<div class="muted">Listed at ${money(m.price_as_listed)} including ${money(m.dealer_fees_listed)} dealer fees</div>` : ''}
       ${m.price_change_total ? `<div class="was">${m.price_change_total < 0 ? 'Down' : 'Up'} ${money(Math.abs(m.price_change_total))} from the first observed ${money(m.original_price)}</div>` : ''}</div>
     <div class="verdict ${el.category}">${CAT_LABEL[el.category]}<small>${esc(el.summary)}</small></div>
@@ -311,7 +311,7 @@ function viewCompare() {
   ${row('Deal quality', c => esc(dealText(c.deal)) + (c.deal.n != null ? `<br><span class="muted">${c.deal.n} comps, ${esc(c.deal.conf || '')}</span>` : ''), { rank: c => c.deal.delta })}
   ${row('Mileage', c => num(c.miles) + ' mi', { rank: c => c.miles })}
   ${row('Year / generation', c => `${c.year} / ${esc(c.gen || '')}`)}
-  ${row('Transmission', c => TRANS[c.trans] || 'n/a')}
+  ${row('Transmission', c => TRANS[c.trans] || 'Unconfirmed')}
   ${row('Exterior', c => esc(c.ext || 'n/a'))}${row('Interior', c => esc(c.int || 'n/a'))}
   ${row('Front lift', c => liftChip(c))}
   ${row('Seats', c => c.seats ? (c.seats === 'bucket' ? 'Bucket' : 'Adjustable sport') : 'Not documented')}

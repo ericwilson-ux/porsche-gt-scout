@@ -262,3 +262,31 @@ def canonical_photo(url: str) -> tuple[str, str]:
 
 def is_finder_image(url: str) -> bool:
     return bool(_FINDER_IMG_RE.match(url or ""))
+
+
+# ---- transmission evidence -----------------------------------------------------
+_MANUAL_TXT = re.compile(r"\bmanual\b(?! steering| wallet)|\b6[\s-]*speed\b|six[\s-]*speed|gt sport(s)? (manual )?transmission", re.I)
+_PDK_TXT = re.compile(r"\bpdk\b|doppelkupplung|7[\s-]*speed", re.I)
+
+
+def resolve_transmission(raw: str | None, text: str | None, variant: str | None, generation: str | None,
+                         trusted: bool = False) -> tuple[str | None, str | None]:
+    """(transmission, note).  Aggregator feeds report "Automatic" as a default (they do so for the
+    manual-only 991.2 GT3 Touring), so an unsupported "Automatic" is treated as unknown.
+
+    trusted=True is for manufacturer data, where the stated value is taken as is.
+    """
+    kind = transmission_kind(raw)
+    if trusted and kind:
+        return kind, None
+    if variant in ("gt4rs", "spyder_rs"):
+        return "pdk", "PDK-only model"
+    if variant == "gt3_touring" and generation == "991.2":
+        return "manual", "The 991.2 GT3 Touring was built with a manual gearbox only"
+    if kind == "manual" or (text and _MANUAL_TXT.search(text)):
+        return "manual", None
+    if text and _PDK_TXT.search(text):
+        return "pdk", None
+    if kind == "pdk":
+        return None, "The feed lists this car as automatic, a value it also uses as a default; not confirmed either way"
+    return None, None

@@ -71,7 +71,8 @@ def normalise(raw: dict, scope: str) -> Listing | None:
     lst.exterior_color = raw.get("exterior_color") or raw.get("base_ext_color")
     lst.interior_color = raw.get("interior_color") or raw.get("base_int_color")
     lst.transmission_raw = build.get("transmission")
-    lst.transmission = C.transmission_kind(build.get("transmission"))
+    lst.transmission, note = C.resolve_transmission(build.get("transmission"), text, lst.variant, lst.generation)
+    lst.extra["transmission_note"] = note
     website = dealer.get("website")
     is_porsche = bool(re.search(r"porsche", f"{dealer.get('name') or ''} {website or ''}", re.I))
     kind = {"fsbo": "private", "auction": "auction"}.get(raw.get("seller_type"),

@@ -254,6 +254,16 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
         m[f] = _first(live, f)
     if m["exterior_color"]:
         m["exterior_color"] = re.sub(r"\bGt\b", "GT", m["exterior_color"])
+    # Transmission: manufacturer data is taken as stated; feed values are re-read with the evidence rules,
+    # so rows stored before those rules existed are corrected too.
+    m["transmission"], m["transmission_note"] = None, None
+    for l in live:
+        t, note = C.resolve_transmission(l.get("transmission_raw"), l.get("title"), m["variant"], m["generation"],
+                                         trusted=(l["source"] == "porsche_finder"))
+        if t:
+            m["transmission"], m["transmission_note"] = t, note
+            break
+        m["transmission_note"] = m["transmission_note"] or note
     m["variant_label"] = C.VARIANT_LABEL.get(m["variant"] or "", m["variant"])
     m["cpo"] = any(l.get("cpo") for l in live)
     m["exterior_family"] = C.exterior_family(m["exterior_color"])
@@ -343,6 +353,10 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
         seat_opt = det["seats"] if any(re.search(r"seat|bucket", o.get("name") or "", re.I) and not re.search(r"belt|heated|ventilat", o.get("name") or "", re.I) for o in opts) else None
         equipment["seats"] = {"status": found_status if seat_opt else "unknown", "value": seat_opt, "source": src_label}
         equipment["pccb"] = {"status": found_status if det["pccb"] else absent_status, "value": True if det["pccb"] else None, "source": src_label}
+        if not m["transmission"]:
+            t, _n = C.resolve_transmission(None, " | ".join(o.get("name") or "" for o in opts), m["variant"], m["generation"])
+            if t:
+                m["transmission"], m["transmission_note"] = t, f"From the {src_label}"
         m["options"] = [{"code": o.get("code"), "name": o.get("name"), "group": None} for o in opts]
         m["standard_equipment"], m["highlights"] = [], []
         m["build_data"] = {**{k: decode.get(k) for k in ("msrp", "combined_msrp", "installed_options_msrp", "msrp_label",
@@ -631,7 +645,8 @@ def decode_candidates(con, cfg: dict, now: str) -> list[str]:
         m = json.loads(r["merged"])
         if not m.get("vin_valid") or m["equipment"]["lift"]["status"] in ("verified", "verified_absent"):
             continue
-        out.append((0 if m.get("in_texas") else 1, -(r["score"] or 0), (m.get("distance") or {}).get("road_miles_est") or 9e9, r["vin"]))
+        out.append((len(m["eligibility"]["unverified"]) > 2, 0 if m.get("in_texas") else 1, -(r["score"] or 0),
+                    (m.get("distance") or {}).get("road_miles_est") or 9e9, r["vin"]))
     return [v for *_k, v in sorted(out)]
 
 
