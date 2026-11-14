@@ -6855,6 +6855,18 @@ INSERT INTO "lifecycle_events" VALUES(1188,'WP0AC2A93JS176826',NULL,'2026-11-14T
 INSERT INTO "lifecycle_events" VALUES(1189,'WP0AC2A9XJS174748',NULL,'2026-11-14T11:46:34Z','category_change','{"backfill":"rules","from":"excluded","summary":"Nothing disqualifying, but needs verification: Front axle lift, Manual transmission (991.2), Clean accident history","to":"lead"}');
 INSERT INTO "lifecycle_events" VALUES(1190,'WP0AC2A97KS149212',NULL,'2026-11-14T11:46:34Z','category_change','{"backfill":"rules","from":"excluded","summary":"Nothing disqualifying, but needs verification: Front axle lift, Manual transmission (991.2), Clean accident history","to":"lead"}');
 INSERT INTO "lifecycle_events" VALUES(1191,'WP0AE2A83SK271969',NULL,'2026-11-14T15:02:29Z','category_change','{"backfill":"porsche_finder","from":"lead","summary":"Fails: Clean accident history (Listing text mentions accident or damage history)","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(1192,'WP0AC2A92JS176171',NULL,'2026-11-14T15:07:54Z','category_change','{"from":"lead","summary":"Fails: Manual transmission (991.2) (Listed as Automatic)","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(1193,'WP0AC2A99JS174563',NULL,'2026-11-14T15:07:54Z','category_change','{"from":"lead","summary":"Fails: Manual transmission (991.2) (Listed as Automatic)","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(1194,'WP0AC2A97JS174321',NULL,'2026-11-14T15:07:54Z','category_change','{"from":"lead","summary":"Fails: Manual transmission (991.2) (Listed as Automatic)","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(1195,'WP0AC2A97JS174223',NULL,'2026-11-14T15:07:54Z','category_change','{"from":"lead","summary":"Fails: Manual transmission (991.2) (Listed as Automatic)","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(1196,'WP0AC2A91JS176579',NULL,'2026-11-14T15:07:54Z','category_change','{"from":"lead","summary":"Fails: Manual transmission (991.2) (Listed as Automatic)","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(1197,'WP0AC2A92JS174629',NULL,'2026-11-14T15:07:54Z','category_change','{"from":"lead","summary":"Fails: Manual transmission (991.2) (Listed as Automatic)","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(1198,'WP0AC2A93JS176907',NULL,'2026-11-14T15:07:54Z','category_change','{"from":"lead","summary":"Fails: Manual transmission (991.2) (Listed as Automatic)","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(1199,'WP0AC2A95JS174723',NULL,'2026-11-14T15:07:54Z','category_change','{"from":"near_miss","summary":"Fails: Manual transmission (991.2) (Listed as Automatic); Under $250,000 (Advertised $259,900 is 4.0% over the cap (near miss))","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(1200,'WP0AC2A9XJS176080',NULL,'2026-11-14T15:07:54Z','category_change','{"from":"lead","summary":"Fails: Manual transmission (991.2) (Listed as Automatic)","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(1201,'WP0AC2A97KS149100',NULL,'2026-11-14T15:07:54Z','category_change','{"from":"lead","summary":"Fails: Manual transmission (991.2) (Listed as Automatic)","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(1202,'WP0AC2A9XJS174815',NULL,'2026-11-14T15:07:54Z','category_change','{"from":"lead","summary":"Fails: Manual transmission (991.2) (Listed as Automatic)","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(1203,'WP0AC2A93JS176826',NULL,'2026-11-14T15:07:54Z','category_change','{"from":"lead","summary":"Fails: Manual transmission (991.2) (Listed as Automatic)","to":"excluded"}');
 CREATE TABLE listings (
   id INTEGER PRIMARY KEY,
   source TEXT NOT NULL,
@@ -8021,6 +8033,7 @@ INSERT INTO "meta" VALUES('scopes_seen:porsche_finder','["10317", "10340", "1045
 INSERT INTO "meta" VALUES('baseline_done:porsche_finder','1');
 INSERT INTO "meta" VALUES('baseline_at:porsche_finder','2026-11-14T11:46:34Z');
 INSERT INTO "meta" VALUES('last_success:porsche_finder','2026-11-14T15:02:29Z');
+INSERT INTO "meta" VALUES('last_pagecheck_summary','{"enabled": true, "checked": 60, "results": {"manual": 12, "conflict": 3, "inconclusive": 10, "blocked": 6, "pdk": 12, "robots": 10, "error": 6, "vin_missing": 1}, "settled": 24}');
 CREATE TABLE options (
   listing_id INTEGER NOT NULL REFERENCES listings(id),
   code TEXT, name TEXT NOT NULL, grp TEXT, kind TEXT NOT NULL DEFAULT 'factory_option',
@@ -44600,6 +44613,75 @@ INSERT INTO "options" VALUES(789,'8JT','LED Headlights in Black incl. Porsche Dy
 INSERT INTO "options" VALUES(789,'8VH','Exclusive Design Taillights','Lighting and vision','factory_option');
 INSERT INTO "options" VALUES(789,'P14','Auto-Dimming Mirrors with Integrated Rain Sensor','Lighting and vision','factory_option');
 INSERT INTO "options" VALUES(789,'7X1','ParkAssist (Rear)','Comfort and assistance systems','factory_option');
+CREATE TABLE page_checks (
+  listing_key TEXT PRIMARY KEY,        -- "<source>:<source_listing_id>"; one reading of the dealer's own page
+  vin TEXT,
+  url TEXT,
+  checked_at TEXT NOT NULL,
+  http_status INTEGER,
+  result TEXT NOT NULL,                -- manual | pdk | conflict | inconclusive | vin_missing | blocked | robots | error
+  evidence TEXT                        -- the wording found on the page
+);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A90JS175097-0c9cb512-de6a','WP0AC2A90JS175097','https://hbiauto.com/inventory--2018-porsche-911-gt3-WP0AC2A90JS175097.html','2026-11-14T15:06:05Z',200,'manual','6-Speed Manual');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A90JS175181-cb08fe0e-fe09','WP0AC2A90JS175181','https://www.lotusofdallas.com/2018/Porsche/911/WP0AC2A90JS175181/','2026-11-14T15:06:05Z',200,'conflict','7-Speed Porsche Doppelkupplung (PDK) / PDK 7-speed auto-shift manual / 6-Speed Manual with Overdrive');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A90JS175407-152ff6fe-2b2c','WP0AC2A90JS175407','https://rpexotics.com/inventory/2018-porsche-911-gt3-rp-8507','2026-11-14T15:06:05Z',200,'conflict','AUTO, 7-SPD PDK MANUAL');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A90JS175553-6b5c1108-c4f6','WP0AC2A90JS175553','https://www.quantumcarcompany.com/vehicle-details/2018-porsche-911-gt3-coupe-7582ab8605b044828a26ce754e311b77','2026-11-14T15:06:05Z',200,'inconclusive','is completely secure.');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A90JS176251-5a44c6c9-f483','WP0AC2A90JS176251','http://themarkmotors.com/vehicle-details/used-2018-porsche-911-gt3---carbon-ceramic-brakes---front-lift---color-change-ppf-boerne-tx-id-WP0AC2A90JS176251','2026-11-14T15:06:05Z',200,'inconclusive',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A90KS149164-d844d9a1-9655','WP0AC2A90KS149164','https://www.ilusso.com/used-vehicle-2019-porsche-911-gt3-c-6569/','2026-11-14T15:06:05Z',403,'blocked',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A91JS174685-00df80da-5a7c','WP0AC2A91JS174685','https://www.roadperformancemotors.com/product-page/2018-porsche-gt3','2026-11-14T15:06:05Z',200,'inconclusive',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A91JS176579-4babbe8d-b60e','WP0AC2A91JS176579','https://tacticalfleet.com/inventory/Used-2018-Porsche-911-GT3-WP0AC2A91JS176579','2026-11-14T15:06:05Z',200,'pdk','7-Speed Automatic Dual Clutch');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A91JS176887-77781052-7db1','WP0AC2A91JS176887','https://porsche.roimotors.com/used/Porsche/2018-Porsche-911-ad66789eac1853d3aaea978743125b32.htm','2026-11-14T15:06:05Z',-1,'robots',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A92JS174131-04b4fd53-6778','WP0AC2A92JS174131','https://www.parkplaceltd.com/used-Bellevue-2018-Porsche-911-GT3-WP0AC2A92JS174131','2026-11-14T15:06:05Z',200,'inconclusive','Automatic');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A92JS174629-385d4aa4-595b','WP0AC2A92JS174629','http://www.scottsdalesport.com/details-2018-porsche-911_gt3-white__2_490_miles__special_gt3_-used-wp0ac2a92js174629.html','2026-11-14T15:06:05Z',200,'pdk','PDK');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A92JS174789-f8b2dca3-cc76','WP0AC2A92JS174789','https://zweck.com/i-30523079','2026-11-14T15:06:05Z',200,'manual','Manual 6-Speed');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A92JS176171-6cd1d987-8940','WP0AC2A92JS176171','https://www.chicagomotorcars.com/2018-porsche-911-gt3-c-14133/','2026-11-14T15:06:05Z',200,'pdk','7-Speed Double Clutch');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A92KS149487-1f2a7c34-f659','WP0AC2A92KS149487','https://www.ilusso.com/used-vehicle-2019-porsche-911-gt3-c-6189/','2026-11-14T15:06:05Z',403,'blocked',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A93JS174753-337f60e7-6b8e','WP0AC2A93JS174753','https://www.kearnsmotorcar.com/vehicle/K10430-porsche-911','2026-11-14T15:06:05Z',200,'inconclusive','-Front Axle Lift System');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A93JS176826-a139a3fe-24c5','WP0AC2A93JS176826','http://www.scottsdalesport.com/details-2018-porsche-gt3_sonderwunsch-chalk__3_265_miles__special_wishes_-used-wp0ac2a93js176826.html','2026-11-14T15:06:05Z',200,'pdk','PDK');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A93JS176907-22a2b0e5-64b4','WP0AC2A93JS176907','http://www.scottsdalesport.com/details-2018-porsche-911_gt3-white__3_616_miles__special_gt3_-used-wp0ac2a93js176907.html','2026-11-14T15:06:05Z',200,'pdk','PDK');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A93KS149143-43112d3a-63ef','WP0AC2A93KS149143','https://www.3percentautogroup.com/Inventory/Details/1114ffa5-c430-4ae3-b748-1016103c732e','2026-11-14T15:06:05Z',0,'error','HTTP 500');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A94JS175524-d455db31-0b0d','WP0AC2A94JS175524','https://rpexotics.com/inventory/2018-porsche-911-gt3-rpa-3881','2026-11-14T15:06:05Z',200,'conflict','AUTO, 7-SPD PDK MANUAL');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A94JS176138-e39455f0-7778','WP0AC2A94JS176138','https://www.randycurnow.com/used/Porsche/2018-Porsche-911-b2bbebf1ac1850ce6cf4e5c1369f75f0.htm','2026-11-14T15:06:05Z',410,'error',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A95JS175323-8404b172-ce8a','WP0AC2A95JS175323','https://www.hiddenroadsproject.com/cars/2018-porsche-911-gt3-c032','2026-11-14T15:06:05Z',200,'manual','6-Speed Manual');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A95JS176424-6bc18881-3da2','WP0AC2A95JS176424','https://www.floridaperformancecars.com/vehicle-details/2018-porsche-911-gt3-coupe-3d3ab39394b644f58dc3dd3774c28ccf','2026-11-14T15:06:05Z',200,'manual','6 Speed Manual');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A95JS176746-bd0f4b3d-6d1c','WP0AC2A95JS176746','https://www.alpinemotorcollection.com/inventory/porsche/911/m01062/','2026-11-14T15:06:05Z',-1,'robots',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A95JS177184-c4a709e5-e1ef','WP0AC2A95JS177184','https://www.luxuryautocollection.com/inventory/used-2018-porsche-911-gt3-pdls-18-way-sport-seats-plus-bose-sound-rear-wheel-drive-coupe-wp0ac2a95js177184/','2026-11-14T15:06:05Z',-1,'robots',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A96JS176626-6af41540-5268','WP0AC2A96JS176626','https://www.clutchmotorsco.com/inventory/2018-porsche-911-js176626/','2026-11-14T15:06:05Z',200,'inconclusive','Automatic');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A97JS174223-b1acce3e-6f3a','WP0AC2A97JS174223','https://www.lasolasautohaus.com/used/Porsche/2018-Porsche-911-91d6837eac182c22af3c57ca229cde63.htm','2026-11-14T15:06:05Z',200,'pdk','7-Speed Porsche Doppelkupplung (PDK)');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A97JS174321-42c7a0ea-ff38','WP0AC2A97JS174321','https://jandsautohaus3.com/inventory/Used-2018-Porsche-911-GT3-WP0AC2A97JS174321','2026-11-14T15:06:05Z',200,'pdk','7-Speed Porsche Doppelkupplung (PDK)');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A97JS176439-863c41fe-9093','WP0AC2A97JS176439','https://www.tsgautohaus.com/2018-porsche-911-gt3','2026-11-14T15:06:05Z',200,'manual','6-Speed Manual');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A97JS176523-059d50da-7a8d','WP0AC2A97JS176523','https://www.ryanfriedmanmotorcars.com/inventory/2018-porsche-911-3656t','2026-11-14T15:06:05Z',200,'manual','6-Speed Manual');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A97KS149100-8827512b-8540','WP0AC2A97KS149100','https://cd-autosales.com/listing/2019-porsche-911-gt3/','2026-11-14T15:06:05Z',200,'pdk',', but for whip-crack shifts at lighting speed, the PDK, as this 2019 P');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A97KS149212-7466a7d4-9752','WP0AC2A97KS149212','https://www.papingarage.com/inventory/porsche/911/004/','2026-11-14T15:06:05Z',-1,'robots',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A98JS174313-5e8d3bfb-3a94','WP0AC2A98JS174313','https://brooklynautoonline.com/vdp/24203291/Used-2018-Porsche-911-GT3-for-sale-in-Staten-Island-NY-10310','2026-11-14T15:06:05Z',200,'manual','Manual');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A98JS176272-be8099ea-bd2e','WP0AC2A98JS176272','https://thespeedcollection.com/vehicle/used-2018-porsche-911-gt3-wp0ac2a98js176272/','2026-11-14T15:06:05Z',200,'inconclusive',', the GT3 delivers instantaneous shifts and relentless performance whi');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A98JS176398-cf2b469b-8660','WP0AC2A98JS176398','https://www.obzu.autos/inventory/porsche/911/PO-6398/','2026-11-14T15:06:05Z',-1,'robots',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A99JS174563-e78849a7-005c','WP0AC2A99JS174563','https://www.greenwoodautomotive.com/vehicle-details/used-2018-porsche-911-gt3-parker-co-id-62760179','2026-11-14T15:06:05Z',200,'pdk','7-SPEED PORSCHE DOPPELKUPPLUNG (PDK)');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A99JS175728-a7ee2b82-c3eb','WP0AC2A99JS175728','https://diplomatmotors.com/inventory/porsche/911/t175728/','2026-11-14T15:06:05Z',200,'inconclusive',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A99JS176037-07c50f23-5586','WP0AC2A99JS176037','https://mdk-global.com/2018-porsche-911-gt3-%7C-burbank,-california-%7C-mdk-international-los-angeles-california-91504/7082827','2026-11-14T15:06:05Z',200,'manual','6-SPEED MANUAL');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A99KS149258-edee0560-2df5','WP0AC2A99KS149258','https://www.floridaperformancecars.com/vehicle-details/2019-porsche-911-gt3-coupe-56cdc037f08949ad97d6ef1bf189111c','2026-11-14T15:06:05Z',200,'manual','6 Speed Manual');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A9XJS174748-4359b3bb-0698','WP0AC2A9XJS174748','https://www.paganibeverlyhills.com/used/Porsche/2018-Porsche-911-GT3-bbadb637ac1803b8152f6eddc54552b8.htm','2026-11-14T15:06:05Z',200,'inconclusive','Number of valves:');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A9XJS174815-b50d6ac1-f8b4','WP0AC2A9XJS174815','https://carsbayarea.com/listing/2018-porsche-911-gt3/','2026-11-14T15:06:05Z',200,'pdk','7-Speed PDK Automatic');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A9XJS176080-484b25fb-49a2','WP0AC2A9XJS176080','https://www.lacarguy.com/used/Porsche/2018-Porsche-911-79db3f39ac1853309337a7f1a4f2f952.htm','2026-11-14T15:06:05Z',200,'pdk','7-Speed Porsche Doppelkupplung (PDK)');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A95JS174723-b0739202-1069','WP0AC2A95JS174723','https://tacticalfleet.com/inventory/Used-2018-Porsche-911-GT3-WP0AC2A95JS174723','2026-11-14T15:06:05Z',200,'pdk','7-Speed Dual-Clutch');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A91JS174458-3cc1cc6f-c02f','WP0AC2A91JS174458','https://www.vegasautogallery.com/used-vehicle-2018-porsche-911-gt3-c-6141/','2026-11-14T15:06:05Z',403,'blocked',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A91JS175867-c6de8f5e-b5d1','WP0AC2A91JS175867','https://www.lotusnj.com/2018/Porsche/911/WP0AC2A91JS175867/','2026-11-14T15:06:05Z',200,'inconclusive','Automatic');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A92JS175974-c240c360-70e9','WP0AC2A92JS175974','https://www.lapinmotorco.com/used-vehicle-2018-porsche-911-gt3-c-865/','2026-11-14T15:06:05Z',403,'blocked',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A94JS174387-ac50ec59-57da','WP0AC2A94JS174387','https://www.floridaperformancecars.com/vehicle-details/2018-porsche-911-gt3-coupe-ce375f8d38a441a88b5d7013d4745643','2026-11-14T15:06:05Z',200,'manual','6 Speed Manual');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A94JS174843-e67b8132-044f','WP0AC2A94JS174843','https://www.grandprixmotorcars.com/used/Porsche/2018-Porsche-911-fa21e8d5ac18103212d9c852f5740955.htm','2026-11-14T15:06:05Z',0,'error','HTTP 429');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A94JS175121-36cb04b0-e1a8','WP0AC2A94JS175121','https://www.ryanfriedmanmotorcars.com/inventory/2018-porsche-911-3780','2026-11-14T15:06:05Z',200,'manual','6-Speed Manual');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A97JS176716-396c6188-36e1','WP0AC2A97JS176716','https://www.grandprixmotorcars.com/used/Porsche/2018-Porsche-911-7855c45cac183586ac64e56a8e6fc63f.htm','2026-11-14T15:06:05Z',0,'error','HTTP 429');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A97KS149114-19f3fd58-aa32','WP0AC2A97KS149114','https://www.grandprixmotorcars.com/used/Porsche/2019-Porsche-911-8cb9d6f1ac18253135a6da02657bae14.htm','2026-11-14T15:06:05Z',200,'manual','6-Speed Manual');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A90NS268904-12ba3f99-f397','WP0AC2A90NS268904','https://group1auto.cms.dealer.com/used/Porsche/2022-Porsche-911-5d93d70e0a0e087f612d9486c03df30c.htm','2026-11-14T15:06:05Z',-1,'robots',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A90NS269342-44747d0a-8052','WP0AC2A90NS269342','https://porsche.roimotors.com/certified/Porsche/2022-Porsche-911-b2fabc2cac1801b143f6bbc483877769.htm','2026-11-14T15:06:05Z',-1,'robots',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A91NS268684-8ee51099-8676','WP0AC2A91NS268684','https://www.papingarage.com/inventory/porsche/911/013/','2026-11-14T15:06:05Z',-1,'robots',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A91NS270063-902988d5-a2ea','WP0AC2A91NS270063','http://www.group1auto.com/inventory/certified-used-2022-porsche-911-gt3-rwd-2dr-car-wp0ac2a91ns270063/','2026-11-14T15:06:05Z',-1,'robots',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A91RS263734-09f63c17-295e','WP0AC2A91RS263734','https://www.southeastautoshowroom.com/2024-porsche-911-gt3-touring-sold-c-2086/','2026-11-14T15:06:05Z',200,'vin_missing',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A92NS268189-2cdf6784-cb67','WP0AC2A92NS268189','https://porsche.roimotors.com/used/Porsche/2022-Porsche-911-f4cde54eac185ff845e3b37251ba95bb.htm','2026-11-14T15:06:05Z',-1,'robots',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A92RS263161-a8e99d1d-814f','WP0AC2A92RS263161','https://www.stradamotorsports.com/used-vehicle-2024-porsche-911-gt3-c-493/','2026-11-14T15:06:05Z',403,'blocked',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A93NS268329-c039a7da-fe35','WP0AC2A93NS268329','https://www.exoticcarfactory.com/used-vehicle-2022-porsche-911-gt3-coupe-2d-c-424/','2026-11-14T15:06:05Z',403,'blocked',NULL);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A93NS268377-c8a0258b-b341','WP0AC2A93NS268377','https://www.chasemotorcarsca.com/Inventory/Details/adf33b1e-54d5-4325-a5e4-449414391d22','2026-11-14T15:06:05Z',0,'error','HTTP 500');
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A93NS268718-81004ba0-c535','WP0AC2A93NS268718','https://www.autoboom.com/used/Porsche/2022-Porsche-911-325883a2ac18265c5d7dcd3d06dfd5cb.htm','2026-11-14T15:06:05Z',0,'error','HTTP 429');
 CREATE TABLE photos (
   id INTEGER PRIMARY KEY,
   listing_id INTEGER NOT NULL REFERENCES listings(id),
@@ -91073,7 +91155,7 @@ INSERT INTO "vehicles" VALUES('WP0AC2A92TS288505','WP0AC2A92TS288505','gt3','992
 INSERT INTO "vehicles" VALUES('WP0AC2A9XJS174331','WP0AC2A9XJS174331','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',82.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A91JS177022','WP0AC2A91JS177022','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',94.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A97JS176716','WP0AC2A97JS176716','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',64.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A97KS149114','WP0AC2A97KS149114','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',69.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A97KS149114','WP0AC2A97KS149114','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',72.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A98JS176000','WP0AC2A98JS176000','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',90.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A96JS175511','WP0AC2A96JS175511','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',92.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A90JS176623','WP0AC2A90JS176623','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',91.0,NULL);
@@ -91085,7 +91167,7 @@ INSERT INTO "vehicles" VALUES('WP0AC2A90JS176251','WP0AC2A90JS176251','gt3','991
 INSERT INTO "vehicles" VALUES('WP0AC2A90JS175181','WP0AC2A90JS175181','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',76.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A91JS175013','WP0AC2A91JS175013','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',83.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A92JS176882','WP0AC2A92JS176882','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',92.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A92JS176171','WP0AC2A92JS176171','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',58.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A92JS176171','WP0AC2A92JS176171','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',59.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A96JS176626','WP0AC2A96JS176626','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A94JS175121','WP0AC2A94JS175121','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',72.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A92JS174131','WP0AC2A92JS174131','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',61.0,NULL);
@@ -91100,10 +91182,10 @@ INSERT INTO "vehicles" VALUES('WP0AC2A99JS175549','WP0AC2A99JS175549','gt3','991
 INSERT INTO "vehicles" VALUES('WP0AC2A94JS176138','WP0AC2A94JS176138','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',67.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A91JS174458','WP0AC2A91JS174458','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',68.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A98JS176157','WP0AC2A98JS176157','gt3_touring','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',64.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A97JS176523','WP0AC2A97JS176523','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A90JS175097','WP0AC2A90JS175097','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',57.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A97JS176523','WP0AC2A97JS176523','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',72.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A90JS175097','WP0AC2A90JS175097','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',60.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A95JS175323','WP0AC2A95JS175323','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',73.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A95JS176424','WP0AC2A95JS176424','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A95JS176424','WP0AC2A95JS176424','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',72.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A98JS175123','WP0AC2A98JS175123','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',92.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A96JS175539','WP0AC2A96JS175539','gt3_touring','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',63.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A9XJS176676','WP0AC2A9XJS176676','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','lead',87.0,NULL);
@@ -91113,50 +91195,50 @@ INSERT INTO "vehicles" VALUES('WP0AC2A92JS176865','WP0AC2A92JS176865','gt3','991
 INSERT INTO "vehicles" VALUES('WP0AC2A94JS177029','WP0AC2A94JS177029','gt3_touring','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',72.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A99JS175728','WP0AC2A99JS175728','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',58.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A90KS149164','WP0AC2A90KS149164','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A99JS174563','WP0AC2A99JS174563','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',71.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A97JS174321','WP0AC2A97JS174321','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',57.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A99JS174563','WP0AC2A99JS174563','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',72.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A97JS174321','WP0AC2A97JS174321','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',58.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A94JS174843','WP0AC2A94JS174843','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',70.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A98JS174313','WP0AC2A98JS174313','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A98JS174313','WP0AC2A98JS174313','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',72.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A98JS175378','WP0AC2A98JS175378','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',80.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A96JS177145','WP0AC2A96JS177145','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',91.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A90KS149391','WP0AC2A90KS149391','gt3_touring','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','near_miss',64.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A99JS176328','WP0AC2A99JS176328','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',73.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A92KS149134','WP0AC2A92KS149134','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',73.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A97JS174223','WP0AC2A97JS174223','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',61.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A99JS176037','WP0AC2A99JS176037','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A91JS176579','WP0AC2A91JS176579','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',76.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A97JS176439','WP0AC2A97JS176439','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',58.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A97JS174223','WP0AC2A97JS174223','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',62.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A99JS176037','WP0AC2A99JS176037','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',72.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A91JS176579','WP0AC2A91JS176579','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',77.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A97JS176439','WP0AC2A97JS176439','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',61.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A97JS176473','WP0AC2A97JS176473','gt3_touring','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',61.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A90KS149214','WP0AC2A90KS149214','gt3_touring','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',61.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A98KS149199','WP0AC2A98KS149199','gt3_touring','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',61.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A98KS149395','WP0AC2A98KS149395','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',89.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A92JS174629','WP0AC2A92JS174629','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A93JS176907','WP0AC2A93JS176907','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A92JS174629','WP0AC2A92JS174629','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',70.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A93JS176907','WP0AC2A93JS176907','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',70.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A90JS176993','WP0AC2A90JS176993','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',92.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A98KS149168','WP0AC2A98KS149168','gt3_touring','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',67.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A99KS149258','WP0AC2A99KS149258','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',61.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A99KS149258','WP0AC2A99KS149258','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',64.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A99JS176295','WP0AC2A99JS176295','gt3_touring','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',69.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A99JS176331','WP0AC2A99JS176331','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',90.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A92JS174789','WP0AC2A92JS174789','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',64.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A92JS174789','WP0AC2A92JS174789','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',67.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A95JS177184','WP0AC2A95JS177184','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A97KS149176','WP0AC2A97KS149176','gt3_touring','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',64.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A95JS174723','WP0AC2A95JS174723','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','near_miss',69.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A95JS174723','WP0AC2A95JS174723','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',70.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A90JS175407','WP0AC2A90JS175407','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',71.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A98JS175686','WP0AC2A98JS175686','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',71.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A99JS174871','WP0AC2A99JS174871','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',87.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A92JS175974','WP0AC2A92JS175974','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',69.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A94JS174387','WP0AC2A94JS174387','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',69.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A94JS174387','WP0AC2A94JS174387','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',72.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A94KS149149','WP0AC2A94KS149149','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T15:02:29Z',1,'active','2026-11-14T04:13:31Z','excluded',80.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A9XJS176080','WP0AC2A9XJS176080','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A9XJS176080','WP0AC2A9XJS176080','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',70.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A95JS175970','WP0AC2A95JS175970','gt3_touring','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',64.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A91JS174685','WP0AC2A91JS174685','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',47.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A95JS176746','WP0AC2A95JS176746','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',73.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A97KS149100','WP0AC2A97KS149100','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',65.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A97KS149100','WP0AC2A97KS149100','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',66.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A94JS175524','WP0AC2A94JS175524','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',71.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A9XJS174815','WP0AC2A9XJS174815','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',65.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A9XJS174815','WP0AC2A9XJS174815','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',66.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A91JS174816','WP0AC2A91JS174816','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',72.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A93KS149143','WP0AC2A93KS149143','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
-INSERT INTO "vehicles" VALUES('WP0AC2A93JS176826','WP0AC2A93JS176826','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
+INSERT INTO "vehicles" VALUES('WP0AC2A93JS176826','WP0AC2A93JS176826','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','excluded',70.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A92KS149487','WP0AC2A92KS149487','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',64.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A9XJS174748','WP0AC2A9XJS174748','gt3','991.2',2018,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
 INSERT INTO "vehicles" VALUES('WP0AC2A97KS149212','WP0AC2A97KS149212','gt3','991.2',2019,'2026-11-14T04:13:31Z','2026-11-14T04:13:31Z',1,'active','2026-11-14T04:13:31Z','lead',69.0,NULL);
