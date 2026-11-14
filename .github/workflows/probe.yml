@@ -14,7 +14,11 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python -m pgt probe "${{ github.event.inputs.url }}" --save page.html | tee parsed.json
+      - run: |
+          curl -s https://api.ipify.org || true; echo " <- runner egress IP"
+          python -m pgt probe "https://finder.porsche.com/sitemap.xml" || true
+          python -m pgt probe "https://finder.porsche.com/us/en-US/sitemap-dealer/9817/sitemap.xml" || true
+          python -m pgt probe "${{ github.event.inputs.url }}" --save page.html | tee parsed.json
       - uses: actions/upload-artifact@v4
         with:
           name: probe

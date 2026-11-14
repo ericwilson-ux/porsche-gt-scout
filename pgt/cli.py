@@ -105,11 +105,15 @@ def cmd_export(args) -> int:
 
 def cmd_probe(args) -> int:
     """Fetch and parse one Porsche Finder listing URL; prints the normalised record."""
-    f = Fetcher()
+    f = Fetcher(max_retries=1)
+    print(f"robots.txt allows this URL for our user agent: {f.allowed(args.url)}")
     r = f.get(args.url)
     if not r.ok:
-        print(f"HTTP {r.status} {r.error or ''}", file=sys.stderr)
+        print(f"HTTP {r.status} {r.error or ''} headers={r.headers} body={r.text[:300]!r}")
         return 1
+    if "/details/" not in args.url:
+        print(f"HTTP 200, {len(r.text)} bytes; starts: {r.text[:200]!r}")
+        return 0
     if args.save:
         Path(args.save).write_text(r.text, encoding="utf-8")
     lst = porsche_finder.parse_detail(r.text, args.url)

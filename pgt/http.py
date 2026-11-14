@@ -20,6 +20,7 @@ class Response:
     status: int            # 0 = network failure, -1 = blocked by robots.txt
     text: str = ""
     error: str | None = None
+    headers: dict | None = None
 
     @property
     def ok(self) -> bool:
@@ -75,7 +76,7 @@ class Fetcher:
         if check_robots and not self.allowed(url):
             return Response(url, -1, error="disallowed by robots.txt")
         host = urlparse(url).netloc
-        last_err = None
+        last_err, last_headers, last_body = None, None, ""
         for attempt in range(self.max_retries + 1):
             self._wait(host)
             self.requests += 1
@@ -89,9 +90,13 @@ class Fetcher:
             if r.status_code in (429, 500, 502, 503, 504):
                 self.errors += 1
                 last_err = f"HTTP {r.status_code}"
+                last_headers = {k.lower(): v for k, v in r.headers.items()
+                                if k.lower() in ("server", "retry-after", "via", "x-cache", "cf-ray", "x-amz-cf-id",
+                                                 "x-amzn-waf-action", "content-type", "x-datadome", "akamai-grn")}
+                last_body = r.text[:300]
                 retry_after = r.headers.get("Retry-After", "")
                 wait = float(retry_after) if retry_after.isdigit() else min(60, 3 * 2 ** attempt)
                 time.sleep(wait)
                 continue
             return Response(url, r.status_code, r.text if r.status_code == 200 else r.text[:2000])
-        return Response(url, 0, error=last_err or "failed")
+        return Response(url, 0, last_body, error=last_err or "failed", headers=last_headers)
