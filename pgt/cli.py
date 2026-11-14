@@ -219,7 +219,7 @@ def _pagecheck(con, cfg, limit: int | None = None) -> dict:
     f = Fetcher(min_interval=float(pc.get("min_interval_seconds", 2.0)), timeout=20.0, max_retries=0)
     out = pagecheck.run(con, cfg, f, limit=limit)
     D.set_meta(con, "last_pagecheck_summary", json.dumps(out))
-    if out.get("settled"):
+    if out.get("checked"):
         out["rebuild"] = ingest.rebuild_vehicles(con, cfg, D.now_iso())
     return out
 

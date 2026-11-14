@@ -21,6 +21,7 @@ class Response:
     text: str = ""
     error: str | None = None
     headers: dict | None = None
+    final_url: str | None = None       # after redirects
 
     @property
     def ok(self) -> bool:
@@ -98,5 +99,5 @@ class Fetcher:
                 wait = float(retry_after) if retry_after.isdigit() else min(60, 3 * 2 ** attempt)
                 time.sleep(wait)
                 continue
-            return Response(url, r.status_code, r.text if r.status_code == 200 else r.text[:2000])
+            return Response(url, r.status_code, r.text if r.status_code == 200 else r.text[:2000], final_url=r.url)
         return Response(url, 0, last_body, error=last_err or "failed", headers=last_headers)

@@ -288,3 +288,5 @@ details.tbl summary { cursor: pointer; font-weight: 600; padding: 8px 0; font-si
   .thumbs button { flex-basis: 72px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+
+.price.none { font-size: 16px; color: var(--ink-3); }

@@ -109,7 +109,9 @@ def normalise(raw: dict, scope: str) -> Listing | None:
     lst.origin_site = raw.get("source")
     lst.extra.update({"model_code": raw.get("model_code"), "msrp": raw.get("msrp"), "dom": raw.get("dom"),
                  "dom_180": raw.get("dom_180"), "price_change_percent": raw.get("price_change_percent"),
-                 "data_source": raw.get("data_source"), "ref_price_dt": raw.get("ref_price_dt")})
+                 "data_source": raw.get("data_source"), "ref_price_dt": raw.get("ref_price_dt"),
+                 "feed_last_seen": raw.get("last_seen_at_date"), "feed_status": raw.get("vehicle_status"),
+                 "in_transit": raw.get("in_transit")})
     return lst
 
 

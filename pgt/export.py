@@ -70,6 +70,8 @@ def card(m: dict, now: datetime) -> dict:
     return {
         "key": m["key"], "vin": m.get("vin"), "variant": m.get("variant"), "label": m.get("variant_label"),
         "gen": m.get("generation"), "year": m.get("year"), "price": m.get("price"),
+        "psrc": ("page" if m.get("price_source") == "dealer's listing page" else "last" if (m.get("price_source") or "").endswith("last advertised") else None),
+        "por": bool(m.get("price_on_request")), "pnote": m.get("price_note"), "snote": m.get("status_note"), "pend": bool(m.get("sale_pending_note")),
         "price0": m.get("original_price"), "dprice": m.get("price_change_total"), "lpc": lpc, "drop": recent_drop,
         "miles": m.get("mileage"), "ext": m.get("exterior_color"), "extf": m.get("exterior_family"),
         "hex": m.get("exterior_hex"), "int": m.get("interior_color"), "intf": m.get("interior_family"),
@@ -188,7 +190,10 @@ def export(con, cfg: dict, out: Path, state: Path | None = None) -> dict:
         coverage[0].update({"state": "covered by browser capture", "note": FINDER_BROWSER_NOTE,
                             "captured_at": json.loads(fin["detail"]).get("captured_at"), "listings": fin["listings_seen"]})
     pages = {r["result"]: r["c"] for r in con.execute("SELECT result, COUNT(*) c FROM page_checks GROUP BY result")}
-    health = {"generated_at": D.now_iso(), "runs": runs, "decodes": dec, "page_checks": pages,
+    page_avail = {r["avail"] or "could not tell": r["c"] for r in con.execute("SELECT avail, COUNT(*) c FROM page_checks GROUP BY avail")}
+    page_last = json.loads(D.get_meta(con, "last_pagecheck_summary") or "null")
+    health = {"generated_at": D.now_iso(), "runs": runs, "decodes": dec, "page_checks": pages, "page_avail": page_avail, "page_last": page_last,
+              "no_price": sum(1 for c in listed if c["price"] is None), "price_from_page": sum(1 for c in listed if c["psrc"] == "page"),
               "gearbox_unknown": sum(1 for c in listed if not c["trans"]),
               "decode_last": json.loads(D.get_meta(con, "last_decode_summary", "null")),
               "api_calls": {r["key"].split(":", 1)[1]: int(r["value"]) for r in con.execute("SELECT * FROM meta WHERE key LIKE 'mc_calls:%'")},

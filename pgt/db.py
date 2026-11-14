@@ -178,7 +178,11 @@ CREATE TABLE IF NOT EXISTS page_checks (
   checked_at TEXT NOT NULL,
   http_status INTEGER,
   result TEXT NOT NULL,                -- manual | pdk | conflict | inconclusive | vin_missing | blocked | robots | error
-  evidence TEXT                        -- the wording found on the page
+  evidence TEXT,                       -- the wording found on the page
+  data TEXT,                           -- JSON: price, equipment, gearbox and availability read from the page
+  avail TEXT,                          -- ok | pending | sold | gone (404/410/redirect); NULL = could not tell
+  avail_first TEXT,                    -- when the current sold/gone state was first seen
+  avail_count INTEGER DEFAULT 0        -- distinct days it has been seen
 );
 
 CREATE TABLE IF NOT EXISTS vin_decodes (
@@ -205,6 +209,10 @@ def connect(path: str | Path) -> sqlite3.Connection:
     con.executescript(SCHEMA)
     if "email" not in {r["name"] for r in con.execute("PRAGMA table_info(sellers)")}:     # added 2026-11-14
         con.execute("ALTER TABLE sellers ADD COLUMN email TEXT")
+    have = {r[1] for r in con.execute("PRAGMA table_info(page_checks)")}
+    for col, kind in (("data", "TEXT"), ("avail", "TEXT"), ("avail_first", "TEXT"), ("avail_count", "INTEGER DEFAULT 0")):
+        if col not in have:
+            con.execute(f"ALTER TABLE page_checks ADD COLUMN {col} {kind}")
     con.execute("INSERT OR IGNORE INTO meta(key, value) VALUES('schema_version', ?)", (str(SCHEMA_VERSION),))
     con.commit()
     return con

@@ -93,6 +93,7 @@ site_url = ""                        # filled from SITE_URL env at run time
 explicit_gone_checks_to_remove = 2   # separate runs where the source says "gone" (404 / delisted)
 silent_misses_to_remove = 3          # separate successful runs where the listing was simply absent
 min_hours_before_removed = 36
+feed_stale_days = 10                 # the feed returns a listing it has not itself re-read for this long: availability unconfirmed
 stale_after_days = 3                 # a listing whose source was last read longer ago shows as "availability unconfirmed"
 
 # ---- Photos --------------------------------------------------------------------
@@ -112,8 +113,9 @@ sweep_calls_per_day = 20       # held back for each remaining day's inventory sw
 min_hours_between_sweeps = 16        # a second run the same day skips the paid feed sweep
 retry_failed_after_days = 30
 
-[page_checks]                        # read the gearbox from the dealer's own listing page when no trusted source states it
+[page_checks]                        # read each dealer's own listing page: gearbox, price, equipment, still for sale?
 enabled = true
-max_per_run = 60                     # one request per listing; 991.2s and cars still in contention go first
-retry_after_days = 14                # a page that was blocked or said nothing is not asked again sooner
+max_per_run = 150                    # one request per listing; cars missing a price or a gearbox go first
+recheck_days = 7                     # every listing outside Porsche Finder is re-read this often to see it is still for sale
+retry_after_days = 14                # a page that refused us is not asked again sooner
 min_interval_seconds = 2.0           # per-host spacing

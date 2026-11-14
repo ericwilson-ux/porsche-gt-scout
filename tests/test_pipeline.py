@@ -974,7 +974,7 @@ def _page(body, title="2018 Porsche 911 GT3 | Example Motors", ld=None):
 
 def test_dealer_page_reading_only_trusts_specific_wording():
     r = pagecheck.read_page(_page("<dl><dt>Transmission</dt><dd>6-Speed Manual</dd></dl>"), VIN_P)
-    assert r == {"result": "manual", "evidence": "6-Speed Manual"}
+    assert (r["result"], r["evidence"], r["data"]["avail"]) == ("manual", "6-Speed Manual", "ok")
     assert pagecheck.read_page(_page("<li>Transmission: 7-Speed Porsche Doppelkupplung (PDK)</li>"), VIN_P)["result"] == "pdk"
     # a bare "Automatic" is the feed's own default and proves nothing
     assert pagecheck.read_page(_page("<span>Transmission</span><span>Automatic</span>"), VIN_P)["result"] == "inconclusive"
@@ -1027,7 +1027,88 @@ def test_page_reading_settles_an_unknown_gearbox_and_is_not_repeated(con, cfg):
     # nothing is asked again inside the retry window; the blocked page is retried after it
     assert pagecheck.run(con, cfg, f, now=ts(2))["checked"] == 0
     later = (datetime.fromisoformat(T0.replace("Z", "+00:00")) + timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    assert pagecheck.run(con, cfg, f, now=later)["checked"] == 1
+    assert pagecheck.run(con, cfg, f, now=later)["checked"] == 3      # weekly "still for sale" re-read, plus the retry
+    assert merged(con, VIN_P)["transmission"] == "manual"
+
+
+def test_dealer_page_gives_price_equipment_and_sold_status():
+    ld = {"@type": "Car", "vehicleIdentificationNumber": VIN_P, "offers": {"price": "239994", "availability": "https://schema.org/InStock"}}
+    r = pagecheck.read_page(_page("<p>Front Axle Lift System, PCCB, Full Bucket Seats</p><p>Payments from $2,999/mo</p>", ld=ld), VIN_P)
+    assert r["data"]["price"] == 239994 and r["data"]["avail"] == "ok"
+    assert (r["data"]["lift"], r["data"]["pccb"], r["data"]["seats"]) == (True, True, "bucket")
+    # a labelled asking price beats MSRP and payment figures; other cars' prices make a bare figure ambiguous
+    r = pagecheck.read_page(_page("<div>Original MSRP: $189,500</div><div>Our Price</div><div>$214,800</div><div>$3,100 per month</div>"), VIN_P)
+    assert r["data"]["price"] == 214800 and "Our Price" in r["data"]["price_evidence"]
+    r = pagecheck.read_page(_page("<b>$214,800</b><h3>Similar vehicles</h3><b>$199,000</b><b>$251,000</b>"), VIN_P)
+    assert "price" not in r["data"]
+    assert pagecheck.read_page(_page("<b>$214,800</b>"), VIN_P)["data"]["price"] == 214800
+    assert pagecheck.read_page(_page("<p>Call for price</p>"), VIN_P)["data"]["price_on_request"] is True
+    # sold: a headline, structured data or an explicit sentence; never the word in passing
+    assert pagecheck.read_page(_page("", title="SOLD - 2018 Porsche 911 GT3"), VIN_P)["data"]["avail"] == "sold"
+    gone = {"@type": "Car", "vehicleIdentificationNumber": VIN_P, "offers": {"price": "1", "availability": "https://schema.org/SoldOut"}}
+    assert pagecheck.read_page(_page("", ld=gone), VIN_P)["data"]["avail"] == "sold"
+    assert pagecheck.read_page(_page("<p>This vehicle has been sold. View similar cars.</p>"), VIN_P)["data"]["avail"] == "sold"
+    assert pagecheck.read_page(_page("<p>Originally sold new in Texas. We have sold hundreds of GT cars.</p>",
+                                     title="Used 2018 Porsche 911 GT3 sold in Dallas TX"), VIN_P)["data"]["avail"] == "ok"
+    assert pagecheck.read_page(_page("<p>Sale pending</p>"), VIN_P)["data"]["avail"] == "pending"
+
+
+def test_page_price_fills_a_missing_price_and_a_sold_or_missing_page_retires_the_car(con, cfg):
+    def feed(i, vin, price=None, **extra):
+        raw = {**MC_RAW, "id": f"pp{i}", "vin": vin, "heading": "2018 Porsche 911 GT3", "price": price, "miles": 12000,
+               "vdp_url": f"https://dealer{i}.example/car/{i}", "build": {"year": 2018, "trim": "GT3", "transmission": "Manual"},
+               "ref_price": None, "msrp": None, **extra}
+        return mc.normalise(raw, "us-used:2018-2019")
+    vins = [VIN_P, "WP0AC2A92JS175859", "WP0AC2A9XJS176676", "WP0AC2A9XKS149267"]
+    def sweep(now):
+        ls = [feed(1, vins[0]), feed(2, vins[1], 230000), feed(3, vins[2], 235000), feed(4, vins[3], 240000)]
+        return ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=ls, scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=now)
+    sweep(T0)
+    assert merged(con, vins[0])["price"] is None and "No price" in merged(con, vins[0])["price_note"]
+    pages = {"https://dealer1.example/car/1": (200, _page("<div>Internet Price</div><div>$239,994</div><li>Front Axle Lift</li>")),
+             "https://dealer2.example/car/2": (200, _page("", title="SOLD 2018 Porsche 911 GT3").replace(VIN_P, vins[1])),
+             "https://dealer3.example/car/3": (404, ""),
+             "https://dealer4.example/car/4": (200, _page("<dt>Transmission</dt><dd>6-Speed Manual</dd>").replace(VIN_P, vins[3]))}
+    f = _FakeFetcher(pages)
+    out = pagecheck.run(con, cfg, f, now=ts(1))
+    assert (out["prices_found"], out["sold"], out["gone"]) == (1, 1, 1)
+    ingest.rebuild_vehicles(con, cfg, ts(1), today=datetime.fromisoformat(ts(1).replace("Z", "+00:00")).date())
+    m = merged(con, vins[0])
+    assert m["price"] == 239994 and m["price_source"] == "dealer's listing page" and "dealer's own page" in m["price_note"]
+    assert m["equipment"]["lift"]["status"] == "seller_stated" and m["equipment"]["lift"]["source"] == "dealer's listing page"
+    assert {c["key"]: c["status"] for c in m["eligibility"]["checks"]}["price"] == "pass"
+    sold = merged(con, vins[1])
+    assert sold["status"] == "removed" and "sold" in sold["status_note"]
+    assert merged(con, vins[2])["status"] == "unverified" and "re-checked" in merged(con, vins[2])["status_note"]
+    assert merged(con, vins[3])["status"] == "active"
+    # the feed keeps returning both cars; the dealer's page still outranks it, and a second missing day retires the 404
+    sweep(ts(2))
+    assert merged(con, vins[1])["status"] == "removed"
+    assert pagecheck.run(con, cfg, f, now=ts(2))["checked"] == 1
+    ingest.rebuild_vehicles(con, cfg, ts(2), today=datetime.fromisoformat(ts(2).replace("Z", "+00:00")).date())
+    gone = merged(con, vins[2])
+    assert gone["status"] == "removed" and "two days" in gone["status_note"]
+    assert con.execute("SELECT status FROM vehicles WHERE key=?", (gone["key"],)).fetchone()[0] == "removed"
+    # a page that comes back (or was only refused) does not lose the price it gave earlier
+    f.pages["https://dealer1.example/car/1"] = (403, "")
+    later = (datetime.fromisoformat(T0.replace("Z", "+00:00")) + timedelta(days=9)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    pagecheck.run(con, cfg, f, now=later)
+    ingest.rebuild_vehicles(con, cfg, later, today=datetime.fromisoformat(ts(2).replace("Z", "+00:00")).date())
+    assert merged(con, vins[0])["price"] == 239994
+
+
+def test_feed_listing_it_has_not_reread_for_long_is_unconfirmed(con, cfg):
+    raw = {**MC_RAW, "id": "st1", "vin": VIN_P, "heading": "2018 Porsche 911 GT3", "price": 230000, "miles": 12000,
+           "build": {"year": 2018, "trim": "GT3", "transmission": "Manual"}, "ref_price": None,
+           "last_seen_at_date": "2026-10-20T08:00:00.000Z", "vehicle_status": "Available"}
+    ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=[mc.normalise(raw, "us-used:2018-2019")],
+                                                   scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=T0)
+    m = merged(con, VIN_P)
+    assert m["status"] == "unverified" and "2026-10-20" in m["status_note"]
+    fresh = {**raw, "last_seen_at_date": T0}
+    ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=[mc.normalise(fresh, "us-used:2018-2019")],
+                                                   scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=ts(1))
+    assert merged(con, VIN_P)["status"] == "active"
 
 
 def test_browser_capture_script_matches_its_fingerprint_and_parses_a_real_page():

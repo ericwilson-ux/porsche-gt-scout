@@ -265,9 +265,10 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
             break
         m["transmission_note"] = m["transmission_note"] or note
     # The dealer's own page outranks the feed's label (never Porsche's data, and never a model-wide rule).
+    pages = pagecheck.readings(con, [f"{l['_row']['source']}:{l['_row']['source_listing_id']}" for l in ls])
     feed_only = (m["transmission_note"] or "").startswith("Per the dealer feed only")
     if not m["transmission"] or feed_only:
-        page = pagecheck.stated_for(con, [f"{l['_row']['source']}:{l['_row']['source_listing_id']}" for l in live])
+        page = pagecheck.gearbox_from(pages)
         if page and feed_only and page["result"] != m["transmission"]:
             m["transmission"], m["transmission_note"] = None, (
                 f"The dealer feed says manual but the dealer's page reads \u201c{page['evidence']}\u201d; confirm with the seller")
@@ -297,6 +298,24 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
     m["dealer_fees_listed"] = priced.get("dealer_fees_listed") if priced else None
     m["fee_items"] = priced.get("fee_items") if priced else []
     m["price_source"] = SOURCE_LABEL.get(priced["source"], priced["source"]) if priced else None
+    m["price_note"], m["price_on_request"] = None, False
+    if not priced:
+        # No source carries a price: use what the dealer's own page shows, else the feed's last advertised figure.
+        page_priced = sorted((r for r in pages.values() if r["data"].get("price")), key=lambda r: r["checked_at"], reverse=True)
+        prev = next((l for l in live if l.get("source_previous_price")), None)
+        if page_priced:
+            r = page_priced[0]
+            m["price"] = int(r["data"]["price"]) if float(r["data"]["price"]).is_integer() else r["data"]["price"]
+            m["price_source"] = "dealer's listing page"
+            m["price_note"] = f"Read from the dealer's own page on {r['checked_at'][:10]} ({r['data'].get('price_evidence') or 'page'}); the feed carries no price"
+        elif prev:
+            m["price"] = prev["source_previous_price"]
+            m["price_source"] = "dealer feed, last advertised"
+            m["price_note"] = "The feed no longer carries a price; this is the last figure it advertised. Confirm with the seller"
+        else:
+            m["price_on_request"] = any(r["data"].get("price_on_request") for r in pages.values())
+            m["price_note"] = ("The dealer's page says the price is on request" if m["price_on_request"]
+                               else "No price in the feed or on the dealer's page")
 
     # seller: from the best listing's seller row
     r0 = live[0]["_row"]
@@ -400,6 +419,17 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
                                  if text_sig["mentions_weissach"] else {"status": "unknown", "value": None})
         equipment["seats"] = {"status": "unknown", "value": None}
         equipment["pccb"] = {"status": "unknown", "value": None}
+        # what the dealer's own page names: a statement to verify, like any seller description
+        said = {k: next((r["data"][k] for r in pages.values() if r["data"].get(k)), None) for k in ("lift", "weissach", "seats", "pccb")}
+        page_src = {"source": "dealer's listing page", "detail": "Named on the dealer's own listing page; no factory option list to confirm"}
+        if said["lift"] and equipment["lift"]["status"] == "unknown":
+            equipment["lift"] = {"status": "seller_stated", "value": True, **page_src}
+        if said["weissach"] and equipment["weissach"]["status"] == "unknown" and m["variant"] in ("gt4rs", "spyder_rs"):
+            equipment["weissach"] = {"status": "seller_stated", "value": True, **page_src}
+        if said["seats"]:
+            equipment["seats"] = {"status": "seller_stated", "value": said["seats"], **page_src}
+        if said["pccb"]:
+            equipment["pccb"] = {"status": "seller_stated", "value": True, **page_src}
         m["options"], m["standard_equipment"], m["highlights"] = [], [], []
     m["equipment"] = equipment
 
@@ -541,19 +571,42 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
     # -- vehicle status from listing statuses
     # A listing whose source has not been re-read for several days no longer proves the car is for sale
     # (a browser capture is not refreshed by the daily cloud run), so it counts as unverified, not active.
-    limit = int((cfg.get("lifecycle") or {}).get("stale_after_days", 3))
-    statuses, stale_src = set(), None
+    lc = cfg.get("lifecycle") or {}
+    limit, feed_limit = int(lc.get("stale_after_days", 3)), int(lc.get("feed_stale_days", 10))
+    statuses, notes = set(), {}
     for l in ls:
         st = l["_row"]["status"]
+        page = pages.get(f"{l['_row']['source']}:{l['_row']['source_listing_id']}")
+        if st != "removed" and page and page["avail"] in ("sold", "gone"):
+            # The dealer's own page outranks a feed that keeps returning the listing.
+            ev, day = page["data"].get("avail_evidence") or "", (page["avail_first"] or page["checked_at"])[:10]
+            if page["avail"] == "sold":
+                st = "removed"
+                notes["removed"] = f"The dealer's page showed this car as sold on {day} (\u201c{ev}\u201d)"
+            elif (page["avail_count"] or 0) >= 2:
+                st = "removed"
+                notes["removed"] = f"The dealer's page for this car has been gone since {day} ({ev}); checked on two days"
+            else:
+                st = "unverified"
+                notes["unverified"] = f"The dealer's page for this car was missing on {day} ({ev}); it is being re-checked"
         if st == "active":
             seen = D.get_meta(con, f"last_success:{l['source']}")
+            feed_seen = (l.get("extra") or {}).get("feed_last_seen")
             if seen and (today - _parse_ts(seen).date()).days > limit:
-                st, stale_src = "unverified", (l["source"], seen)
+                st = "unverified"
+                notes["unverified"] = (f"Last read from {SOURCE_LABEL.get(l['source'], l['source'])} on {seen[:10]} and not "
+                                       "re-checked since. Confirm with the seller that it is still available")
+            elif feed_seen and (date.fromisoformat(l["_row"]["last_seen"][:10]) - date.fromisoformat(str(feed_seen)[:10])).days > feed_limit:
+                # the feed still returns the listing but has not itself re-read the dealer's site for a long time
+                st = "unverified"
+                notes["unverified"] = (f"The dealer feed last saw this listing on the dealer's site on {feed_seen[:10]} "
+                                       "and has only repeated it since. Confirm with the seller that it is still available")
         statuses.add(st)
     m["status"] = "active" if "active" in statuses else "unverified" if "unverified" in statuses else "removed"
-    m["status_note"] = (f"Last read from {SOURCE_LABEL.get(stale_src[0], stale_src[0])} on {stale_src[1][:10]} and not "
-                        "re-checked since. Confirm with the seller that it is still available."
-                        if stale_src and m["status"] == "unverified" else None)
+    m["status_note"] = notes.get(m["status"])
+    pend = next((r for r in pages.values() if r["avail"] == "pending"), None)
+    m["sale_pending_note"] = (f"The dealer's page mentions a pending sale or deposit (\u201c{pend['data'].get('avail_evidence', '')}\u201d, "
+                              f"read {pend['checked_at'][:10]})" if pend and m["status"] != "removed" else None)
     return m
 
 
