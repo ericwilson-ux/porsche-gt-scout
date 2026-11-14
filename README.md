@@ -8,21 +8,22 @@ conditional daily email for four cars: 992 GT3, 992 GT3 Touring, 718 Cayman GT4 
 ```
 GitHub Actions (daily 10:23 UTC)
   ├─ python -m pgt run
-  │    ├─ Porsche Finder: sitemap index → ~230 US dealer sitemaps → target listing pages
-  │    ├─ MarketCheck API: used GT3 / GT4 RS / Spyder RS dealer listings (needs MARKETCHECK_API_KEY)
+  │    ├─ MarketCheck API: used GT3 / GT4 RS / Spyder RS dealer listings (MARKETCHECK_API_KEY)
+  │    ├─ Porsche Finder adapter: built, but the site blocks cloud runners (docs/SOURCES.md)
   │    ├─ upsert → price observations → conservative lifecycle → merge by VIN
   │    ├─ eligibility (hard requirements) · preference score · Texas out-the-door · valuation
   │    ├─ queue the day's digest if a new qualifying car appeared
   │    └─ export JSON + copy site/ → _site/
-  ├─ commit state/ (SQLite database, digests, optional photo copies) to the `state` branch
-  └─ deploy _site/ to GitHub Pages
+  ├─ commit state/ (database as a SQL text dump, digests, optional photo copies) to the `state` branch
+  ├─ push the built site to the `site` branch
+  └─ deploy _site/ to GitHub Pages when Pages is enabled
 Claude scheduled task (weekday-agnostic, ~7:10 AM America/Chicago)
   └─ reads state/digests/pending.json → sends one Gmail message → writes a receipt
 ```
 
 | Piece | Choice | Why |
 |---|---|---|
-| Database | SQLite file on the `state` branch | One daily writer, relational history (vehicles → listings → prices / photos / evidence / events). The file is versioned on every run, so history survives deployments and every past state is recoverable from git. |
+| Database | SQLite, stored as a SQL text dump on the `state` branch | One daily writer, relational history (vehicles → listings → prices / photos / evidence / events). The file is versioned on every run, so history survives deployments and every past state is recoverable from git. |
 | Site | Static files on GitHub Pages | No server to keep alive; the site can only ever show what the last run stored, and says how old that is. |
 | Scheduler | GitHub Actions cron | Unattended, logged, retriable from the Actions tab. |
 | Photos | Displayed from the listing site's image host | Every image id is captured; durable copies are optional (below). |
@@ -30,7 +31,8 @@ Claude scheduled task (weekday-agnostic, ~7:10 AM America/Chicago)
 ## Setup (once)
 
 1. Create the repository and push this code to `main`.
-2. Settings → Pages → Source: **GitHub Actions**.
+2. Hosting: Settings → Pages → Source: **GitHub Actions** (private repos need a paid GitHub plan), or
+   point any static host (Vercel, Cloudflare Pages) at the `site` branch with no build step.
 3. Settings → Secrets and variables → Actions:
    - secret `MARKETCHECK_API_KEY` (free plan at developers.marketcheck.com; about 12 calls per run)
    - secret `ALERT_RECIPIENT` (the address the digest is written for)
