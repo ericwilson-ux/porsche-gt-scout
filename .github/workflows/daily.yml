@@ -25,6 +25,8 @@ jobs:
   ingest:
     runs-on: ubuntu-latest
     timeout-minutes: 75
+    # Secrets may live at repository level or in this Actions environment; both resolve here.
+    environment: porsche-gt-scout-env
     outputs:
       exit: ${{ steps.run.outputs.exit }}
     steps:
@@ -45,6 +47,12 @@ jobs:
           cache: pip
 
       - run: pip install -r requirements.txt
+
+      - name: Report which credentials are configured (names only, never values)
+        env:
+          HAS_MC: ${{ secrets.MARKETCHECK_API_KEY != '' }}
+          HAS_RECIPIENT: ${{ secrets.ALERT_RECIPIENT != '' }}
+        run: echo "MARKETCHECK_API_KEY set=$HAS_MC  ALERT_RECIPIENT set=$HAS_RECIPIENT"
 
       - name: Collect, update database, queue digest, build site
         id: run
