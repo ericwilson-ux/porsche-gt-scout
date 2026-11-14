@@ -19,7 +19,34 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def _db(state: Path):
-    return D.connect(state / "pgt.sqlite")
+    """Open the working database.
+
+    The durable copy in the state branch is a plain SQL dump (state/pgt.sql): git stores
+    day-to-day changes to text as small deltas, where a binary SQLite file would add its
+    full size to the repository on every run.  The dump is loaded into a working SQLite
+    file at the start of a run and written back at the end (save_state).
+    """
+    work, dump = state / "pgt.sqlite", state / "pgt.sql"
+    if dump.exists():
+        if work.exists():
+            work.unlink()
+        import sqlite3
+        raw = sqlite3.connect(str(work))
+        raw.executescript(dump.read_text(encoding="utf-8"))
+        raw.commit()
+        raw.close()
+    return D.connect(work)
+
+
+def save_state(con, state: Path) -> None:
+    """Write the durable SQL dump.  The derived `merged` column is rebuilt every run, so it is left out."""
+    con.commit()
+    con.execute("UPDATE vehicles SET merged=NULL")
+    con.commit()
+    with open(state / "pgt.sql", "w", encoding="utf-8") as fh:
+        for line in con.iterdump():
+            fh.write(line + "\n")
+    (state / ".gitignore").write_text("pgt.sqlite\npgt.sqlite-journal\n", encoding="utf-8")
 
 
 def _known_finder(con) -> dict:
@@ -65,6 +92,10 @@ def cmd_run(args) -> int:
             if res.detail.get("trims") and not cached:
                 D.set_meta(con, "mc_trims", json.dumps(res.detail["trims"]))
                 D.set_meta(con, "mc_trims_at", D.now_iso())
+            if res.detail.get("raw_sample"):      # one raw feed row, kept for adapter maintenance
+                (state / "debug").mkdir(exist_ok=True)
+                (state / "debug" / "marketcheck_sample.json").write_text(
+                    json.dumps(res.detail["raw_sample"], indent=1, ensure_ascii=False), encoding="utf-8")
             results.append(res)
         except Exception as exc:
             results.append(SourceResult("marketcheck", status="failed", messages=[f"crash: {type(exc).__name__}: {exc}"]))
@@ -86,7 +117,7 @@ def cmd_run(args) -> int:
             alerts.mark_failed(con, digest["digest_date"], f"{type(exc).__name__}: {exc}")
             summary["digest"]["error"] = str(exc)
     summary["site"] = build_site(con, cfg, state, Path(args.out))
-    con.commit()
+    save_state(con, state)
     print(json.dumps(summary, indent=1, default=str))
     for r in results:
         for msg in r.messages[:25]:
@@ -132,9 +163,11 @@ def cmd_digest(args) -> int:
     con = _db(state)
     if args.action == "mark-sent":
         ok = alerts.mark_sent(con, state, args.date, args.channel, args.message_id)
+        save_state(con, state)
         print("marked sent" if ok else "already sent or unknown digest (no change)")
         return 0
     if args.action == "show":
+        ingest.rebuild_vehicles(con, cfg, D.now_iso())
         row = con.execute("SELECT * FROM digests WHERE status IN ('pending','failed') ORDER BY digest_date LIMIT 1").fetchone()
         print(json.dumps(alerts.build_digest(con, cfg, row), indent=1) if row else "no pending digest")
         return 0
@@ -145,7 +178,7 @@ def main(argv=None) -> int:
     p = argparse.ArgumentParser(prog="pgt")
     sub = p.add_subparsers(dest="cmd", required=True)
     r = sub.add_parser("run", help="collect, update the database, queue the digest, build the site")
-    r.add_argument("--sources", default="porsche_finder,marketcheck")
+    r.add_argument("--sources", default=os.environ.get("PGT_SOURCES", "marketcheck"))
     r.add_argument("--max-dealers", type=int, default=None, help="limit dealer sitemaps (smoke tests)")
     r.add_argument("--interval", type=float, default=1.0, help="seconds between requests to one host")
     r.add_argument("--url", action="append", help="extra Porsche Finder listing URL to include")

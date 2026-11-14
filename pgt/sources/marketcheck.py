@@ -24,7 +24,12 @@ ROWS = 50
 # Trim names are discovered from the feed's own facet counts (cached for a week by the
 # caller) so a naming difference can never silently drop cars; every row is then classified
 # locally from heading/trim text and validated against its VIN.
-BASE_PARAMS = {"make": "porsche", "car_type": "used", "year_range": "2022-2027", "country": "us"}
+BASE_PARAMS = {"make": "porsche", "car_type": "used", "country": "us"}
+# The feed refuses to page past 500 rows per query, so the sweep is split into model-year
+# buckets that each stay under that cap.  Each bucket is its own coverage unit.
+YEAR_BUCKETS = ["2022-2023", "2024-2025", "2026-2027"]
+ALL_YEARS = "2022-2027"
+PAGE_CAP = 500
 _TRIM_RE = re.compile(r"gt3|gt4\s*rs|spyder\s*rs|^rs$", re.I)
 _TRIM_EXCLUDE_RE = re.compile(r"gt3\s*rs|gt2|cup|clubsport", re.I)
 SCOPE = "us-used"
@@ -108,11 +113,11 @@ def _f(v):
 
 
 def collect(fetcher: Fetcher, api_key: str | None = None, cached_trims: list[str] | None = None,
-            max_pages: int = 12) -> SourceResult:
+            max_pages: int = 10) -> SourceResult:
     """Fetch every used target-variant listing in the feed.
 
     Call budget per run: 1 facet call (skipped when `cached_trims` is given) plus
-    ceil(matches / 50) page calls.
+    ceil(matches / 50) page calls per model-year bucket.
     """
     res = SourceResult(SOURCE)
     api_key = api_key or os.environ.get("MARKETCHECK_API_KEY")
@@ -120,11 +125,11 @@ def collect(fetcher: Fetcher, api_key: str | None = None, cached_trims: list[str
         res.status = "skipped"
         res.messages.append("MARKETCHECK_API_KEY not configured")
         return res
-    res.scopes_total = 1
+    res.scopes_total = len(YEAR_BUCKETS)
     trims = list(cached_trims or [])
     if not trims:
-        r = fetcher.get(ENDPOINT, params={"api_key": api_key, **BASE_PARAMS, "rows": 1, "start": 0,
-                                          "facets": "trim|0|1000"}, check_robots=False)
+        r = fetcher.get(ENDPOINT, params={"api_key": api_key, **BASE_PARAMS, "year_range": ALL_YEARS, "rows": 1,
+                                          "start": 0, "facets": "trim|0|1000"}, check_robots=False)
         if not r.ok:
             res.status = "failed"
             res.messages.append(f"trim facet: HTTP {r.status} {(r.error or r.text[:160]).strip()}")
@@ -140,45 +145,58 @@ def collect(fetcher: Fetcher, api_key: str | None = None, cached_trims: list[str
             res.requests, res.errors = fetcher.requests, fetcher.errors
             return res
     res.detail["trims"] = trims
+    res.detail["buckets"] = {}
 
-    ok, start, found, seen_ids = True, 0, None, set()
-    for _page in range(max_pages):
-        params = {"api_key": api_key, **BASE_PARAMS, "trim": ",".join(trims), "rows": ROWS, "start": start,
-                  "sort_by": "first_seen", "sort_order": "desc"}
-        r = fetcher.get(ENDPOINT, params=params, check_robots=False)   # licensed API, keyed access
-        if r.status == 422:      # documented: start beyond num_found, or the plan's pagination cap
+    seen_ids: set[str] = set()
+    for bucket in YEAR_BUCKETS:
+        scope = f"{SCOPE}:{bucket}"
+        ok, start, found = True, 0, None
+        for _page in range(max_pages):
+            params = {"api_key": api_key, **BASE_PARAMS, "year_range": bucket, "trim": ",".join(trims), "rows": ROWS,
+                      "start": start, "sort_by": "first_seen", "sort_order": "desc"}
+            r = fetcher.get(ENDPOINT, params=params, check_robots=False)   # licensed API, keyed access
+            if r.status == 422:      # documented: start beyond num_found, or the plan's pagination cap
+                if found is not None and start < found:
+                    ok = False
+                    res.messages.append(f"{bucket}: pagination cap reached at start={start} of {found}")
+                break
+            if not r.ok:
+                ok = False
+                res.messages.append(f"{bucket} start={start}: HTTP {r.status} {(r.error or r.text[:160]).strip()}")
+                break
+            try:
+                payload = json.loads(r.text)
+            except ValueError:
+                ok = False
+                res.messages.append(f"{bucket} start={start}: response was not JSON")
+                break
+            found = payload.get("num_found", 0)
+            rows = payload.get("listings") or []
+            if rows and "raw_sample" not in res.detail:
+                res.detail["raw_sample"] = rows[0]
+            for raw in rows:
+                lst = normalise(raw, scope=scope)
+                if lst and lst.source_listing_id not in seen_ids:
+                    seen_ids.add(lst.source_listing_id)
+                    res.listings.append(lst)
+            start += ROWS
+            if start >= found or not rows:
+                break
+            if start >= PAGE_CAP:
+                ok = False
+                res.messages.append(f"{bucket}: {found} matches exceed the feed's {PAGE_CAP}-row paging cap; split this bucket")
+                break
+        else:
             if found is not None and start < found:
                 ok = False
-                res.messages.append(f"plan pagination cap reached at start={start} of {found}")
-            break
-        if not r.ok:
-            ok = False
-            res.messages.append(f"search page start={start}: HTTP {r.status} {(r.error or r.text[:160]).strip()}")
-            break
-        try:
-            payload = json.loads(r.text)
-        except ValueError:
-            ok = False
-            res.messages.append(f"search page start={start}: response was not JSON")
-            break
-        found = payload.get("num_found", 0)
-        rows = payload.get("listings") or []
-        for raw in rows:
-            lst = normalise(raw, scope=SCOPE)
-            if lst and lst.source_listing_id not in seen_ids:
-                seen_ids.add(lst.source_listing_id)
-                res.listings.append(lst)
-        start += ROWS
-        if start >= found or not rows:
-            break
-    else:
-        if found is not None and start < found:
-            ok = False
-            res.messages.append(f"stopped after {max_pages} pages ({start} of {found})")
-    if ok:
-        res.scopes_ok.add(SCOPE)
-    else:
+                res.messages.append(f"{bucket}: stopped after {max_pages} pages ({start} of {found})")
+        res.detail["buckets"][bucket] = {"num_found": found, "complete": ok}
+        if ok:
+            res.scopes_ok.add(scope)
+    if not res.scopes_ok:
         res.status = "partial" if res.listings else "failed"
-    res.detail.update({"num_found": found, "listings": len(res.listings)})
+    elif len(res.scopes_ok) < res.scopes_total:
+        res.status = "partial"
+    res.detail["listings"] = len(res.listings)
     res.requests, res.errors = fetcher.requests, fetcher.errors
     return res

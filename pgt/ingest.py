@@ -80,7 +80,9 @@ def upsert_listings(con, result: SourceResult, now: str, baseline: bool | None =
             stats["new_vehicles"] += 1
             stats["new_vehicles_baseline"] += 1 if is_base else 0
         seller_id = _upsert_seller(con, lst.seller, now)
-        data = D.j(lst.to_dict())
+        d = lst.to_dict()
+        d["photos"] = []                     # photos live in their own table; keep listing rows small
+        data = D.j(d)
         row = con.execute("SELECT * FROM listings WHERE source=? AND source_listing_id=?",
                           (lst.source, lst.source_listing_id)).fetchone()
         if row is None:
@@ -280,6 +282,8 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
     eq_src = next((l for l in ls if l.get("has_equipment_list")), None)
     texts = [l.get("seller_comment") or "" for l in ls]
     text_sig = C.scan_seller_text("\n".join(texts))
+    if any(C.scan_seller_text(l.get("title"))["mentions_weissach"] for l in ls):
+        text_sig["mentions_weissach"] = True
     equipment: dict = {}
     if eq_src:
         det = C.detect_equipment(eq_src.get("options") or [], eq_src.get("standard_equipment") or [], eq_src.get("highlights") or [])
@@ -306,7 +310,7 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
                                  "detail": "Seller description mentions a front axle lift; no factory option list to confirm"}
         else:
             equipment["lift"] = {"status": "unknown", "value": None}
-        equipment["weissach"] = ({"status": "seller_stated", "value": True, "source": "seller description"}
+        equipment["weissach"] = ({"status": "seller_stated", "value": True, "source": "listing title or description"}
                                  if text_sig["mentions_weissach"] else {"status": "unknown", "value": None})
         equipment["seats"] = {"status": "unknown", "value": None}
         equipment["pccb"] = {"status": "unknown", "value": None}
@@ -572,7 +576,7 @@ def import_sales_csv(con, path: Path, now: str) -> int:
 # run orchestration
 # ---------------------------------------------------------------------------
 def record_source(con, run_id: int, result: SourceResult, started: str, up: dict | None, lc: dict | None) -> None:
-    detail = dict(result.detail)
+    detail = {k: v for k, v in result.detail.items() if k != "raw_sample"}
     detail["messages"] = result.messages[:40]
     if lc:
         detail["lifecycle"] = lc

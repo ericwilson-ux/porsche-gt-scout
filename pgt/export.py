@@ -11,12 +11,15 @@ from . import db as D
 from . import valuation
 
 COVERAGE_NOTES = [
-    {"source": "Porsche Finder", "state": "covered",
-     "note": "All US dealer sitemaps scanned daily; every GT3 / GT3 Touring / GT4 RS / Spyder RS detail page parsed "
-             "(VIN, factory option codes, CPO, full gallery). Search pages and /api are not used."},
-    {"source": "MarketCheck dealer feed", "state": "covered when MARKETCHECK_API_KEY is set",
-     "note": "Licensed API for nationwide dealer inventory (franchise + independent). Stands in for consumer "
-             "marketplaces; it does not expose factory option lists, so lift status needs Porsche Finder or the seller."},
+    {"source": "Porsche Finder", "state": "not covered from the cloud",
+     "note": "The adapter (dealer sitemaps + listing pages: VIN, factory option codes, CPO, full gallery) works on real "
+             "pages, but finder.porsche.com answers GitHub's servers with a bot-check page (HTTP 429), and that check "
+             "is not bypassed. Until a collector runs from a permitted network, factory option data is missing and "
+             "front-lift status stays unverified."},
+    {"source": "MarketCheck dealer feed", "state": "covered",
+     "note": "Licensed API for nationwide used dealer inventory (Porsche dealers and independents), swept daily in "
+             "three model-year buckets. It carries VIN, price, mileage, colours, CPO flag and photo links, but no "
+             "factory option list, so front lift and accident history need the seller's documentation."},
     {"source": "Cars.com", "state": "not covered",
      "note": "Cars.com disallows automated access in robots.txt and offers no public inventory API. Dealer stock that "
              "appears there is reached through the MarketCheck feed instead."},

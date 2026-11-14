@@ -290,6 +290,45 @@ def test_marketcheck_collect_pages_and_reports_partial(monkeypatch):
     assert mc.collect(FakeFetcher({}), api_key=None).status == "skipped"
 
 
+def test_marketcheck_year_buckets_cover_the_paging_cap():
+    calls = []
+
+    def api(params):
+        calls.append(dict(params))
+        if "facets" in params:
+            return (200, json.dumps({"facets": {"trim": [{"item": "GT3", "count": 3}]}}))
+        n = {"2022-2023": 120, "2024-2025": 30, "2026-2027": 620}[params["year_range"]]
+        row = {**MC_RAW, "id": f"{params['year_range']}-{params['start']}"}
+        return (200, json.dumps({"num_found": n, "listings": [row]}))
+    res = mc.collect(FakeFetcher({mc.ENDPOINT: api}), api_key="k")
+    # two buckets complete; the third exceeds 500 rows and is reported, never silently truncated
+    assert res.scopes_ok == {"us-used:2022-2023", "us-used:2024-2025"} and res.status == "partial"
+    assert res.detail["buckets"]["2026-2027"] == {"num_found": 620, "complete": False}
+    assert any("exceed" in m for m in res.messages)
+    pages = [c for c in calls if "facets" not in c]
+    assert len(pages) == 3 + 1 + 10 and res.detail["raw_sample"]["vin"] == MC_RAW["vin"]
+    assert len(mc.collect(FakeFetcher({mc.ENDPOINT: api}), api_key="k", cached_trims=["GT3"]).listings) == 14
+
+
+def test_state_round_trips_through_the_sql_dump(tmp_path, cfg, examples):
+    from pgt import cli
+    con = cli._db(tmp_path)
+    ingest.process_results(con, cfg, [finder_result(examples)], now=T0)
+    ingest.process_results(con, cfg, [finder_result([clone(examples[0], price=205000.0)] + examples[1:])], now=ts(1))
+    cli.save_state(con, tmp_path)
+    con.close()
+    (tmp_path / "pgt.sqlite").unlink()
+    dump = (tmp_path / "pgt.sql").read_text()
+    assert "WP0AE2A80SK271606" in dump and len(dump) < 400_000
+    con2 = cli._db(tmp_path)                                   # rebuilt purely from the text dump
+    assert con2.execute("SELECT COUNT(*) c FROM photos").fetchone()["c"] == 115
+    assert [r["price"] for r in con2.execute("SELECT price FROM price_observations WHERE vehicle_key='WP0AE2A80SK271606' ORDER BY id")] == [209093.0, 205000.0]
+    assert con2.execute("SELECT merged FROM vehicles LIMIT 1").fetchone()["merged"] is None
+    ingest.process_results(con2, cfg, [finder_result(examples)], now=ts(2))
+    m = merged(con2, "WP0AE2A80SK271606")
+    assert m["baseline"] is True and len(m["price_history"]) == 3 and len(m["photos"]) == 32
+
+
 def test_same_vin_from_two_sources_is_one_vehicle_with_conflicts(con, cfg):
     finder = example("058WLN")
     ingest.process_results(con, cfg, [finder_result([finder])], now=T0)
