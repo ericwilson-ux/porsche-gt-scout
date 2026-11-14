@@ -1045,3 +1045,28 @@ def test_browser_capture_script_matches_its_fingerprint_and_parses_a_real_page()
         rec = json.loads(out.stdout)
         assert (rec["vin"], rec["tr"], rec["vp"], rec["imgs"], rec["opts"]) == ("WP0AC2A98NS268519", "Manual", 239992, 36, 13)
         assert rec["fns"] == ["function"] * 3
+
+
+def test_cpo_status_is_decided_by_porsche_finder_and_feed_only_is_a_claim(con, cfg):
+    def feed(i, vin, certified):
+        return mc.normalise({**MC_RAW, "id": f"cp{i}", "vin": vin, "heading": "2019 Porsche 911 GT3", "price": 245999, "miles": 9067,
+                             "is_certified": 1 if certified else 0, "build": {"year": 2019, "trim": "GT3", "transmission": "Manual"},
+                             "ref_price": None}, "us-used:2018-2019")
+    # XKS149267: Finder says Porsche Approved, feed says not.  JS175859: Finder says CPO too.  JS176676: feed only, "certified".
+    ls = [feed(1, "WP0AC2A9XKS149267", False), feed(3, "WP0AC2A9XJS176676", True)]
+    ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=ls, scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=T0)
+    assert merged(con, "WP0AC2A9XKS149267")["cpo_status"] is None
+    m3 = merged(con, "WP0AC2A9XJS176676")
+    assert (m3["cpo"], m3["cpo_status"]) == (True, "listed") and "not confirmed" in m3["cpo_note"]
+    cap = pf.parse_lite(LITE_LINES, {"captured_at": ts(1), "dealers_total": 2, "dealers_ok": ["15164", "3290"]})
+    ingest.process_results(con, cfg, [pf.collect_from_capture(cap)], now=ts(1))
+    assert merged(con, "WP0AC2A9XKS149267")["cpo_status"] == "verified"          # Finder outranks the feed's "not certified"
+    # a Finder listing that is not Porsche Approved overrides a feed "certified" flag
+    not_cpo = [l.replace("|9067|1||1|32|", "|9067|0||1|32|") if l.startswith("A|XGMXKP") else l for l in
+               (x.rsplit("|", 1)[0] for x in LITE_LINES)]
+    cap2 = pf.parse_lite([_lite(b) for b in not_cpo], {"captured_at": ts(2), "dealers_total": 2, "dealers_ok": ["15164", "3290"]})
+    ls2 = [feed(1, "WP0AC2A9XKS149267", True)]
+    ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=ls2, scopes_ok={"us-used:2018-2019"}, scopes_total=1),
+                                      pf.collect_from_capture(cap2)], now=ts(2))
+    m = merged(con, "WP0AC2A9XKS149267")
+    assert (m["cpo"], m["cpo_status"]) == (False, None)

@@ -73,7 +73,7 @@ def card(m: dict, now: datetime) -> dict:
         "price0": m.get("original_price"), "dprice": m.get("price_change_total"), "lpc": lpc, "drop": recent_drop,
         "miles": m.get("mileage"), "ext": m.get("exterior_color"), "extf": m.get("exterior_family"),
         "hex": m.get("exterior_hex"), "int": m.get("interior_color"), "intf": m.get("interior_family"),
-        "trans": m.get("transmission"), "transq": bool(m.get("transmission_note")) and not m.get("transmission"), "cpo": bool(m.get("cpo")), "cond": m.get("condition"),
+        "trans": m.get("transmission"), "transq": bool(m.get("transmission_note")) and not m.get("transmission"), "cpo": bool(m.get("cpo")), "cpos": m.get("cpo_status"), "cond": m.get("condition"),
         "seats": (eq.get("seats") or {}).get("value"), "lift": (eq.get("lift") or {}).get("status"),
         "weissach": (eq.get("weissach") or {}).get("value"), "weissach_s": (eq.get("weissach") or {}).get("status"),
         "pccb": (eq.get("pccb") or {}).get("value"),

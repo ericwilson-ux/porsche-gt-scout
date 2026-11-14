@@ -224,8 +224,11 @@ def preference_score(v: dict, cfg: dict, today: date | None = None) -> dict:
             items.append(_item("weissach", "No Weissach Package", 0.7, w["weissach"], "Weissach status not documented"))
 
     wr = v.get("warranty_summary") or {}
-    if v.get("cpo"):
+    if v.get("cpo") and v.get("cpo_status", "verified") == "verified":
         items.append(_item("warranty", "CPO / warranty", 1.0, w["warranty"], "Porsche Approved Certified Pre-Owned"))
+    elif v.get("cpo"):
+        items.append(_item("warranty", "CPO / warranty", 0.85, w["warranty"],
+                           "Listed as certified in the dealer feed; Porsche Approved not confirmed"))
     elif wr.get("factory_months_remaining_est") is not None and wr["factory_months_remaining_est"] >= 12:
         items.append(_item("warranty", "CPO / warranty", 0.75, w["warranty"],
                            f"Not CPO; ~{wr['factory_months_remaining_est']} months of factory warranty left (estimate)"))

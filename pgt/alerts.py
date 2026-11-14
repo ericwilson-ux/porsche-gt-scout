@@ -126,7 +126,7 @@ def build_digest(con, cfg: dict, row) -> dict:
             "category": m["eligibility"]["category"], "eligibility_summary": m["eligibility"]["summary"],
             "checks": [{"label": c["label"], "status": c["status"], "provenance": c["provenance"]} for c in m["eligibility"]["checks"]],
             "price": m.get("price"), "mileage": m.get("mileage"), "transmission": m.get("transmission"),
-            "exterior": m.get("exterior_color"), "interior": m.get("interior_color"), "cpo": m.get("cpo"),
+            "exterior": m.get("exterior_color"), "interior": m.get("interior_color"), "cpo": m.get("cpo"), "cpo_label": {"verified": "Porsche Approved CPO", "listed": "certified per dealer feed"}.get(m.get("cpo_status"), "not CPO"),
             "seats": (m["equipment"].get("seats") or {}).get("value"),
             "weissach": (m["equipment"].get("weissach") or {}).get("value"),
             "pccb": (m["equipment"].get("pccb") or {}).get("value"),
@@ -159,7 +159,7 @@ def render_text(d: dict) -> str:
     for c in d["cars"]:
         lines += [f"{c['title']} - {_money(c['price'])} - {c['mileage']:,} mi" if c["mileage"] is not None else f"{c['title']} - {_money(c['price'])}",
                   f"  {c['reason']} | {c['category'].upper()}: {c['eligibility_summary']}",
-                  f"  {c['exterior'] or '?'} / {c['interior'] or '?'} | {(c['transmission'] or '?').upper()} | {'CPO' if c['cpo'] else 'not CPO'}",
+                  f"  {c['exterior'] or '?'} / {c['interior'] or '?'} | {(c['transmission'] or '?').upper()} | {c['cpo_label']}",
                   f"  {c['seller'] or '?'} - {c['location']} (~{c['distance_miles']} mi from Austin)" if c["distance_miles"] is not None else f"  {c['seller'] or '?'} - {c['location']}",
                   f"  Preference match {c['score']}/100 | Est. out-the-door {_money(c['otd_total'])}",
                   *(f"  + {s}" for s in c["strengths"]), *(f"  - {s}" for s in c["misses"]),
@@ -195,7 +195,7 @@ def render_html(d: dict) -> str:
 <div style="padding:16px 18px">
 <div style="font-size:11px;letter-spacing:.14em;color:{badge};font-weight:700">{badge_txt} &middot; {e(c['reason']).upper()}</div>
 <div style="font-size:20px;font-weight:800;margin:6px 0 2px">{e(c['title'])}</div>
-<div style="font-size:15px;color:#f2f0ea"><b>{_money(c['price'])}</b> &middot; {miles} &middot; {e((c['transmission'] or '?').upper())} &middot; {'CPO' if c['cpo'] else 'not CPO'}</div>
+<div style="font-size:15px;color:#f2f0ea"><b>{_money(c['price'])}</b> &middot; {miles} &middot; {e((c['transmission'] or '?').upper())} &middot; {e(c['cpo_label'])}</div>
 <div style="font-size:13px;color:#b9b6ad;margin:4px 0 10px">{e(c['exterior'] or '?')} over {e(c['interior'] or '?')}<br>{e(c['seller'] or '?')} &middot; {e(c['location'])}{dist}</div>
 <div style="margin:0 0 8px">{checks}</div>
 <table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 10px"><tr>

@@ -86,8 +86,11 @@ def open_questions(m: dict) -> list[dict]:
         q.append({"key": "weissach", "why": "preference", "ask": "Does it have the Weissach Package?"})
     if m.get("price") is None:
         q.append({"key": "price", "why": "value", "ask": "What is the asking price?"})
-    if m.get("cpo"):
+    if m.get("cpo") and m.get("cpo_status", "verified") == "verified":
         q.append({"key": "warranty", "why": "value", "ask": "When does the Porsche Approved warranty run to?"})
+    elif m.get("cpo"):
+        q.append({"key": "warranty", "why": "value",
+                  "ask": "Is the car Porsche Approved Certified Pre-Owned, and if so when does that warranty run to?"})
     elif (m.get("seller") or {}).get("kind") == "porsche_dealer":
         q.append({"key": "warranty", "why": "value",
                   "ask": "What was the original in-service date, and can the car be Porsche Approved certified?"})

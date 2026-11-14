@@ -87,7 +87,8 @@ function passes(c) {
   if (f.int?.length && !f.int.includes(c.intf)) return false;
   if (f.trans && c.trans !== f.trans) return false;
   if (f.seats && c.seats !== f.seats) return false;
-  if (f.cpo && !c.cpo) return false;
+  const cp = f.cpos?.length ? f.cpos : f.cpo ? ['verified', 'listed'] : null;   // f.cpo: the old single checkbox
+  if (cp && !cp.includes(c.cpos || 'none')) return false;
   if (f.lift && c.lift !== 'verified' && c.lift !== 'seller_stated') return false;
   if (f.noW && c.weissach === true) return false;
   if (f.pccb === 'yes' && c.pccb !== true) return false;
@@ -115,12 +116,16 @@ const SORTS = {
 function liftChip(c) { return c.lift === 'verified' ? '<span class="chip ok">Front lift</span>' : c.lift === 'seller_stated' ? '<span class="chip ok">Front lift (dealer-listed)</span>' : c.lift === 'verified_absent' ? '<span class="chip bad">No front lift</span>' : c.lift === 'decode_absent' ? '<span class="chip q">Lift not in build data</span>' : '<span class="chip q">Front lift unverified</span>'; }
 function dealText(d) { return d.rating ? `${d.rating[0].toUpperCase() + d.rating.slice(1)} deal ${pct(d.delta)}` : 'Deal: too few comps'; }
 function distText(c) { if (c.dist == null) return ''; return c.tx ? `<span class="near">Texas</span> ${num(c.dist)} mi` : c.dist <= 600 ? `<span class="near">Drivable</span> ${num(c.dist)} mi` : `${num(c.dist)} mi away`; }
+const CPOS = [['verified', 'Porsche Approved CPO', 'confirmed on Porsche Finder'], ['listed', 'Listed as certified', 'dealer feed only, not confirmed'], ['none', 'Not CPO', '']];
+const CPO_TIP = { verified: 'Porsche Approved Certified Pre-Owned, per the car\'s Porsche Finder listing', listed: 'The dealer feed lists this car as certified. It is not on Porsche Finder, so Porsche Approved status is not confirmed.' };
+function cpoBand(st) { return st === 'verified' ? `<div class="cpo v" title="${esc(CPO_TIP.verified)}">Porsche Approved CPO</div>` : st === 'listed' ? `<div class="cpo l" title="${esc(CPO_TIP.listed)}">Certified per dealer, unconfirmed</div>` : ''; }
+function cpoCount(k) { const t = TABS.find(x => x[0] === S.tab) || TABS[0]; return live().filter(t[2]).filter(c => (c.cpos || 'none') === k).length; }
 function cardHTML(c, archive) {
   const o = otdFor(c), t = c.thumbs || [];
   const flags = [c.new ? '<span class="flag new">New</span>' : '', c.drop && c.lpc ? `<span class="flag drop">${money(c.lpc.delta)}</span>` : '',
     c.status === 'unverified' ? '<span class="flag">Availability unconfirmed</span>' : '', c.status === 'sold' ? '<span class="flag">Sold</span>' : '', c.status === 'removed' ? '<span class="flag">Delisted</span>' : ''].join('');
   const pc = c.nphotos ? `<span class="pcount${c.gcomplete ? '' : ' warn'}" title="${esc(c.gnote || '')}">${c.gcomplete ? c.nphotos + ' photos' : c.nadv ? `${c.nphotos} of ${c.nadv} photos` : `${c.nphotos} photos, preview only`}</span>` : '';
-  const chips = [liftChip(c), c.cpo ? '<span class="chip ok">CPO</span>' : '', c.unver.includes('accident') ? '<span class="chip q">Accident history</span>' : '', c.unver.includes('transmission') ? '<span class="chip q">Manual unconfirmed</span>' : '',
+  const chips = [liftChip(c), c.unver.includes('accident') ? '<span class="chip q">Accident history</span>' : '', c.unver.includes('transmission') ? '<span class="chip q">Manual unconfirmed</span>' : '',
     c.seats ? `<span class="chip">${c.seats === 'bucket' ? 'Bucket seats' : 'Sport seats'}</span>` : '', c.weissach === true ? '<span class="chip">Weissach</span>' : '', c.pccb === true ? '<span class="chip">PCCB</span>' : '',
     c.locq ? '<span class="chip q">Location: dealer group</span>' : '',
     c.conflicts ? `<span class="chip q">${c.conflicts} source conflict${c.conflicts > 1 ? 's' : ''}</span>` : ''].join('');
@@ -130,7 +135,7 @@ function cardHTML(c, archive) {
   return `<article class="card ${c.status === 'unverified' ? 'unverified-status' : ''}" data-key="${esc(c.key)}">
   <div class="shot">${t.length ? `<img src="${esc(src(t[0], 640))}" alt="${esc(title(c))} in ${esc(c.ext || 'unknown colour')}" loading="lazy" data-i="0">` : '<div class="noimg">No photos published</div>'}
     <div class="ticks" aria-hidden="true">${t.map((_, i) => `<b class="${i ? '' : 'on'}"></b>`).join('')}</div>
-    <div class="flags">${flags}</div>${archive ? '' : `<div class="score" title="Preference match"><b>${c.score}</b><span>match</span></div>`}${pc}</div>
+    <div class="flags">${flags}</div>${cpoBand(c.cpos)}${archive ? '' : `<div class="score" title="Preference match"><b>${c.score}</b><span>match</span></div>`}${pc}</div>
   <div class="body">
     <div class="price-row">${priceLine}</div>
     <a class="title" href="#/v/${encodeURIComponent(c.key)}">${esc(title(c))}${c.gen && c.gen !== '982' ? ' <span class="muted">' + esc(c.gen) + '</span>' : ''}</a>
@@ -157,6 +162,8 @@ function filterPanel() {
   <fieldset><legend>Model</legend>${Object.entries(v).map(([k, o]) => multi('variants', k, esc(o.label))).join('')}</fieldset>
   <fieldset><legend>GT3 generation</legend><div class="swatches">${GENS.map(([g, yrs]) => `<button type="button" class="sw gen" data-sw="gens" value="${g}" aria-pressed="${!!f.gens?.includes(g)}"><b>${g}</b><span>${yrs}</span><em>${genCount(g)}</em></button>`).join('')}</div>
     <p class="hint">Narrows GT3 and GT3 Touring. Pick more than one to combine. 991.2 cars must be manual.</p></fieldset>
+  <fieldset><legend>Porsche CPO</legend><div class="swatches">${CPOS.map(([k, name, sub]) => `<button type="button" class="sw cpo" data-sw="cpos" value="${k}" aria-pressed="${!!f.cpos?.includes(k)}"><span><b>${name}</b>${sub ? `<small>${sub}</small>` : ''}</span><em>${cpoCount(k)}</em></button>`).join('')}</div>
+    <p class="hint">Counts are for the tab you are on. Pick more than one to combine.</p></fieldset>
   <fieldset><legend>Price</legend><div class="pair">${n('pmin', 'Min $')}${n('pmax', 'Max $')}</div></fieldset>
   <fieldset><legend>Year and mileage</legend><div class="pair">${n('ymin', 'From year')}${n('ymax', 'To year')}</div><div class="pair" style="margin-top:8px">${n('mmax', 'Max miles')}${n('smin', 'Min match')}</div></fieldset>
   <fieldset><legend>Exterior</legend><div class="swatches">${fams('extf').map(x => sw('ext', x)).join('')}</div></fieldset>
@@ -165,7 +172,7 @@ function filterPanel() {
     ${sel('trans', [['', 'Any transmission'], ['manual', 'Manual'], ['pdk', 'PDK']])}
     <div style="height:8px;clear:both"></div>${sel('seats', [['', 'Any seats'], ['adjustable', 'Adjustable sport seats'], ['bucket', 'Bucket seats']])}
     <div style="height:8px;clear:both"></div>${sel('pccb', [['', 'Any brakes'], ['yes', 'PCCB ceramic'], ['no', 'Steel brakes']])}
-    ${ck('lift', 'Front lift documented')}${ck('noW', 'Without Weissach Package')}${ck('cpo', 'Porsche Approved CPO')}</fieldset>
+    ${ck('lift', 'Front lift documented')}${ck('noW', 'Without Weissach Package')}</fieldset>
   <fieldset><legend>Location</legend>${ck('tx', 'In Texas')}<div class="pair">${n('dmax', 'Max miles away')}${sel('state', [['', 'Any state'], ...states.map(s => [s, s])])}</div></fieldset>
   <fieldset><legend>Activity</legend>${ck('newOnly', 'New this week')}${ck('drops', 'Price reduced in last 14 days')}${ck('favs', 'My favourites')}</fieldset>
   <fieldset><button type="button" class="linkbtn" id="clearF">Clear all filters</button></fieldset></form>`;
@@ -177,7 +184,7 @@ function viewInventory() {
   const cnt = fn => all.filter(fn).length;
   const drive = all.filter(c => (c.cat === 'confirmed' || c.cat === 'lead') && c.dist != null && c.dist <= 600).length;
   $('#app').innerHTML = `<section class="head"><h1>${cnt(TABS[1][2])} confirmed, ${cnt(TABS[2][2])} to verify</h1>
-    <p>Used 991.2 and 992 GT3, GT3 Touring, 718 Cayman GT4 RS and 718 Spyder RS for sale across the US, checked against your hard requirements. ${drive} of the qualifying cars are within driving distance of ${esc(S.idx.home)}.</p></section>
+    <p>Used 991.2 and 992 GT3, GT3 Touring, 718 Cayman GT4 RS and 718 Spyder RS for sale across the US, checked against your hard requirements. ${drive} of the qualifying cars are within driving distance of ${esc(S.idx.home)}. ${all.filter(c => c.cpos === 'verified').length} of the ${all.length} cars tracked are Porsche Approved CPO.</p></section>
     <div class="tabs" role="tablist">${TABS.map(([k, l, fn]) => `<button class="tab" role="tab" aria-selected="${k === S.tab}" data-tab="${k}"><span class="n">${cnt(fn)}</span>${l}</button>`).join('')}</div>
     <div class="layout">${filterPanel()}<section><div class="bar"><button class="btn alt filter-toggle" id="fToggle">Filters</button>
       <span class="grow">${rows.length} ${rows.length === 1 ? 'car' : 'cars'}${rows.length !== cnt(tabDef[2]) ? ` of ${cnt(tabDef[2])} (filtered)` : ''}</span>
@@ -265,7 +272,7 @@ async function viewDetail(key) {
     ['Brakes', eq.pccb?.value == null ? 'Not documented' : (eq.pccb.value ? 'PCCB ceramic' : 'Steel') + ` <span class="muted">${evTxt(eq.pccb)}</span>`],
     ['Front axle lift', `${eq.lift?.value ? 'Yes' : eq.lift?.value === false ? 'No' : 'Unknown'} <span class="muted">${evTxt(eq.lift || { status: 'unknown' })}</span>`],
     ['Weissach Package', `${eq.weissach?.value ? 'Yes' : eq.weissach?.value === false ? 'No' : 'Unknown'} <span class="muted">${evTxt(eq.weissach || { status: 'unknown' })}</span>`],
-    ['Certification', m.cpo ? 'Porsche Approved Certified Pre-Owned' : 'Not CPO'],
+    ['Certification', m.cpo_status === 'verified' ? '<b>Porsche Approved Certified Pre-Owned</b> <span class="muted">per its Porsche Finder listing</span>' : m.cpo_status === 'listed' ? `Listed as certified <span class="muted">${esc(m.cpo_note || '')}</span>` : 'Not CPO'],
     ['Warranty', (m.warranty || []).map(x => `${esc(x.label || x.type)} ${esc(x.duration || '')}`).join('<br>') || (w.factory_months_remaining_est != null ? `About ${w.factory_months_remaining_est} months of factory warranty left <span class="muted">(${esc(w.factory_start_basis)})</span>` : 'n/a')],
     ['Owners and service', [h.previous_owners != null ? `${h.previous_owners} previous owner${h.previous_owners === 1 ? '' : 's'}` : null, h.service_history ? 'Service history: ' + esc(h.service_history) : null].filter(Boolean).join('<br>') || 'Not published'],
     ['Stock number', esc(m.stock_number || 'n/a')], ['On the market', `${m.days_on_market ?? 'n/a'} days <span class="muted">since ${day(m.listed_since)}, ${esc(m.listed_since_basis || '')}</span>`]];
@@ -288,7 +295,7 @@ async function viewDetail(key) {
       ${m.sources.map(x => `<tr><td>${esc(x.label)}${x.origin_site ? ` <span class="muted">via ${esc(x.origin_site)}</span>` : ''}</td><td>${esc(x.status)}</td><td class="r">${money(x.price)}</td><td class="r">${num(x.mileage)}</td><td>${day(x.first_seen)}</td><td>${day(x.last_seen)}</td><td>${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">Original listing</a>` : ''}</td></tr>`).join('')}</tbody></table></div></section>
     <section class="sect"><h2>Record history</h2><ul class="timeline">${(m.events || []).slice().reverse().map(e => `<li><span class="muted">${new Date(e.at).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</span><span><b>${esc(e.event.replace(/_/g, ' '))}</b> ${e.detail && typeof e.detail === 'object' ? esc(Object.entries(e.detail).filter(([, v]) => v != null && typeof v !== 'object').map(([k, v]) => `${k.replace(/_/g, ' ')}: ${typeof v === 'number' && Math.abs(v) > 999 ? money(v) : v}`).join(', ')) : esc(e.detail || '')}</span></li>`).join('')}</ul></section>
   </div>
-  <aside class="side"><div><h1>${esc(title(c))}</h1><div class="muted">${num(m.mileage)} mi, ${TRANS[m.transmission] || 'gearbox unconfirmed'}, ${esc(m.exterior_color || '')}</div></div>
+  <aside class="side"><div>${cpoBand(m.cpo_status).replace('class="cpo', 'class="cpo inline')}<h1>${esc(title(c))}</h1><div class="muted">${num(m.mileage)} mi, ${TRANS[m.transmission] || 'gearbox unconfirmed'}, ${esc(m.exterior_color || '')}</div></div>
     <div><div class="bigprice">${money(m.price)}</div>${m.dealer_fees_listed ? `<div class="muted">Listed at ${money(m.price_as_listed)} including ${money(m.dealer_fees_listed)} dealer fees</div>` : ''}
       ${m.price_change_total ? `<div class="was">${m.price_change_total < 0 ? 'Down' : 'Up'} ${money(Math.abs(m.price_change_total))} from the first observed ${money(m.original_price)}</div>` : ''}</div>
     <div class="verdict ${el.category}">${CAT_LABEL[el.category]}<small>${esc(el.summary)}</small></div>
@@ -329,7 +336,7 @@ function viewCompare() {
   ${row('Seats', c => c.seats ? (c.seats === 'bucket' ? 'Bucket' : 'Adjustable sport') : 'Not documented')}
   ${row('Weissach', c => c.weissach === true ? 'Yes' : c.weissach === false ? 'No' : 'Unknown')}
   ${row('Brakes', c => c.pccb === true ? 'PCCB' : c.pccb === false ? 'Steel' : 'Unknown')}
-  ${row('CPO', c => c.cpo ? 'Porsche Approved' : 'No')}
+  ${row('CPO', c => c.cpos === 'verified' ? 'Porsche Approved' : c.cpos === 'listed' ? 'Listed as certified, unconfirmed' : 'No')}
   ${row('Location', c => `${esc(c.seller || '')}<br>${esc([c.city, c.state].filter(Boolean).join(', '))}`)}
   ${row('Distance', c => c.dist != null ? num(c.dist) + ' mi' : 'n/a', { rank: c => c.dist })}
   ${row('Days on market', c => c.dom ?? 'n/a')}

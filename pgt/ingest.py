@@ -275,7 +275,18 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
             m["transmission"] = page["result"]
             m["transmission_note"] = f"From the dealer's own listing page: \u201c{page['evidence']}\u201d"
     m["variant_label"] = C.VARIANT_LABEL.get(m["variant"] or "", m["variant"])
-    m["cpo"] = any(l.get("cpo") for l in live)
+    # Porsche Approved status: Porsche Finder is Porsche's own word, so where it lists the car it decides.
+    # The dealer feed's "certified" flag misses some Porsche Approved cars and is set by some non-Porsche
+    # sellers, so on its own it is a claim: "listed".
+    finder_live = [l for l in live if l["_row"]["source"] == "porsche_finder"]
+    if finder_live:
+        m["cpo_status"] = "verified" if any(l.get("cpo") for l in finder_live) else None
+    else:
+        m["cpo_status"] = "listed" if any(l.get("cpo") for l in live) else None
+    m["cpo"] = m["cpo_status"] is not None
+    m["cpo_note"] = {"verified": "Porsche Approved Certified Pre-Owned, per the car's Porsche Finder listing",
+                     "listed": "The dealer feed lists this car as certified. It is not on Porsche Finder, so Porsche Approved "
+                               "status is not confirmed; ask the seller which programme it is"}.get(m["cpo_status"])
     m["exterior_family"] = C.exterior_family(m["exterior_color"])
     m["interior_family"] = C.interior_family(m["interior_color"])
 
@@ -405,8 +416,10 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
                                "detail": "Seller states a clean history report in the listing; ask for the report itself"}
     else:
         bits = []
-        if m["cpo"]:
+        if m.get("cpo_status") == "verified":
             bits.append("Porsche Approved CPO (inspection passed), but no accident statement published")
+        elif m["cpo"]:
+            bits.append("listed as certified in the dealer feed (not confirmed as Porsche Approved); no accident statement published")
         if any(l.get("carfax_clean_title") for l in ls):
             bits.append("feed reports a clean title, which is not the same as accident-free")
         history["accident"] = {"status": "unknown", "detail": "; ".join(bits) or None}
