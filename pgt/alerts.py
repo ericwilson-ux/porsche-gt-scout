@@ -88,6 +88,15 @@ def prepare_digest(con, cfg: dict, state: Path, now: datetime | None = None) -> 
     if not row:
         return None
     digest = build_digest(con, cfg, row)
+    if not digest["cars"]:
+        # every queued car has since sold, been withdrawn or stopped qualifying: nothing to send
+        con.execute("UPDATE digests SET status='void' WHERE digest_date=?", (row["digest_date"],))
+        con.commit()
+        write_pending_pointer(con, state)
+        stale = state / "digests" / f"{row['digest_date']}.json"
+        if stale.exists():
+            stale.unlink()
+        return None
     ddir = state / "digests"
     ddir.mkdir(parents=True, exist_ok=True)
     (ddir / f"{row['digest_date']}.json").write_text(json.dumps(digest, indent=1, ensure_ascii=False), encoding="utf-8")
@@ -117,6 +126,8 @@ def build_digest(con, cfg: dict, row) -> dict:
         if not v or not v["merged"]:
             continue
         m = json.loads(v["merged"])
+        if m.get("status") != "active" or m["eligibility"]["category"] not in cfg["alerts"]["categories"]:
+            continue          # sold, withdrawn or re-graded since it was queued: not news any more
         ev = con.execute("""SELECT detail FROM lifecycle_events WHERE vehicle_key=? AND event='alert_queued'
                             ORDER BY id DESC LIMIT 1""", (k,)).fetchone()
         s = m.get("seller") or {}

@@ -1183,3 +1183,20 @@ def test_cpo_status_is_decided_by_porsche_finder_and_feed_only_is_a_claim(con, c
                                       pf.collect_from_capture(cap2)], now=ts(2))
     m = merged(con, "WP0AC2A9XKS149267")
     assert (m["cpo"], m["cpo_status"]) == (False, None)
+
+
+def test_queued_alert_drops_a_car_that_is_found_sold_before_the_email(con, cfg, tmp_path):
+    def one(i, vin, **extra):
+        return mc.normalise({**MC_RAW, "id": f"qa{i}", "vin": vin, "heading": "2018 Porsche 911 GT3", "price": 230000, "miles": 12000,
+                             "build": {"year": 2018, "trim": "GT3", "transmission": "Manual"}, "ref_price": None, **extra}, "us-used:2018-2019")
+    run = lambda ls, now: ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=ls, scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=now)
+    run([one(0, "WP0AC2A92JS175859")], T0)                                    # baseline
+    run([one(0, "WP0AC2A92JS175859"), one(1, VIN_P), one(2, "WP0AC2A9XJS176676")], ts(1))
+    d = alerts.prepare_digest(con, cfg, tmp_path, now=datetime(2026, 11, 14, 13, tzinfo=timezone.utc))
+    assert sorted(c["vin"] for c in d["cars"]) == sorted([VIN_P, "WP0AC2A9XJS176676"])
+    run([one(0, "WP0AC2A92JS175859"), one(1, VIN_P, vehicle_status="Sold"), one(2, "WP0AC2A9XJS176676")], ts(1, 6))
+    d = alerts.prepare_digest(con, cfg, tmp_path, now=datetime(2026, 11, 14, 19, tzinfo=timezone.utc))
+    assert [c["vin"] for c in d["cars"]] == ["WP0AC2A9XJS176676"] and "1 new" in d["subject"]
+    run([one(0, "WP0AC2A92JS175859"), one(1, VIN_P, vehicle_status="Sold"), one(2, "WP0AC2A9XJS176676", vehicle_status="Sold")], ts(1, 8))
+    assert alerts.prepare_digest(con, cfg, tmp_path, now=datetime(2026, 11, 14, 21, tzinfo=timezone.utc)) is None
+    assert json.loads((tmp_path / "digests" / "pending.json").read_text())["pending"] == []

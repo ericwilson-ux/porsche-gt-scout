@@ -101,9 +101,28 @@ step). The Claude scheduled task "GT Scout Finder capture" runs every morning on
 It needs the computer on with the Claude desktop app open. If it cannot run, Finder listings older than
 `lifecycle.stale_after_days` show as "availability unconfirmed" and nothing else breaks.
 
-## Gearbox from dealer pages
+## Dealer page readings (price, gearbox, equipment, still for sale)
 
-For cars that are not on Porsche Finder, the daily run reads the dealer's own listing page once
-(`pgt/pagecheck.py`; robots.txt respected, no retries on refusal, at most `page_checks.max_per_run` per run).
-Only specific wording settles a gearbox ("6-speed manual", "PDK", "Doppelkupplung", "dual-clutch", "7-speed");
-a bare "Automatic" is the feed's default and is ignored, and mixed wording is recorded as a conflict.
+Every listing that is not on Porsche Finder has its dealer page read about once a week by the daily run
+(`pgt/pagecheck.py`; robots.txt respected, one request, no retries on refusal, at most `page_checks.max_per_run`
+per run). Cars with no price or no gearbox go first.
+
+- **Price.** When the feed has none: structured data for this VIN, a labelled asking price, or the only price on
+  the page (MSRP, payments and other cars' prices are ignored; figures below $120,000 are rejected). Failing that,
+  the feed's last advertised price. Both are labelled on the site. "Price on request" is recorded as such.
+- **Gearbox.** Only specific wording counts ("6-speed manual", "PDK", "Doppelkupplung", "dual-clutch",
+  "7-speed"); a bare "Automatic" is the feed's default and is ignored; mixed wording is a conflict.
+- **Equipment.** Front axle lift, PCCB, Weissach and seat type when the page names them: dealer-stated, to verify.
+- **Still for sale.** A sold headline or sold structured data retires the car at once. A "sold" sentence in the
+  body, a 404/410 or a redirect to another page makes it "availability unconfirmed" and retires it when it is
+  the same on a second day. The feed returning the listing does not override the dealer's page.
+
+Other staleness rules, all in `merge_vehicle`:
+
+- the feed's own `vehicle_status` of "Sold" retires the listing (the feed keeps sold cars in its active results);
+- a listing the feed itself has not re-read for `lifecycle.feed_stale_days` is unconfirmed;
+- a listing older than `lifecycle.long_listing_days` whose dealer page cannot be read is unconfirmed;
+- a queued alert drops any car that has sold or stopped qualifying before the email goes out.
+
+Many dealer sites refuse cloud servers (HTTP 429/403) or disallow robots; those pages stay unread from the
+cloud and the affected cars keep whatever the feed says, flagged where the rules above apply.
