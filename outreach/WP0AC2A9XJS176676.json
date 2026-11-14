@@ -1,0 +1,30 @@
+{
+ "vin": "WP0AC2A9XJS176676",
+ "car": "2018 911 GT3 (991.2), GT Silver, 6-speed manual, stock 15162N",
+ "seller": {"name": "Porsche Charleston", "email": null, "phone": "843-852-4005"},
+ "thread_id": null,
+ "status": "negotiating",
+ "asking": 240594,
+ "target": 214000, "opening": 207500, "ceiling": 223000,
+ "trade": {"car": "Lotus Emira", "dealer_offer": 74000, "other_written_offer": 82000, "other_offer_source": "Porsche Richmond quote, 2026-11-14"},
+ "net_plan": {"asking_net": 166594, "counter_net": 138000, "counter_split": {"gt3": 220000, "emira": 82000}, "landing_net": "143000-145000", "walk_net": 149000},
+ "facts": {
+  "available": {"value": true, "basis": "phone call with dealer, 2026-11-14 (Eric)"},
+  "lift": {"value": true, "basis": "option 474 on Porsche Finder equipment list"},
+  "transmission": {"value": "manual", "basis": "option 486 on Porsche Finder; G9190 gearbox and clutch check on CPO inspection sheet"},
+  "cpo": {"value": true, "basis": "Porsche Approved multi-point inspection dated 2026-11-11; 2 years unlimited miles from purchase (in service 2018-11-07)"},
+  "accident": {"value": "no signs of previous damage", "basis": "CPO inspection sheet; Carfax not yet seen"},
+  "over_rev": {"value": null, "basis": "CPO item 03 ticked, no reading recorded; DME report not yet seen"},
+  "brakes": {"value": "pads 10 mm, rotors 33.99/29.9 mm (steel)", "basis": "CPO inspection sheet; dealer says brakes just done"},
+  "tires": {"value": "Michelin Pilot Sport 4S N0, 10/32 all four", "basis": "CPO inspection sheet"},
+  "service": {"value": "major service just done with small replacements", "basis": "dealer statement by phone; repair order not yet seen"},
+  "owners": {"value": null, "basis": "not stated"},
+  "quote_otd": null
+ },
+ "events": [
+  {"at": "2026-11-14T15:16:24Z", "type": "inquiry_sent", "summary": "Eric sent a Porsche Finder inquiry"},
+  {"at": "2026-11-14T19:00:00Z", "type": "call", "summary": "Eric spoke with the salesperson: $74,000 offered for the Emira, dealer asked Eric to name his price for the GT3; CPO inspection sheets received"},
+  {"at": "2026-11-14T19:30:00Z", "type": "counter_drafted", "summary": "Counter drafted for Eric to send himself: $138,000 difference ($220,000 GT3 / $82,000 Emira); not yet sent"}
+ ],
+ "next_step": "Eric reviews and sends the counter; then await dealer reply, Carfax, service records and DME over-rev report"
+}
