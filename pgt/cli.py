@@ -188,6 +188,28 @@ def cmd_digest(args) -> int:
     return 2
 
 
+def cmd_import_finder(args) -> int:
+    """Load a Porsche Finder browser capture file into the database and rebuild the site."""
+    cfg, state = config.load_config(), config.state_dir()
+    con = _db(state)
+    src = Path(args.file)
+    if src.is_dir():        # checksummed lite transfer: c*.txt line files plus meta.json
+        lines = [l for f in sorted(src.glob("c*.txt")) for l in f.read_text(encoding="utf-8").split("\n")]
+        capture = porsche_finder.parse_lite(lines, json.loads((src / "meta.json").read_text(encoding="utf-8")))
+    else:
+        capture = json.loads(src.read_text(encoding="utf-8"))
+    res = porsche_finder.collect_from_capture(capture)
+    summary = ingest.process_results(con, cfg, [res], sales_csv=ROOT / "config" / "manual_sales.csv")
+    digest = alerts.prepare_digest(con, cfg, state)
+    summary["digest"] = {"date": digest["digest_date"], "cars": len(digest["cars"])} if digest else None
+    summary["site"] = build_site(con, cfg, state, Path(args.out))
+    save_state(con, state)
+    print(json.dumps(summary, indent=1, default=str))
+    for msg in res.messages[:25]:
+        print(f"[porsche_finder] {msg}", file=sys.stderr)
+    return 1 if summary["status"] == "failed" else 0
+
+
 def cmd_outreach(args) -> int:
     """Print the private outreach brief (target price, open questions, draft inquiry) for one or more cars."""
     cfg, state = config.load_config(), config.state_dir()
@@ -228,6 +250,10 @@ def main(argv=None) -> int:
     d.add_argument("--channel", default="gmail")
     d.add_argument("--message-id")
     d.set_defaults(fn=cmd_digest)
+    imp = sub.add_parser("import-finder", help="load a Porsche Finder browser capture (JSON) into the database")
+    imp.add_argument("file", help="capture .json file, or a directory of lite line files (c*.txt + meta.json)")
+    imp.add_argument("--out", default=str(ROOT / "_site"))
+    imp.set_defaults(fn=cmd_import_finder)
     o = sub.add_parser("outreach", help="private brief for contacting a seller: target price, open questions, draft email")
     o.add_argument("cars", nargs="+", help="VIN (or its last 6+ characters)")
     o.set_defaults(fn=cmd_outreach)

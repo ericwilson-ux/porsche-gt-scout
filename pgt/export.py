@@ -11,6 +11,13 @@ from . import classify as C
 from . import db as D
 from . import valuation
 
+FINDER_BROWSER_NOTE = (
+    "Read through the owner's own browser, not from the cloud: every US dealer sitemap and each matching listing page "
+    "(VIN, transmission, factory option codes, CPO, fees). finder.porsche.com answers GitHub's servers with a bot-check "
+    "page that is not bypassed, so the daily cloud run cannot refresh these listings; they are as of the capture time "
+    "shown here until the next browser capture. Cars that already fail a hard requirement carry their deciding options "
+    "only, and photo galleries are partial until a full capture file is imported.")
+
 COVERAGE_NOTES = [
     {"source": "Porsche Finder", "state": "not covered from the cloud",
      "note": "The adapter (dealer sitemaps + listing pages: VIN, factory option codes, CPO, full gallery) works on real "
@@ -175,13 +182,21 @@ def export(con, cfg: dict, out: Path, state: Path | None = None) -> dict:
     incomplete = [{"key": c["key"], "label": f"{c['year']} {c['label']}", "captured": c["nphotos"], "advertised": c["nadv"],
                    "note": c["gnote"], "cat": c["cat"]} for c in listed if not c["gcomplete"]]
     dec = {r["status"]: r["c"] for r in con.execute("SELECT status, COUNT(*) c FROM vin_decodes GROUP BY status")}
+    coverage = [dict(c) for c in COVERAGE_NOTES]
+    fin = con.execute("""SELECT finished_at, listings_seen, detail FROM source_runs WHERE source='porsche_finder'
+                         AND status IN ('ok','partial') ORDER BY id DESC LIMIT 1""").fetchone()
+    if fin and "browser" in (fin["detail"] or ""):
+        coverage[0].update({"state": "covered by browser capture", "note": FINDER_BROWSER_NOTE,
+                            "captured_at": json.loads(fin["detail"]).get("captured_at"), "listings": fin["listings_seen"]})
     health = {"generated_at": D.now_iso(), "runs": runs, "decodes": dec,
               "decode_last": json.loads(D.get_meta(con, "last_decode_summary", "null")),
               "api_calls": {r["key"].split(":", 1)[1]: int(r["value"]) for r in con.execute("SELECT * FROM meta WHERE key LIKE 'mc_calls:%'")},
-              "last_success": last_success, "coverage": COVERAGE_NOTES,
+              "last_success": last_success, "coverage": coverage,
               "digests": digests, "gallery": {"advertised": adv, "captured": cap, "cars": len(listed), "complete_cars": sum(1 for c in listed if c["gcomplete"]),
                           "preview_only": sum(1 for c in listed if c["gnote"] and "preview" in c["gnote"]),
                           "no_photos": sum(1 for c in listed if not c["nphotos"]),
+                          "finder_partial": sum(1 for c in listed if c["gnote"] and "original listing" in c["gnote"]
+                                                and "preview" not in c["gnote"]),
                           "incomplete": [g for g in incomplete if g["cat"] in ("lead", "confirmed", "near_miss")][:200]},
               "baseline": {r["key"].split(":", 1)[1]: r["value"] for r in con.execute("SELECT * FROM meta WHERE key LIKE 'baseline_at:%'")}}
     (out / "health.json").write_text(json.dumps(health, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

@@ -93,6 +93,7 @@ site_url = ""                        # filled from SITE_URL env at run time
 explicit_gone_checks_to_remove = 2   # separate runs where the source says "gone" (404 / delisted)
 silent_misses_to_remove = 3          # separate successful runs where the listing was simply absent
 min_hours_before_removed = 36
+stale_after_days = 3                 # a listing whose source was last read longer ago shows as "availability unconfirmed"
 
 # ---- Photos --------------------------------------------------------------------
 [photos]

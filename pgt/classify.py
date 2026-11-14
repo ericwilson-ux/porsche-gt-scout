@@ -283,10 +283,14 @@ def resolve_transmission(raw: str | None, text: str | None, variant: str | None,
         return "pdk", "PDK-only model"
     if variant == "gt3_touring" and generation == "991.2":
         return "manual", "The 991.2 GT3 Touring was built with a manual gearbox only"
-    if kind == "manual" or (text and _MANUAL_TXT.search(text)):
+    if text and _MANUAL_TXT.search(text):
         return "manual", None
+    if kind == "manual":
+        # checked against Porsche's own listings, the feed's "Manual" was right for most cars but not all
+        return "manual", "Per the dealer feed only, which is occasionally wrong; confirm with the seller"
     if text and _PDK_TXT.search(text):
         return "pdk", None
     if kind == "pdk":
+        # checked against Porsche's own listings, over half of the GT3s the feed called automatic were manuals
         return None, "The feed lists this car as automatic, a value it also uses as a default; not confirmed either way"
     return None, None

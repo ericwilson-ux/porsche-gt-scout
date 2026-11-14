@@ -43,7 +43,8 @@ def _candidates(con, cfg: dict) -> list[dict]:
                                 ORDER BY id DESC LIMIT 1""", (r["key"],)).fetchone()
             if ev:
                 d = json.loads(ev["detail"])
-                if d.get("from") in QUALIFYING_FROM and d.get("to") in cats:
+                # a source's first import re-grades cars that were already for sale: backfill, not news
+                if d.get("from") in QUALIFYING_FROM and d.get("to") in cats and not d.get("backfill"):
                     reason = "Now qualifies (was " + d["from"].replace("_", " ") + ")"
         if reason:
             m = json.loads(r["merged"])

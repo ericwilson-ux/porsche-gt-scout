@@ -307,6 +307,12 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
     if eq_src:
         det = C.detect_equipment(eq_src.get("options") or [], eq_src.get("standard_equipment") or [], eq_src.get("highlights") or [])
         src_label = SOURCE_LABEL.get(eq_src["source"], eq_src["source"])
+        ex = eq_src.get("extra") or {}
+        n_opts = ex.get("options_total") or len(eq_src["options"])
+        m["options_total"] = n_opts
+        m["options_note"] = (f"The {len(eq_src['options'])} options that decide lift, seats, brakes and packages, out of {n_opts} "
+                             f"on the {src_label} listing. The full list is on the original listing."
+                             if ex.get("options_partial") else None)
         lift_opt = next((o for o in eq_src["options"] if str(o.get("code") or "").upper() in C.LIFT_CODES
                          or C.has_lift_text(o.get("name"))), None)
         if det["lift"]:
@@ -315,7 +321,7 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
                                  "detail": f"Front Axle Lift System{code} in the factory option list on {src_label}"}
         else:
             equipment["lift"] = {"status": "verified_absent", "value": False, "source": src_label, "url": eq_src["url"],
-                                 "detail": f"Factory option list on {src_label} ({len(eq_src['options'])} options) has no front axle lift"}
+                                 "detail": f"Factory option list on {src_label} ({n_opts} options) has no front axle lift"}
         equipment["weissach"] = {"status": "verified" if det["weissach"] else "verified_absent", "value": det["weissach"],
                                  "source": src_label}
         equipment["seats"] = {"status": "verified" if det["seats"] else "unknown", "value": det["seats"], "source": src_label}
@@ -434,14 +440,20 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
     preview_only = bool(photos) and not from_finder_page and all(C.is_finder_image(p["url"]) for p in photos)
     if not from_finder_page:
         advertised = None            # aggregator feeds carry links, not the listing's own photo count
-    if not photos:
+    pending = next((l for l in ls if l["source"] == "porsche_finder" and l.get("photos_advertised")), None)
+    if not photos and pending:
+        advertised = pending["photos_advertised"]
+        complete, note = False, (f"The Porsche Finder listing has {advertised} photos; none are captured here yet. "
+                                 "See them on the original listing")
+    elif not photos:
         complete, note = False, "No photos published in any source"
     elif preview_only:
         complete, note = False, (f"Only the {len(photos)} preview photos from the dealer's Porsche page reach the feed; "
                                  "the full gallery is on the original listing")
     elif advertised is not None:
         complete = len(photos) >= advertised
-        note = None if complete else f"{len(photos)} of {advertised} advertised photos captured"
+        note = None if complete else (f"{len(photos)} of {advertised} advertised photos captured; "
+                                      "the rest are on the original listing")
     else:
         complete, note = True, "Every photo link in the feed is shown; the source does not publish a count to check against"
     m["photos"] = photos
@@ -504,8 +516,21 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
     m["baseline"] = bool(vrow["baseline"])
 
     # -- vehicle status from listing statuses
-    statuses = {l["_row"]["status"] for l in ls}
+    # A listing whose source has not been re-read for several days no longer proves the car is for sale
+    # (a browser capture is not refreshed by the daily cloud run), so it counts as unverified, not active.
+    limit = int((cfg.get("lifecycle") or {}).get("stale_after_days", 3))
+    statuses, stale_src = set(), None
+    for l in ls:
+        st = l["_row"]["status"]
+        if st == "active":
+            seen = D.get_meta(con, f"last_success:{l['source']}")
+            if seen and (today - _parse_ts(seen).date()).days > limit:
+                st, stale_src = "unverified", (l["source"], seen)
+        statuses.add(st)
     m["status"] = "active" if "active" in statuses else "unverified" if "unverified" in statuses else "removed"
+    m["status_note"] = (f"Last read from {SOURCE_LABEL.get(stale_src[0], stale_src[0])} on {stale_src[1][:10]} and not "
+                        "re-checked since. Confirm with the seller that it is still available."
+                        if stale_src and m["status"] == "unverified" else None)
     return m
 
 
@@ -536,7 +561,9 @@ def data_quality(m: dict) -> dict:
     return {"level": level, "points": pts, "max": 7, "notes": notes}
 
 
-def rebuild_vehicles(con, cfg: dict, now: str, today: date | None = None) -> dict:
+def rebuild_vehicles(con, cfg: dict, now: str, today: date | None = None, backfill: str | None = None) -> dict:
+    """Re-merge and re-evaluate every vehicle.  `backfill` names a source whose first import is part of
+    this run: category changes it causes are existing cars seen in more detail, not news."""
     today = today or datetime.now(timezone.utc).date()
     stats = {"vehicles": 0, "status_changes": 0}
     sold_keys = {r["vehicle_key"]: r for r in con.execute("SELECT * FROM sales WHERE vehicle_key IS NOT NULL")}
@@ -572,7 +599,8 @@ def rebuild_vehicles(con, cfg: dict, now: str, today: date | None = None) -> dic
             D.event(con, m["key"], f"vehicle_{m['status']}", {"was": vrow["status"], "last_asking": m.get("price")}, None, now)
         if vrow["category"] and m["eligibility"]["category"] != vrow["category"]:
             D.event(con, m["key"], "category_change", {"from": vrow["category"], "to": m["eligibility"]["category"],
-                                                       "summary": m["eligibility"]["summary"]}, None, now)
+                                                       "summary": m["eligibility"]["summary"],
+                                                       **({"backfill": backfill} if backfill else {})}, None, now)
         con.execute("""UPDATE vehicles SET variant=?, generation=?, year=?, status=?, status_changed_at=CASE WHEN status!=? THEN ? ELSE status_changed_at END,
                        category=?, score=?, merged=? WHERE key=?""",
                     (m["variant"], m["generation"], m["year"], m["status"], m["status"], now,
@@ -752,6 +780,12 @@ def process_results(con, cfg: dict, results: list[SourceResult], now: str | None
     cur = con.execute("INSERT INTO runs(started_at, status, baseline) VALUES(?, 'running', ?)", (now, 1 if baseline else 0))
     run_id = cur.lastrowid
     summary = {"baseline": baseline, "sources": {}}
+    first_import = [r.source for r in results if r.status in ("ok", "partial")
+                    and D.get_meta(con, f"baseline_done:{r.source}") != "1"]
+    sig = evaluate.rules_signature(cfg)
+    if D.get_meta(con, "rules_signature") != sig:        # criteria or grading rules changed since the last run
+        first_import.insert(0, "rules")
+        D.set_meta(con, "rules_signature", sig)
     any_ok = False
     for res in results:
         up = lc = None
@@ -764,7 +798,7 @@ def process_results(con, cfg: dict, results: list[SourceResult], now: str | None
         summary["sources"][res.source] = {"status": res.status, **(up or {}), **({"lifecycle": lc} if lc else {})}
     if sales_csv:
         summary["sales_imported"] = import_sales_csv(con, sales_csv, now)
-    summary["rebuild"] = rebuild_vehicles(con, cfg, now)
+    summary["rebuild"] = rebuild_vehicles(con, cfg, now, backfill=first_import[0] if first_import else None)
     snapshot_inventory(con, now[:10])
     statuses = [r.status for r in results if r.status != "skipped"]
     status = "failed" if not any_ok else "ok" if all(s == "ok" for s in statuses) else "partial"

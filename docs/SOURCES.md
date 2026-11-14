@@ -65,3 +65,23 @@ says so.
    installed option packages; calling it for feed-only leads would verify front lift without the seller.
 2. MarketCheck's past-90-days search adds delisted listings (last asking prices) for deeper comps.
 3. A paid auction-results data source would replace the manual sales file.
+
+
+## Porsche Finder through the owner's browser
+
+finder.porsche.com answers GitHub-hosted runners with a bot-check page, and that check is not bypassed. The same
+public pages load normally in an ordinary browser, so Finder data is collected there instead:
+
+1. In the browser, read `sitemap.xml`, every US dealer sitemap, and each listing page whose URL names a tracked
+   model (the site's robots.txt allows these; its filter/search URLs are not used).
+2. Reduce each page's embedded listing data to the fields the pipeline uses.
+3. Import with `python -m pgt import-finder <capture>`, where `<capture>` is either a capture `.json` file or a
+   directory of checksummed "lite" line files (`c*.txt` + `meta.json`, format in `pgt/sources/porsche_finder.py`).
+
+The lite form exists because a full capture is a few megabytes and there may be no file channel between the browser
+and the pipeline. It carries the whole option list and the first photos for cars that pass the hard requirements,
+and only the deciding options for cars that already fail one. The site labels both as partial.
+
+The daily cloud run cannot refresh Finder listings. A listing whose source has not been re-read for
+`lifecycle.stale_after_days` shows as "availability unconfirmed" until the next capture. The first import of a
+source, and any change to the criteria or grading rules, re-grades existing cars without sending an alert.

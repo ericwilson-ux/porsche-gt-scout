@@ -267,3 +267,15 @@ def preference_score(v: dict, cfg: dict, today: date | None = None) -> dict:
     misses = [i["label"] + ": " + i["note"] for i in items if i["fraction"] < 0.75]
     strengths = [i["label"] + ": " + i["note"] for i in items if i["fraction"] >= 0.99]
     return {"total": total, "items": items, "strengths": strengths, "misses": misses}
+
+
+RULES_VERSION = 3      # bump when grading logic changes (eligibility, transmission or equipment evidence rules)
+
+
+def rules_signature(cfg: dict) -> str:
+    """Fingerprint of everything that decides a car's category.  When it changes, cars move between
+    categories because the rules moved, which must not be announced as market news."""
+    import hashlib
+    import json
+    parts = {k: cfg.get(k) for k in ("variants", "generation_rules", "hard")}
+    return f"{RULES_VERSION}:" + hashlib.sha256(json.dumps(parts, sort_keys=True, default=str).encode()).hexdigest()[:16]

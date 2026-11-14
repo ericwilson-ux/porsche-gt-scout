@@ -28,6 +28,8 @@ _LOC_RE = re.compile(r"<loc>\s*([^<\s]+)\s*</loc>")
 _LASTMOD_RE = re.compile(r"<lastmod>\s*([^<\s]+)\s*</lastmod>")
 _PUSH_RE = re.compile(r'self\.__next_f\.push\(\[1,("(?:[^"\\]|\\.)*")\]\)')
 _STATE_RE = re.compile(r",\s*([A-Z]{2})\s*,?\s*(\d{5})")
+_MSRP_RE = re.compile(r"\bMSRP", re.I)
+_ADDON_RE = re.compile(r"add-?\s?ons?\b|adjustment|market", re.I)
 
 
 # ---------------------------------------------------------------------------
@@ -366,3 +368,228 @@ def collect(fetcher: Fetcher, known: dict[str, dict] | None = None, max_dealers:
                   "rechecked_missing": len(recheck), "explicit_gone": len(res.explicit_gone)}
     res.requests, res.errors = fetcher.requests, fetcher.errors
     return res
+
+
+# ---------------------------------------------------------------------------
+# browser capture import
+# ---------------------------------------------------------------------------
+# When the site cannot be reached from the cloud runner, the same pages (dealer sitemaps and
+# listing pages) are read in the owner's own browser and saved as one JSON "capture" file.
+# Each record is the listing page's embedded data reduced to the fields used below.
+def from_capture(rec: dict) -> Listing | None:
+    if not rec or not rec.get("id"):
+        return None
+    lst = Listing(source=SOURCE, source_listing_id=str(rec["id"]),
+                  url=rec.get("url") or f"{BASE}/us/en-US/details/{rec.get('slug') or 'porsche'}-{rec.get('cond') or 'preowned'}-{rec['id']}",
+                  scope=str(rec["d"]) if rec.get("d") else (str(rec["sid"]) if rec.get("sid") else None))
+    lst.extra.update({"listed": rec.get("listed"), "inventory_id": rec.get("inv"), "model_code": rec.get("mc"),
+                      "exterior_color_code": rec.get("ecc"), "commission_number": rec.get("com"), "via": "browser capture",
+                      "capture_level": rec.get("level") or "full"})
+    lst.vin = rec.get("vin")
+    lst.title = f"{rec.get('yr') or ''} Porsche {rec.get('cat') or ''}".strip()
+    cls = C.classify(rec.get("cat"), lst.vin, rec.get("yr"), platform_text=rec.get("mdl"))
+    lst.variant, lst.generation, lst.year, lst.issues = cls["variant"], cls["generation"], cls["year"], cls["issues"]
+    lst.condition = "new" if rec.get("cond") == "new" else "used"
+    lst.cpo = bool(rec.get("pa"))
+    lst.price_as_listed = rec.get("pv")
+    # The page's price breakdown mixes three kinds of line: the MSRP of a new car (the price itself),
+    # dealer add-ons / market adjustments (part of what the car costs) and documentary-type fees.
+    items = [(str(f[0]), f[1]) for f in rec.get("fees") or [] if f and f[1] is not None]
+    msrp = [a for lab, a in items if _MSRP_RE.search(lab)]
+    addons = [a for lab, a in items if _ADDON_RE.search(lab)]
+    fees = [{"label": lab, "amount": a} for lab, a in items if not _MSRP_RE.search(lab) and not _ADDON_RE.search(lab)]
+    lst.fee_items = fees
+    lst.dealer_fees_listed = round(sum(f["amount"] for f in fees), 2) if fees else None
+    if lst.price_as_listed is not None:
+        price = round(lst.price_as_listed - (lst.dealer_fees_listed or 0), 2)
+        lst.price = int(price) if float(price).is_integer() else price
+    else:
+        lst.price = rec.get("vp")
+    if msrp:
+        lst.extra["msrp"] = msrp[0]
+    if addons:
+        lst.extra["dealer_add_ons"] = round(sum(addons), 2)
+    if isinstance(rec.get("mi"), (int, float)):
+        lst.mileage = int(round(rec["mi"] * 0.621371)) if rec.get("miu") == "KMT" else int(round(rec["mi"]))
+    lst.exterior_color = re.sub(r"\bGt\b", "GT", rec.get("ext") or "") or None
+    lst.exterior_hex = rec.get("hex")
+    lst.interior_color = rec.get("int")
+    lst.transmission_raw = rec.get("tr")
+    lst.transmission = C.transmission_kind(rec.get("tr"))
+    m = _STATE_RE.search(rec.get("fcity") or "")
+    lst.seller = {"name": rec.get("sname"), "kind": "porsche_dealer", "street": rec.get("street"), "city": rec.get("city"),
+                  "state": m.group(1) if m else None, "zip": rec.get("zip"), "phone": None, "website": None,
+                  "source_seller_id": rec.get("sid"), "partner_number": rec.get("pn")}
+    lst.options = [{"code": o[0], "name": o[1], "group": o[2] if len(o) > 2 else None} for o in rec.get("opts") or [] if o and o[1]]
+    lst.standard_equipment = [n for n in rec.get("std") or [] if isinstance(n, str)]
+    lst.highlights = list(rec.get("hl") or [])
+    total = rec.get("opts_total")
+    lst.has_equipment_list = bool(lst.options) or bool(total)
+    if total and total > len(lst.options):
+        # summary-level capture: only the options that decide lift, seats, brakes and packages came across
+        lst.extra["options_total"] = int(total)
+        lst.extra["options_partial"] = True
+    lst.seller_comment = rec.get("comment") if isinstance(rec.get("comment"), str) else None
+    phone = re.search(r"\(?\b\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}\b", lst.seller_comment or "")
+    if phone:
+        lst.seller["phone"] = phone.group(0)
+    seen, pos = set(), 0
+    for category, ids in (rec.get("imgs") or {}).items():
+        for iid in ids or []:
+            if iid and iid not in seen:
+                seen.add(iid)
+                lst.photos.append({"id": iid, "url": f"{IMAGE_HOST}/{iid}/1280", "category": category, "position": pos, "aspect": None})
+                pos += 1
+    lst.photos_advertised = rec.get("adv") if rec.get("adv") is not None else (len(lst.photos) or None)
+    lst.photos_are_real = bool(rec.get("real"))
+    lst.accident_free = rec.get("af") if isinstance(rec.get("af"), bool) else None
+    lst.previous_owners = rec.get("own") if isinstance(rec.get("own"), int) else None
+    lst.one_owner = True if lst.previous_owners == 1 else None
+    lst.service_history = rec.get("svc")
+    lst.warranty = [{"type": w[0], "label": w[1], "duration": w[2]} for w in rec.get("warr") or [] if w]
+    start = re.search(r"warranty start:?\s*([\d/-]{8,10})", lst.seller_comment or "", re.I)
+    if start:
+        lst.extra["warranty_start_stated"] = start.group(1)
+    docs = rec.get("docs") or [False, False]
+    lst.documents = {"window_sticker_available": bool(docs[0]), "build_sheet_available": bool(docs[1]), "car_pass_url": None}
+    lst.stock_number = rec.get("stock")
+    return lst
+
+
+def collect_from_capture(capture: dict) -> SourceResult:
+    """Turn a browser capture into a source result with the same coverage semantics as collect()."""
+    res = SourceResult(SOURCE)
+    res.scopes_total = int(capture.get("dealers_total") or 0)
+    res.scopes_ok = {str(d) for d in capture.get("dealers_ok") or []}
+    res.explicit_gone = {str(x) for x in capture.get("gone") or []}
+    res.inconclusive = {str(x) for x in capture.get("failed") or []}
+    for rec in capture.get("listings") or []:
+        lst = from_capture(rec)
+        if lst is None:
+            continue
+        res.checked_ids.add(lst.source_listing_id)
+        if rec.get("listed") is False:
+            res.explicit_gone.add(lst.source_listing_id)
+        elif lst.variant:
+            res.listings.append(lst)
+        else:
+            res.messages.append(f"capture {lst.source_listing_id}: not a tracked variant ({lst.title}; {lst.issues})")
+    coverage = len(res.scopes_ok) / max(1, res.scopes_total)
+    if not res.listings or coverage < 0.5:
+        res.status = "failed"
+    elif coverage < 0.97 or res.inconclusive:
+        res.status = "partial"
+    res.detail = {"via": "browser capture", "captured_at": capture.get("captured_at"), "dealer_sitemaps": res.scopes_total,
+                  "dealer_sitemaps_ok": len(res.scopes_ok), "listing_urls_scanned": capture.get("listing_urls"),
+                  "target_urls": capture.get("targets"), "inconclusive": len(res.inconclusive)}
+    return res
+
+
+# ---------------------------------------------------------------------------
+# compact ("lite") capture transfer
+# ---------------------------------------------------------------------------
+# A full capture is a few megabytes.  When no file channel exists between the browser and the
+# pipeline, the browser emits this line format instead: dictionaries (D dealers, E exterior colours,
+# I interiors, F fee labels, G option groups, O options) followed by one line per listing.
+# "A" listings carry the whole option list and the first photos; "B" listings (cars that already
+# fail a hard requirement) carry the deciding options only.  Every line ends in a checksum.
+LITE_SLUGS = ["porsche-911-gt3", "porsche-911-gt3-with-touring-package", "porsche-718-cayman-gt4-rs", "porsche-718-spyder-rs"]
+LITE_CATS = ["911 GT3", "911 GT3 Touring", "718 Cayman GT4 RS", "718 Spyder RS"]
+LITE_MODELS = ["982", "991 II", "992 I", "992 II"]
+LITE_HIGHLIGHTS = ["bose-sound-system", "front-led", "front-led-matrix", "full-bucket-seats", "lifting-system",
+                   "lightweight-roof-carbon", "pccb", "rear-axle-steering", "reversing-camera", "sport-chrono-package",
+                   "sport-exhaust", "sports-seats"]
+LITE_SERVICE = [None, "Yes, every service done", "Yes, every service done in Porsche Center"]
+LITE_PHOTO_CATS = {"e": "exterior", "i": "interior", "h": "highlights", "u": "uncategorized"}
+
+
+def lite_checksum(body: str) -> str:
+    h = 0x811C9DC5
+    for ch in body:
+        h = ((h ^ ord(ch)) * 0x01000193) & 0xFFFFFFFF
+    n, digits = h % 46656, "0123456789abcdefghijklmnopqrstuvwxyz"
+    return digits[n // 1296] + digits[(n // 36) % 36] + digits[n % 36]
+
+
+def _num(v: str):
+    if v == "":
+        return None
+    f = float(v)
+    return int(f) if f.is_integer() else f
+
+
+def parse_lite(lines: list[str], meta: dict | None = None) -> dict:
+    """Rebuild a capture dict (see collect_from_capture) from checksummed lite lines."""
+    from .. import geo
+    D, E, I, F, G, O, recs = {}, {}, {}, {}, {}, {}, []
+    for n, line in enumerate(l for l in lines if l.strip()):
+        body, _, cs = line.rpartition("|")
+        if lite_checksum(body) != cs:
+            raise ValueError(f"lite capture line {n + 1} fails its checksum: {line[:40]}")
+        f = body.split("|")
+        kind = f[0]
+        if kind == "D":
+            D[f[1]] = {"name": f[2], "city": f[3], "zip": f[4]}
+        elif kind == "E":
+            E[f[1]] = (f[2], f[3] or None)
+        elif kind == "I":
+            I[f[1]] = f[2]
+        elif kind == "F":
+            F[f[1]] = f[2]
+        elif kind == "G":
+            G[f[1]] = f[2]
+        elif kind == "O":
+            O[f[1]] = [f[2] or None, f[3], f[4]]
+        elif kind in ("A", "B"):
+            recs.append(f)
+        else:
+            raise ValueError(f"lite capture line {n + 1}: unknown record type {kind!r}")
+
+    def opt(i):
+        code, name, g = O[i]
+        return [code, name, G.get(g)]
+
+    listings = []
+    for f in recs:
+        kind, lid, s, cond, d, vin, yr, mdl, tr, pv, vp, mi, pa, own, real, adv = f[:16]
+        dealer = D[d]
+        loc = geo.zip_latlon(dealer["zip"])
+        state = loc[3] if loc else None
+        rec = {"id": lid, "listed": True, "slug": LITE_SLUGS[int(s)], "cond": "new" if cond == "n" else "preowned", "d": d,
+               "sid": d, "vin": vin, "yr": int(yr), "cat": LITE_CATS[int(s)], "mdl": LITE_MODELS[int(mdl)],
+               "tr": "Manual" if tr == "M" else "PDK (Automatic)", "pv": _num(pv), "vp": _num(vp), "mi": _num(mi), "miu": "SMI",
+               "pa": pa == "1", "own": int(own) if own != "" else None, "real": real == "1", "adv": _num(adv),
+               "sname": dealer["name"], "city": dealer["city"], "zip": dealer["zip"],
+               "fcity": ", ".join(x for x in (dealer["city"], state, dealer["zip"]) if x)}
+        rec["url"] = f"{BASE}/us/en-US/details/{rec['slug']}-{rec['cond']}-{lid}"
+        if kind == "A":
+            docs, e, i, stock, svc, w, fees, opts, hl, imgs = f[16:26]
+            comment = "|".join(f[26:])
+            rec.update({"docs": [c == "1" for c in docs], "int": I[i], "stock": stock or None, "svc": LITE_SERVICE[int(svc)],
+                        "opts": [opt(x) for x in opts.split(",") if x], "comment": comment.replace(" \\n ", "\n") or None,
+                        "level": "detail"})
+            photos: dict = {}
+            for token in (t for t in imgs.split(",") if t):
+                h = token[1:]
+                photos.setdefault(LITE_PHOTO_CATS.get(token[0], "uncategorized"), []).append(
+                    f"{h[:8]}-{h[8:12]}-{h[12:16]}-{h[16:20]}-{h[20:]}")
+            rec["imgs"] = photos
+        else:
+            e, w, fees, lift, total, opts, hl = f[16:23]
+            rec.update({"opts": [opt(x) for x in opts.split(",") if x], "opts_total": int(total), "imgs": {}, "level": "summary"})
+            if (lift == "1") != any(str(o[0]) in ("474", "2UH") for o in rec["opts"]):
+                raise ValueError(f"lite capture {lid}: lift flag disagrees with its option list")
+        rec["ext"], rec["hex"] = E[e]
+        rec["fees"] = [[F[x.split(":")[0]], float(x.split(":")[1])] for x in fees.split(",") if x]
+        rec["hl"] = [LITE_HIGHLIGHTS[ord(c) - 97] for c in hl]
+        warr = []
+        if rec["pa"]:
+            warr += [["PORSCHE_APPROVED_WARRANTY", "Porsche Approved Warranty", "24 months"],
+                     ["ASSISTANCE", "Porsche Roadside Assistance", "24 months"]]
+        if w:
+            warr.append(["NEW_CAR_WARRANTY", "New Car Warranty", f"{int(w[1:])} months" + (" remaining term" if w[0] == "R" else "")])
+        rec["warr"] = warr
+        listings.append(rec)
+    out = {"format": "lite", "listings": listings, "gone": [], "failed": []}
+    out.update(meta or {})
+    return out

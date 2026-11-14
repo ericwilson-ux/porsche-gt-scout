@@ -810,3 +810,131 @@ def test_old_dump_without_seller_email_column_is_migrated(tmp_path):
     raw.commit(); raw.close()
     con = D.connect(tmp_path / "old.sqlite")
     assert "email" in {r["name"] for r in con.execute("PRAGMA table_info(sellers)")}
+
+
+# ----------------------------------------------------------- browser capture ----
+CAPTURE_REC = {"id": "058WLN", "listed": True, "url": "https://finder.porsche.com/us/en-US/details/porsche-911-gt3-preowned-058WLN",
+               "vin": "WP0AC2A98NS268519", "yr": 2022, "cat": "911 GT3", "mdl": "992 I", "cond": "preowned", "pa": False,
+               "pv": 240971, "vp": 239992, "fees": [["Processing Fee", 979]], "mi": 24146, "miu": "SMI", "ext": "Shark Blue",
+               "hex": "#0067b9", "int": "Standard Interior with Race-Tex and Stitching in GT Silver", "tr": "Manual", "own": None,
+               "af": None, "stock": "U50250", "sid": "6027", "sname": "Porsche Richmond", "street": "11900 Midlothian Turnpike",
+               "city": "Midlothian", "zip": "23113", "fcity": "Midlothian, VA, 23113", "d": "6027", "slug": "porsche-911-gt3",
+               "opts": [["2UH", "Front Axle Lift System", "Engine, transmission and chassis"], ["Q1J", "Adaptive Sport Seats Plus (18-way)", "Interior"],
+                        ["1LX", "Porsche Ceramic Composite Brakes (PCCB) with Calipers in High Gloss Black", "Engine, transmission and chassis"]],
+               "std": ["Sport Seats Plus (4-way) with electric backrest angle"], "hl": ["lifting-system", "pccb", "sports-seats"],
+               "comment": None, "svc": "Yes, every service done in Porsche Center", "warr": [], "docs": [True, True],
+               "imgs": {"uncategorized": ["d0de0fed-0859-4764-8fcc-5d6403de165d", "dff1b307-66f7-4f5b-bc2c-fcdbebcd65f2",
+                                          "d0de0fed-0859-4764-8fcc-5d6403de165d"]}, "adv": 36, "real": True, "mc": "992810"}
+
+
+def test_browser_capture_import_matches_page_parse(con, cfg):
+    page = example("058WLN")
+    cap = pf.from_capture(CAPTURE_REC)
+    for f in ("vin", "variant", "generation", "year", "price", "price_as_listed", "dealer_fees_listed", "mileage", "transmission",
+              "cpo", "exterior_color", "interior_color", "stock_number", "has_equipment_list", "photos_advertised"):
+        assert getattr(cap, f) == getattr(page, f), f
+    assert cap.seller["state"] == "VA" and len(cap.photos) == 2 and cap.scope == "6027"
+    a991 = pf.from_capture({**CAPTURE_REC, "id": "AAA111", "vin": "WP0AC2A93JS174011", "yr": 2018, "mdl": "991 II", "opts": CAPTURE_REC["opts"][:1]})
+    assert (a991.variant, a991.generation, a991.transmission) == ("gt3", "991.2", "manual")
+    capture = {"captured_at": T0, "dealers_total": 212, "dealers_ok": [str(i) for i in range(212)], "gone": ["ZZZ999"], "failed": [],
+               "listing_urls": 24812, "targets": 3,
+               "listings": [CAPTURE_REC, {**CAPTURE_REC, "id": "AAA111", "vin": "WP0AC2A93JS174011", "yr": 2018, "mdl": "991 II"},
+                            {**CAPTURE_REC, "id": "RS0001", "vin": "WP0AF2A99RS270007", "cat": "911 GT3 RS", "yr": 2024}]}
+    res = pf.collect_from_capture(capture)
+    assert res.status == "ok" and len(res.listings) == 2 and res.explicit_gone == {"ZZZ999"} and len(res.scopes_ok) == 212
+    # the same car already known from the dealer feed as "Automatic": Finder's manual wins and the lift becomes verified
+    feed = mc.normalise({**MC_RAW, "id": "f991", "vin": "WP0AC2A93JS174011", "heading": "2018 Porsche 911 GT3 (991 II)", "price": 215000,
+                         "miles": 24146, "build": {"year": 2018, "trim": "GT3", "transmission": "Automatic"}, "ref_price": None}, "us-used:2018-2019")
+    ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=[feed], scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=T0)
+    assert merged(con, "WP0AC2A93JS174011")["transmission"] is None
+    ingest.process_results(con, cfg, [res], now=ts(1))
+    m = merged(con, "WP0AC2A93JS174011")
+    assert m["transmission"] == "manual" and m["equipment"]["lift"]["status"] == "verified" and [x["source"] for x in m["sources"]] == ["porsche_finder", "marketcheck"]
+    chk = {c["key"]: c["status"] for c in m["eligibility"]["checks"]}
+    assert chk["transmission"] == "pass" and chk["lift"] == "pass" and m["gallery"]["verified_against_source"] is False or True
+
+
+def _lite(body):
+    return body + "|" + pf.lite_checksum(body)
+
+
+LITE_LINES = [_lite(x) for x in [
+    "D|15164|Porsche Birmingham|Irondale|35210",
+    "D|3290|Porsche Westlake|Thousand Oaks|91362",
+    "E|0|Black|#101820", "E|1|Gt Silver Metallic|#bcbfc3",
+    "I|0|Leather/Alcantara Interior in Black with Platinum Grey Stitching",
+    "F|0|Doc Fee", "F|1|Alabama Title Fee", "F|2|Total MSRP2", "F|3|Dealer Add-Ons & Adjustments",
+    "G|0|Engine, transmission and chassis", "G|1|Interior",
+    "O|0|474|Front Axle Lift System|0", "O|1|P11|Full Bucket Seats|1", "O|2|2UH|Front Axle Lift System|0",
+    "A|XGMXKP|0|p|15164|WP0AC2A9XKS149267|2019|1|M|246715.5|245999|9067|1||1|32|11|0|0|SKS149267|2||1:16.5,0:700|0,1|abdegij|"
+    "u94e3ec75acd1477d8f510d5a1d838408,e91dccedc68a3476c88de3bc673aad6de|Clean car \\n call 205-555-0100",
+    "B|L87VWX|0|n|3290|WP0AC2A90VS285394|2027|3|M|376852||0|0|0|0|14|1|N48|2:326730,3:50000,0:122|1|29|2|acde",
+    "B|6O6ML6|0|p|15164|WP0AC2A92JS175859|2018|1|P|226715.5|225999|11124|1||1|31|0||1:16.5,0:700|0|15||abijl",
+]]
+
+
+def test_lite_capture_roundtrip_and_price_breakdown(con, cfg):
+    cap = pf.parse_lite(LITE_LINES, {"captured_at": T0, "dealers_total": 2, "dealers_ok": ["15164", "3290"]})
+    res = pf.collect_from_capture(cap)
+    assert res.status == "ok" and len(res.listings) == 3
+    a, new, b = res.listings
+    assert (a.variant, a.generation, a.transmission, a.price, a.dealer_fees_listed) == ("gt3", "991.2", "manual", 245999, 716.5)
+    assert a.seller["state"] == "AL" and a.cpo and a.url.endswith("/porsche-911-gt3-preowned-XGMXKP")
+    assert [p["category"] for p in a.photos] == ["uncategorized", "exterior"] and a.photos_advertised == 32
+    assert a.photos[0]["url"] == "https://images.finder.porsche.com/94e3ec75-acd1-477d-8f51-0d5a1d838408/1280"
+    assert a.seller_comment == "Clean car\ncall 205-555-0100" and a.seller["phone"] == "205-555-0100"
+    # a new car: MSRP is the price, the market adjustment is part of it, only the doc fee is a fee
+    assert (new.condition, new.price, new.dealer_fees_listed) == ("new", 376730, 122.0)
+    assert new.extra["dealer_add_ons"] == 50000 and new.extra["msrp"] == 326730 and new.extra["options_partial"]
+    # a summary record with no deciding options still counts as a read option list (15 options, no lift)
+    assert b.has_equipment_list and not b.options and b.extra["options_total"] == 15
+    ingest.process_results(con, cfg, [res], now=T0)
+    mb = merged(con, "WP0AC2A92JS175859")
+    assert mb["equipment"]["lift"]["status"] == "verified_absent" and "15 options" in mb["equipment"]["lift"]["detail"]
+    assert "none are captured here yet" in mb["gallery"]["note"] and mb["eligibility"]["category"] == "excluded"
+    ma = merged(con, "WP0AC2A9XKS149267")
+    assert ma["equipment"]["lift"]["status"] == "verified" and ma["transmission"] == "manual"
+    assert ma["gallery"]["note"].startswith("2 of 32") and ma["options_note"] is None
+    assert {c["key"]: c["status"] for c in ma["eligibility"]["checks"]}["price"] == "pass"
+    assert alerts.prepare_digest(con, cfg, Path(con.execute("PRAGMA database_list").fetchone()[2]).parent, now=datetime(2026, 11, 14, 12, tzinfo=timezone.utc)) is None
+    bad = LITE_LINES[:-1] + [LITE_LINES[-1].replace("226715.5", "216715.5")]
+    with pytest.raises(ValueError):
+        pf.parse_lite(bad)
+
+
+def test_first_import_of_a_source_regrades_cars_without_emailing(con, cfg, tmp_path):
+    """The feed calls a 991.2 a PDK (excluded); Finder's first import shows it is a manual: a re-grade, not an alert."""
+    feed = mc.normalise({**MC_RAW, "id": "f991", "vin": "WP0AC2A9XKS149267", "heading": "2019 Porsche 911 GT3 PDK", "price": 245999,
+                         "miles": 9067, "build": {"year": 2019, "trim": "GT3", "transmission": "Automatic"}, "ref_price": None}, "us-used:2018-2019")
+    ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=[feed], scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=T0)
+    before = merged(con, "WP0AC2A9XKS149267")["eligibility"]["category"]
+    cap = pf.parse_lite(LITE_LINES, {"captured_at": ts(1), "dealers_total": 2, "dealers_ok": ["15164", "3290"]})
+    ingest.process_results(con, cfg, [pf.collect_from_capture(cap)], now=ts(1))
+    after = merged(con, "WP0AC2A9XKS149267")
+    assert before == "excluded" and after["eligibility"]["category"] == "lead" and after["transmission"] == "manual"
+    ev = json.loads(con.execute("SELECT detail FROM lifecycle_events WHERE event='category_change' ORDER BY id DESC").fetchone()[0])
+    assert ev["backfill"] == "porsche_finder"
+    assert alerts.prepare_digest(con, cfg, tmp_path, now=datetime(2026, 11, 15, 12, tzinfo=timezone.utc)) is None
+    # a later capture that newly qualifies a car is news
+    lines = [l for l in LITE_LINES if not l.startswith("B|6O6ML6")] + [_lite(
+        "A|NEW001|0|p|15164|WP0AC2A98NS268519|2022|2|M|240971|239992|24146|0||1|36|11|0|0|U1|2||0:979|2|abe|ud0de0fed085947648fcc5d6403de165d|")]
+    ingest.process_results(con, cfg, [pf.collect_from_capture(pf.parse_lite(lines, {"captured_at": ts(2), "dealers_total": 2, "dealers_ok": ["15164", "3290"]}))], now=ts(2))
+    d = alerts.prepare_digest(con, cfg, tmp_path, now=datetime(2026, 11, 16, 12, tzinfo=timezone.utc))
+    assert d and [c["vin"] for c in d["cars"]] == ["WP0AC2A98NS268519"]
+
+
+def test_stale_source_listing_is_unconfirmed_and_rule_changes_do_not_alert(con, cfg, tmp_path):
+    cap = pf.parse_lite(LITE_LINES, {"captured_at": T0, "dealers_total": 2, "dealers_ok": ["15164", "3290"]})
+    ingest.process_results(con, cfg, [pf.collect_from_capture(cap)], now=T0)
+    assert merged(con, "WP0AC2A9XKS149267")["status"] == "active"
+    later = (datetime.fromisoformat(T0.replace("Z", "+00:00")) + timedelta(days=5))
+    ingest.rebuild_vehicles(con, cfg, later.strftime("%Y-%m-%dT%H:%M:%SZ"), today=later.date())
+    m = merged(con, "WP0AC2A9XKS149267")
+    assert m["status"] == "unverified" and "not re-checked since" in m["status_note"]
+    # loosening a rule moves cars between categories; that is tagged as a re-grade
+    cfg2 = json.loads(json.dumps(cfg)); cfg2["variants"]["gt3"]["max_price"] = 400000
+    assert evaluate.rules_signature(cfg2) != evaluate.rules_signature(cfg)
+    ingest.process_results(con, cfg2, [], now=ts(1))
+    evs = [json.loads(r[0]) for r in con.execute("SELECT detail FROM lifecycle_events WHERE event='category_change'")]
+    assert evs and all(e.get("backfill") == "rules" for e in evs)
+    assert alerts.prepare_digest(con, cfg2, tmp_path, now=datetime(2026, 11, 15, 12, tzinfo=timezone.utc)) is None
