@@ -17,6 +17,7 @@ from __future__ import annotations
 import html as htmllib
 import json
 import re
+import time
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 
@@ -219,7 +220,8 @@ def candidates(con, cfg: dict, now: str, limit: int) -> list[dict]:
     """Live listings outside Porsche Finder that are due a page read, most useful first."""
     pc = cfg.get("page_checks") or {}
     now_dt = datetime.fromisoformat(now.replace("Z", "+00:00"))
-    retry = timedelta(days=float(pc.get("retry_after_days", 14)))
+    retry_days = {"robots": float(pc.get("retry_after_days", 14)), "blocked": float(pc.get("retry_blocked_days", 3)),
+                  "error": float(pc.get("retry_blocked_days", 3))}
     recheck = timedelta(days=float(pc.get("recheck_days", 7)))
     rows = con.execute("""
         SELECT l.source, l.source_listing_id, l.url, v.key, v.vin, v.variant, v.generation, v.category,
@@ -245,14 +247,15 @@ def candidates(con, cfg: dict, now: str, limit: int) -> list[dict]:
         elif r["avail"] in ("sold", "gone"):
             continue                                             # settled
         elif r["result"] in ("blocked", "robots", "error"):
-            if age < retry:
+            if age < timedelta(days=retry_days[r["result"]]):
                 continue
             rank = 4
         else:
             if age < recheck:
                 continue
             rank = 3                                             # routine "is it still for sale" re-read
-        if r["pdata"] is None and r["result"] in ("blocked", "robots", "error") and age is not None and age < retry:
+        if (r["pdata"] is None and r["result"] in ("blocked", "robots", "error") and age is not None
+                and age < timedelta(days=retry_days[r["result"]])):
             continue                                             # refused recently; do not ask again yet
         want = (0 if (no_price and in_play) else 1, 0 if (no_gearbox and r["generation"] == "991.2") else 1, 0 if in_play else 1)
         out.append({"listing_key": f"{r['source']}:{r['source_listing_id']}", "url": r["url"], "vin": r["vin"], "key": r["key"],
@@ -278,7 +281,15 @@ def run(con, cfg: dict, fetcher, now: str | None = None, limit: int | None = Non
     todo = candidates(con, cfg, now, int(limit if limit is not None else pc.get("max_per_run", 150)))
     tally: dict[str, int] = {}
     found = {"prices": 0, "sold": 0, "gone": 0, "settled": 0}
-    for c in todo:
+    gap, refused_run, stopped = float(pc.get("global_interval_seconds", 1.5)), 0, None
+    for n, c in enumerate(todo):
+        # Many dealer sites share one hosting platform, so requests are spaced overall, not only per site,
+        # and a run of refusals means the platform is throttling us: stop and leave the rest for tomorrow.
+        if refused_run >= int(pc.get("stop_after_refusals", 12)):
+            stopped = f"stopped after {refused_run} refusals in a row; {len(todo) - n} pages left for the next run"
+            break
+        if n and gap and not getattr(fetcher, "no_wait", False):
+            time.sleep(gap)
         resp = fetcher.get(c["url"])
         final = getattr(resp, "final_url", None)
         if resp.status == -1:
@@ -295,6 +306,7 @@ def run(con, cfg: dict, fetcher, now: str | None = None, limit: int | None = Non
                 res["result"] = "gone"
                 res["data"] = {"avail": "gone", "avail_evidence": "the link now leads to a different page that does not show this car"}
         tally[res["result"]] = tally.get(res["result"], 0) + 1
+        refused_run = refused_run + 1 if res["result"] == "blocked" else 0
         old = con.execute("SELECT * FROM page_checks WHERE listing_key=?", (c["listing_key"],)).fetchone()
         old_data = json.loads(old["data"]) if old and old["data"] else {}
         data = dict(res["data"])
@@ -329,7 +341,7 @@ def run(con, cfg: dict, fetcher, now: str | None = None, limit: int | None = Non
                     (c["listing_key"], c["vin"], c["url"], now, resp.status, gearbox, (evidence or None) and str(evidence)[:200],
                      json.dumps(data, ensure_ascii=False), avail, first, count))
     con.commit()
-    return {"enabled": True, "checked": len(todo), "results": tally, "settled": found["settled"], "prices_found": found["prices"],
+    return {"enabled": True, "checked": sum(tally.values()), "stopped": stopped, "results": tally, "settled": found["settled"], "prices_found": found["prices"],
             "sold": found["sold"], "gone": found["gone"]}
 
 

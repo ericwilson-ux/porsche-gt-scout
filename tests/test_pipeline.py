@@ -996,6 +996,8 @@ def test_dealer_page_reading_only_trusts_specific_wording():
 
 
 class _FakeFetcher:
+    no_wait = True
+
     def __init__(self, pages): self.pages, self.asked = pages, []
 
     def get(self, url, **_):
