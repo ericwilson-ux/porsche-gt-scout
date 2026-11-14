@@ -622,11 +622,14 @@ def test_decode_verifies_lift_for_leads_once_and_never_excludes_on_absence(con, 
     ingest.rebuild_vehicles(con, cfg, T0)
     a, b = merged(con, SYN_GT4RS), merged(con, "WP0AE2A82SK270005")
     chk = next(c for c in a["eligibility"]["checks"] if c["key"] == "lift")
-    assert (a["equipment"]["lift"]["status"], chk["status"], chk["provenance"]) == ("verified", "pass", "licensed VIN build data")
+    # NEOVIN_RAW says msrp_label build_specs_msrp -> treated as an OEM build record
+    assert (a["equipment"]["lift"]["status"], chk["status"], chk["provenance"]) == ("verified", "pass", "OEM build record via VIN decode")
     assert "474" in a["equipment"]["lift"]["detail"] and a["equipment"]["pccb"]["value"] is True and len(a["options"]) == 3
+    assert a["equipment"]["seats"]["value"] == "adjustable"
     assert a["eligibility"]["category"] == "lead" and a["eligibility"]["unverified"] == ["accident"]
-    assert b["equipment"]["lift"]["status"] == "decode_absent" and b["eligibility"]["category"] == "lead"   # warned, not excluded
-    assert "lift" in b["eligibility"]["unverified"]
+    # a two-option decode without the lift proves nothing: unknown, still a lead, never excluded
+    assert b["equipment"]["lift"]["status"] == "unknown" and "only 2 option" in b["equipment"]["lift"]["detail"]
+    assert b["eligibility"]["category"] == "lead" and "lift" in b["eligibility"]["unverified"]
     # a second run pays for nothing
     assert ingest.run_decodes(con, cfg, ts(1), fake, state)["candidates"] == 0 and len(calls) == 2
     assert ingest.month_calls(con, "2026-11") == 2
@@ -651,10 +654,18 @@ def test_lead_without_lift_in_build_data_is_not_emailed(con, cfg, state):
     seed = _feed_only("WP0AC2A98RS260006", "seed", heading="2024 Porsche 911 GT3", price=230000, build={"year": 2024, "trim": "GT3"})
     ingest.process_results(con, cfg, [_feed([seed, a, b])], now=ts(1))
 
+    rich_no_lift = [{"code": f"X{i}", "name": f"Option {i}", "confidence": "High"} for i in range(12)]
+    listing_based = {**NEOVIN_RAW, "msrp_label": "neo_combined_msrp", "record_source": "used_mc_listing"}
+
     def fake(vin):
-        raw = NEOVIN_RAW if vin == SYN_GT4RS else {**NEOVIN_RAW, "installed_options_details": NEOVIN_RAW["installed_options_details"][1:]}
+        raw = listing_based if vin == SYN_GT4RS else {**listing_based, "installed_options_details": rich_no_lift}
         return {"status": "ok", "http_status": 200, "data": neovin.compact(raw)}
     ingest.run_decodes(con, cfg, ts(1), fake, state)
     ingest.rebuild_vehicles(con, cfg, ts(1))
+    a, b = merged(con, SYN_GT4RS), merged(con, "WP0AE2A82SK270005")
+    chk = next(c for c in a["eligibility"]["checks"] if c["key"] == "lift")
+    # listing-derived decode: the lift passes as dealer-listed, not as factory-verified
+    assert (a["equipment"]["lift"]["status"], chk["status"], chk["provenance"]) == ("seller_stated", "pass", "dealer's listed options (VIN decode)")
+    assert b["equipment"]["lift"]["status"] == "decode_absent"            # 12 options, none of them the lift
     d = _digest(con, cfg, state, ts(1))
     assert [c["vin"] for c in d["cars"]] == [SYN_GT4RS]

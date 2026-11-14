@@ -252,6 +252,8 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
     for f in ("variant", "generation", "year", "title", "condition", "exterior_color", "exterior_hex", "interior_color",
               "transmission", "transmission_raw", "mileage", "stock_number", "seller_comment", "previous_owners"):
         m[f] = _first(live, f)
+    if m["exterior_color"]:
+        m["exterior_color"] = re.sub(r"\bGt\b", "GT", m["exterior_color"])
     m["variant_label"] = C.VARIANT_LABEL.get(m["variant"] or "", m["variant"])
     m["cpo"] = any(l.get("cpo") for l in live)
     m["exterior_family"] = C.exterior_family(m["exterior_color"])
@@ -277,6 +279,10 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
     m["distance"] = geo.distance_from(cfg["buyer"]["home_zip"], r0["s_zip"], r0["s_lat"], r0["s_lon"],
                                       cfg["otd"]["road_factor"])
     m["in_texas"] = (r0["s_state"] or "").upper() == "TX"
+    # A dealer group's own website lists every store's cars under the group's head-office address.
+    grp = re.search(r"\bgroup\b|\bautomotive\s+inc\b|autonation|driveway|carmax|carvana", f"{r0['s_name'] or ''} {live[0].get('origin_site') or ''}", re.I)
+    m["location_note"] = ("Listed through a dealer group or multi-store site; the car may be at a different store than the "
+                          "address shown. Confirm where it is before planning travel.") if grp else None
 
     # -- equipment and evidence
     drow = con.execute("SELECT data FROM vin_decodes WHERE vin=? AND status='ok'", (vrow["vin"],)).fetchone() if vrow["vin"] else None
@@ -306,32 +312,42 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
         m["options"] = eq_src.get("options") or []
         m["standard_equipment"] = eq_src.get("standard_equipment") or []
         m["highlights"] = eq_src.get("highlights") or []
-    elif decode and decode.get("options"):
-        src_label = "MarketCheck VIN build data"
-        opts = decode["options"]
+    elif decode is not None:
+        # MarketCheck's decode is built from OEM build records for some VINs and from dealers' listed
+        # options for most.  The evidence level follows that source; a thin decode proves nothing.
+        opts = decode.get("options") or []
+        from_oem = bool(re.search(r"oem|build", f"{decode.get('record_source') or ''} {decode.get('msrp_label') or ''}", re.I))
+        src_label = "MarketCheck VIN decode (OEM build record)" if from_oem else "MarketCheck VIN decode of the dealer's listed options"
+        found_status = "verified" if from_oem else "seller_stated"
+        rich = len(opts) >= 10
+        absent_status = "decode_absent" if rich else "unknown"
         det = C.detect_equipment(opts, decode.get("features") or [], [])
         lift_opt = next((o for o in opts if str(o.get("code") or "").upper() in C.LIFT_CODES or C.has_lift_text(o.get("name"))), None)
-        lift_in_features = any(C.has_lift_text(f) for f in decode.get("features") or [])
-        if lift_opt or lift_in_features:
-            code = f" (option code {lift_opt['code']})" if lift_opt and lift_opt.get("code") else ""
-            conf = f", confidence {lift_opt['confidence']}" if lift_opt and lift_opt.get("confidence") else ""
-            equipment["lift"] = {"status": "verified", "value": True, "source": src_label,
-                                 "detail": f"Front axle lift{code} in the VIN's licensed factory build data{conf}"}
-        else:
-            # A decode can be incomplete, so a missing option is a warning, never a disqualification.
+        if lift_opt:
+            extra = "; ".join(x for x in (f"confidence {lift_opt['confidence']}" if lift_opt.get("confidence") else "",
+                                          "marked verified by the feed" if lift_opt.get("verified") is True else "") if x)
+            equipment["lift"] = {"status": found_status, "value": True, "source": src_label,
+                                 "detail": f"{lift_opt.get('name') or 'Front axle lift'} (option code {lift_opt.get('code')}) in the "
+                                           f"{src_label}" + (f" ({extra})" if extra else "")}
+        elif rich:
             equipment["lift"] = {"status": "decode_absent", "value": None, "source": src_label,
-                                 "detail": f"VIN build data lists {len(opts)} installed options and no front axle lift; "
+                                 "detail": f"The VIN decode lists {len(opts)} installed options and no front axle lift; "
                                            "probably not fitted, confirm with the window sticker"}
-        equipment["weissach"] = {"status": "verified" if det["weissach"] else "decode_absent", "value": True if det["weissach"] else None,
-                                 "source": src_label}
-        if not det["weissach"] and text_sig["mentions_weissach"]:
-            equipment["weissach"] = {"status": "seller_stated", "value": True, "source": "listing title or description"}
-        equipment["seats"] = {"status": "verified" if det["seats"] else "unknown", "value": det["seats"], "source": src_label}
-        equipment["pccb"] = {"status": "verified" if det["pccb"] else "unknown", "value": True if det["pccb"] else None, "source": src_label}
+        else:
+            equipment["lift"] = {"status": "unknown", "value": None, "source": src_label,
+                                 "detail": f"The VIN decode returned only {len(opts)} option(s), taken from listing text, so it shows "
+                                           "nothing either way; ask the seller for the window sticker"}
+        equipment["weissach"] = ({"status": found_status, "value": True, "source": src_label} if det["weissach"] else
+                                 {"status": "seller_stated", "value": True, "source": "listing title or description"} if text_sig["mentions_weissach"]
+                                 else {"status": absent_status, "value": None, "source": src_label})
+        seat_opt = det["seats"] if any(re.search(r"seat|bucket", o.get("name") or "", re.I) and not re.search(r"belt|heated|ventilat", o.get("name") or "", re.I) for o in opts) else None
+        equipment["seats"] = {"status": found_status if seat_opt else "unknown", "value": seat_opt, "source": src_label}
+        equipment["pccb"] = {"status": found_status if det["pccb"] else absent_status, "value": True if det["pccb"] else None, "source": src_label}
         m["options"] = [{"code": o.get("code"), "name": o.get("name"), "group": None} for o in opts]
         m["standard_equipment"], m["highlights"] = [], []
-        m["build_data"] = {k: decode.get(k) for k in ("msrp", "combined_msrp", "installed_options_msrp", "msrp_label",
-                                                       "record_confidence", "record_source", "trim", "version")}
+        m["build_data"] = {**{k: decode.get(k) for k in ("msrp", "combined_msrp", "installed_options_msrp", "msrp_label",
+                                                          "record_confidence", "record_source", "trim", "version")},
+                           "from_oem": from_oem, "option_count": len(opts)}
     else:
         if text_sig["mentions_lift"]:
             equipment["lift"] = {"status": "seller_stated", "value": True, "source": "seller description",

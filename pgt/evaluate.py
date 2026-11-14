@@ -39,16 +39,17 @@ def eligibility(v: dict, cfg: dict) -> dict:
         pass
     elif st == "verified":
         checks.append(_check("lift", "Front axle lift", PASS, lift.get("detail"),
-                             "licensed VIN build data" if "build data" in (lift.get("source") or "") else "manufacturer equipment data"))
+                             "OEM build record via VIN decode" if "VIN decode" in (lift.get("source") or "") else "manufacturer equipment data"))
     elif st == "decode_absent":
-        checks.append(_check("lift", "Front axle lift", UNVERIFIED, lift.get("detail"), "licensed VIN build data"))
+        checks.append(_check("lift", "Front axle lift", UNVERIFIED, lift.get("detail"), "VIN decode"))
     elif st == "seller_stated":
-        checks.append(_check("lift", "Front axle lift", PASS, lift.get("detail"), "seller statement"))
+        checks.append(_check("lift", "Front axle lift", PASS, lift.get("detail"),
+                             "dealer's listed options (VIN decode)" if "VIN decode" in (lift.get("source") or "") else "seller statement"))
     elif st == "verified_absent":
         checks.append(_check("lift", "Front axle lift", FAIL, lift.get("detail"), "manufacturer equipment data"))
     else:
         checks.append(_check("lift", "Front axle lift", UNVERIFIED,
-                             "No equipment list or window sticker available from any source; confirm with the seller"))
+                             lift.get("detail") or "No equipment list or window sticker available from any source; confirm with the seller"))
 
     # -- price cap
     near_miss_only = False

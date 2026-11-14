@@ -20,10 +20,11 @@ COVERAGE_NOTES = [
      "note": "Licensed API for nationwide used dealer inventory (Porsche dealers and independents), swept daily in "
              "three model-year buckets. It carries VIN, price, mileage, colours, CPO flag and photo links, but no "
              "factory option list, so front lift and accident history need the seller's documentation."},
-    {"source": "MarketCheck VIN build data", "state": "covered for qualifying cars",
-     "note": "Paid per-VIN lookup of factory-installed options, run once for each car that passes every other hard "
-             "requirement, within a monthly call budget. Supplies front-lift, seat, brake and Weissach evidence. A decode "
-             "that lacks the lift option marks the car 'probably not fitted' rather than excluding it."},
+    {"source": "MarketCheck VIN decode", "state": "covered for qualifying cars",
+     "note": "Paid per-VIN lookup, run once for each car that passes every other hard requirement, within a monthly "
+             "call budget. For most of these cars the decode is assembled from the dealer's listed options, not an OEM "
+             "build record, so a front-lift option it finds counts as seller-documented and a decode without one proves "
+             "nothing unless it lists ten or more options."},
     {"source": "Cars.com", "state": "not covered",
      "note": "Cars.com disallows automated access in robots.txt and offers no public inventory API. Dealer stock that "
              "appears there is reached through the MarketCheck feed instead."},
@@ -70,7 +71,7 @@ def card(m: dict, now: datetime) -> dict:
         "weissach": (eq.get("weissach") or {}).get("value"), "weissach_s": (eq.get("weissach") or {}).get("status"),
         "pccb": (eq.get("pccb") or {}).get("value"),
         "seller": s.get("name"), "skind": s.get("kind"), "city": s.get("city"), "state": s.get("state"),
-        "tx": bool(m.get("in_texas")), "dist": (m.get("distance") or {}).get("road_miles_est"),
+        "tx": bool(m.get("in_texas")), "locq": bool(m.get("location_note")), "dist": (m.get("distance") or {}).get("road_miles_est"),
         "cat": el["category"], "status": m["status"], "why": el["summary"], "unver": el["unverified"],
         "score": m["score"]["total"],
         "deal": {"rating": val.get("rating"), "delta": val.get("delta_pct"), "n": val.get("n"),
