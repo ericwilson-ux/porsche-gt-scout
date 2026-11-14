@@ -47,6 +47,8 @@ def _candidates(con, cfg: dict) -> list[dict]:
                     reason = "Now qualifies (was " + d["from"].replace("_", " ") + ")"
         if reason:
             m = json.loads(r["merged"])
+            if m["equipment"]["lift"]["status"] == "decode_absent":
+                continue                    # build data shows no front lift: stays visible on the site, not emailed
             m["_alert_reason"] = reason
             out.append(m)
     order = {"confirmed": 0, "lead": 1}

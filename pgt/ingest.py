@@ -279,6 +279,8 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
     m["in_texas"] = (r0["s_state"] or "").upper() == "TX"
 
     # -- equipment and evidence
+    drow = con.execute("SELECT data FROM vin_decodes WHERE vin=? AND status='ok'", (vrow["vin"],)).fetchone() if vrow["vin"] else None
+    decode = json.loads(drow["data"]) if drow and drow["data"] else None
     eq_src = next((l for l in ls if l.get("has_equipment_list")), None)
     texts = [l.get("seller_comment") or "" for l in ls]
     text_sig = C.scan_seller_text("\n".join(texts))
@@ -304,6 +306,32 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
         m["options"] = eq_src.get("options") or []
         m["standard_equipment"] = eq_src.get("standard_equipment") or []
         m["highlights"] = eq_src.get("highlights") or []
+    elif decode and decode.get("options"):
+        src_label = "MarketCheck VIN build data"
+        opts = decode["options"]
+        det = C.detect_equipment(opts, decode.get("features") or [], [])
+        lift_opt = next((o for o in opts if str(o.get("code") or "").upper() in C.LIFT_CODES or C.has_lift_text(o.get("name"))), None)
+        lift_in_features = any(C.has_lift_text(f) for f in decode.get("features") or [])
+        if lift_opt or lift_in_features:
+            code = f" (option code {lift_opt['code']})" if lift_opt and lift_opt.get("code") else ""
+            conf = f", confidence {lift_opt['confidence']}" if lift_opt and lift_opt.get("confidence") else ""
+            equipment["lift"] = {"status": "verified", "value": True, "source": src_label,
+                                 "detail": f"Front axle lift{code} in the VIN's licensed factory build data{conf}"}
+        else:
+            # A decode can be incomplete, so a missing option is a warning, never a disqualification.
+            equipment["lift"] = {"status": "decode_absent", "value": None, "source": src_label,
+                                 "detail": f"VIN build data lists {len(opts)} installed options and no front axle lift; "
+                                           "probably not fitted, confirm with the window sticker"}
+        equipment["weissach"] = {"status": "verified" if det["weissach"] else "decode_absent", "value": True if det["weissach"] else None,
+                                 "source": src_label}
+        if not det["weissach"] and text_sig["mentions_weissach"]:
+            equipment["weissach"] = {"status": "seller_stated", "value": True, "source": "listing title or description"}
+        equipment["seats"] = {"status": "verified" if det["seats"] else "unknown", "value": det["seats"], "source": src_label}
+        equipment["pccb"] = {"status": "verified" if det["pccb"] else "unknown", "value": True if det["pccb"] else None, "source": src_label}
+        m["options"] = [{"code": o.get("code"), "name": o.get("name"), "group": None} for o in opts]
+        m["standard_equipment"], m["highlights"] = [], []
+        m["build_data"] = {k: decode.get(k) for k in ("msrp", "combined_msrp", "installed_options_msrp", "msrp_label",
+                                                       "record_confidence", "record_source", "trim", "version")}
     else:
         if text_sig["mentions_lift"]:
             equipment["lift"] = {"status": "seller_stated", "value": True, "source": "seller description",
@@ -438,7 +466,7 @@ def data_quality(m: dict) -> dict:
         pts += 2
     else:
         notes.append("VIN missing or failed its check digit")
-    if (m.get("equipment") or {}).get("lift", {}).get("status") in ("verified", "verified_absent"):
+    if (m.get("equipment") or {}).get("lift", {}).get("status") in ("verified", "verified_absent", "decode_absent"):
         pts += 2
     else:
         notes.append("no manufacturer equipment list")
@@ -531,6 +559,82 @@ def snapshot_inventory(con, day: str) -> None:
                      valuation.percentile(prices, 0.25) if prices else None,
                      valuation.percentile(prices, 0.75) if prices else None,
                      median(miles) if miles else None, elig))
+
+
+# ---------------------------------------------------------------------------
+# paid VIN build-data lookups
+# ---------------------------------------------------------------------------
+def month_calls(con, month: str) -> int:
+    return int(D.get_meta(con, f"mc_calls:{month}", "0"))
+
+
+def add_month_calls(con, month: str, n: int) -> None:
+    D.set_meta(con, f"mc_calls:{month}", month_calls(con, month) + n)
+
+
+def decode_budget(con, cfg: dict, now: str) -> int:
+    """Decodes affordable right now without starving the rest of the month's inventory sweeps."""
+    import calendar
+    d = cfg["decode"]
+    y, mth, day = int(now[:4]), int(now[5:7]), int(now[8:10])
+    days_left = calendar.monthrange(y, mth)[1] - day
+    room = d["monthly_call_quota"] - month_calls(con, now[:7]) - days_left * d["sweep_calls_per_day"]
+    return max(0, min(d["max_per_run"], room))
+
+
+def decode_candidates(con, cfg: dict, now: str) -> list[str]:
+    """VINs worth a paid lookup: active leads with a valid VIN, no factory equipment list from any
+    source, and no usable decode yet.  Best matches and nearest cars first."""
+    retry_before = (_parse_ts(now) - timedelta(days=cfg["decode"]["retry_failed_after_days"])).strftime("%Y-%m-%dT%H:%M:%SZ")
+    out = []
+    for r in con.execute("""SELECT v.key, v.vin, v.score, v.merged, d.status AS d_status, d.fetched_at AS d_at
+                            FROM vehicles v LEFT JOIN vin_decodes d ON d.vin=v.vin
+                            WHERE v.status='active' AND v.category IN ('lead','confirmed') AND v.vin IS NOT NULL
+                            AND v.merged IS NOT NULL"""):
+        if r["d_status"] in ("ok", "empty") or (r["d_status"] == "error" and r["d_at"] > retry_before):
+            continue
+        m = json.loads(r["merged"])
+        if not m.get("vin_valid") or m["equipment"]["lift"]["status"] in ("verified", "verified_absent"):
+            continue
+        out.append((0 if m.get("in_texas") else 1, -(r["score"] or 0), (m.get("distance") or {}).get("road_miles_est") or 9e9, r["vin"]))
+    return [v for *_k, v in sorted(out)]
+
+
+def run_decodes(con, cfg: dict, now: str, decode_fn, state: Path | None = None) -> dict:
+    """decode_fn(vin) -> {status, http_status, data?}.  Returns a summary for the run log."""
+    stats = {"candidates": 0, "budget": 0, "decoded": 0, "empty": 0, "errors": 0, "lift_found": 0, "stopped": None}
+    if not cfg["decode"]["enabled"]:
+        stats["stopped"] = "disabled"
+        return stats
+    cands = decode_candidates(con, cfg, now)
+    stats["candidates"] = len(cands)
+    budget = decode_budget(con, cfg, now)
+    stats["budget"] = budget
+    if cands and not budget:
+        stats["stopped"] = "monthly call budget reserved for inventory sweeps"
+    for vin in cands[:budget]:
+        res = decode_fn(vin)
+        add_month_calls(con, now[:7], 1)
+        if res["status"] == "not_entitled":
+            stats["stopped"] = f"API plan does not include VIN decode (HTTP {res.get('http_status')})"
+            break
+        con.execute("""INSERT INTO vin_decodes(vin, fetched_at, status, http_status, data) VALUES(?,?,?,?,?)
+                       ON CONFLICT(vin) DO UPDATE SET fetched_at=excluded.fetched_at, status=excluded.status,
+                       http_status=excluded.http_status, data=excluded.data""",
+                    (vin, now, res["status"], res.get("http_status"), D.j(res["data"]) if res.get("data") else None))
+        if res["status"] == "ok":
+            stats["decoded"] += 1
+            if any(C.has_lift_text(o.get("name")) or str(o.get("code") or "").upper() in C.LIFT_CODES for o in res["data"]["options"]):
+                stats["lift_found"] += 1
+            if state is not None and res.get("raw") and not (state / "debug" / "neovin_sample.json").exists():
+                (state / "debug").mkdir(exist_ok=True)
+                (state / "debug" / "neovin_sample.json").write_text(json.dumps(res["raw"], indent=1, ensure_ascii=False), encoding="utf-8")
+        elif res["status"] == "empty":
+            stats["empty"] += 1
+        else:
+            stats["errors"] += 1
+    con.commit()
+    return stats
 
 
 # ---------------------------------------------------------------------------

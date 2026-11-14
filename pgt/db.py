@@ -171,6 +171,14 @@ CREATE TABLE IF NOT EXISTS alert_log (
   category TEXT, claimed_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS vin_decodes (
+  vin TEXT PRIMARY KEY,                -- one paid build-data lookup per VIN, kept forever
+  fetched_at TEXT NOT NULL,
+  status TEXT NOT NULL,                -- ok | empty | error
+  http_status INTEGER,
+  data TEXT                            -- JSON: installed options, related features, colours, MSRP
+);
+
 CREATE TABLE IF NOT EXISTS favorites (
   vehicle_key TEXT PRIMARY KEY, added_at TEXT NOT NULL, note TEXT
 );

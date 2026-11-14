@@ -38,7 +38,10 @@ def eligibility(v: dict, cfg: dict) -> dict:
     if not hard["require_front_lift"]:
         pass
     elif st == "verified":
-        checks.append(_check("lift", "Front axle lift", PASS, lift.get("detail"), "manufacturer equipment data"))
+        checks.append(_check("lift", "Front axle lift", PASS, lift.get("detail"),
+                             "licensed VIN build data" if "build data" in (lift.get("source") or "") else "manufacturer equipment data"))
+    elif st == "decode_absent":
+        checks.append(_check("lift", "Front axle lift", UNVERIFIED, lift.get("detail"), "licensed VIN build data"))
     elif st == "seller_stated":
         checks.append(_check("lift", "Front axle lift", PASS, lift.get("detail"), "seller statement"))
     elif st == "verified_absent":
@@ -198,6 +201,8 @@ def preference_score(v: dict, cfg: dict, today: date | None = None) -> dict:
             items.append(_item("weissach", "No Weissach Package", 0.4, w["weissach"], "Has the Weissach Package"))
         elif ws.get("status") == "verified_absent":
             items.append(_item("weissach", "No Weissach Package", 1.0, w["weissach"], "No Weissach Package in the factory option list"))
+        elif ws.get("status") == "decode_absent":
+            items.append(_item("weissach", "No Weissach Package", 0.9, w["weissach"], "No Weissach Package in the VIN build data"))
         else:
             items.append(_item("weissach", "No Weissach Package", 0.7, w["weissach"], "Weissach status not documented"))
 

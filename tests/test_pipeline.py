@@ -568,3 +568,93 @@ def test_export_writes_site_data(con, cfg, tmp_path, examples):
     assert any(n["source"] == "Cars.com" and n["state"] == "not covered" for n in health["coverage"])
     market = json.loads((tmp_path / "data" / "market.json").read_text())
     assert len(market["points"]) == 3 and market["sales"] == [] and len(market["snapshots"]) == 3
+
+
+# ----------------------------------------------------------------- vin decode ----
+NEOVIN_RAW = {"vin": SYN_GT4RS, "year": 2025, "make": "Porsche", "trim": "GT4 RS", "msrp": 164200, "combined_msrp": 181000,
+              "msrp_label": "build_specs_msrp", "record_confidence": 0.9,
+              "installed_options_details": [
+                  {"code": "474", "name": "Front Axle Lift System", "msrp": "3040", "type": "O", "confidence": "High", "verified": True},
+                  {"code": "450", "name": "Porsche Ceramic Composite Brakes (PCCB)", "msrp": "8000", "type": "O", "confidence": "High", "verified": None},
+                  {"code": "P11", "name": "Adaptive Sport Seats Plus (18-way)", "msrp": "1500", "type": "O", "confidence": "High", "verified": None}],
+              "features": {"Seating": [{"category": "Seating", "feature_type": "x", "description": "Full bucket seats"}],
+                           "Audio": [{"category": "Audio", "feature_type": "x", "description": "BOSE Surround Sound"}]},
+              "exterior_color": {"code": "D7", "name": "Shark Blue", "confidence": "High", "base": "Blue"}}
+
+
+def _feed_only(vin, lid, **kw):
+    raw = {**MC_RAW, "id": lid, "vin": vin, "heading": "2025 Porsche 718 Cayman GT4 RS", "price": 205000, "miles": 3000,
+           "build": {"year": 2025, "trim": "GT4 RS", "transmission": "Automatic"}, "ref_price": None, **kw}
+    return mc.normalise(raw, "us-used:2024-2025")
+
+
+def _feed(ls):
+    return SourceResult("marketcheck", listings=ls, scopes_ok={"us-used:2024-2025"}, scopes_total=1)
+
+
+def test_neovin_compact_keeps_options_and_relevant_features():
+    from pgt.sources import neovin
+    c = neovin.compact(NEOVIN_RAW)
+    assert [o["code"] for o in c["options"]] == ["474", "450", "P11"] and c["features"] == ["Full bucket seats"]
+    assert c["msrp_label"] == "build_specs_msrp" and c["exterior_color"]["name"] == "Shark Blue"
+    f = FakeFetcher({neovin.ENDPOINT.format(vin=SYN_GT4RS): (200, json.dumps(NEOVIN_RAW)),
+                     neovin.ENDPOINT.format(vin=SYN_GT3): (404, "not found"),
+                     neovin.ENDPOINT.format(vin="X"): (403, "plan")})
+    assert neovin.decode(f, SYN_GT4RS, "k")["status"] == "ok" and neovin.decode(f, SYN_GT3, "k")["status"] == "empty"
+    assert neovin.decode(f, "X", "k")["status"] == "not_entitled"
+
+
+def test_decode_verifies_lift_for_leads_once_and_never_excludes_on_absence(con, cfg, state):
+    from pgt.sources import neovin
+    with_lift, without = _feed_only(SYN_GT4RS, "a1"), _feed_only("WP0AE2A82SK270005", "a2")
+    too_dear = _feed_only(SYN_GT3, "a3", price=400000, heading="2022 Porsche 911 GT3", build={"year": 2022, "trim": "GT3"})
+    ingest.process_results(con, cfg, [_feed([with_lift, without, too_dear])], now=T0)
+    assert merged(con, SYN_GT4RS)["equipment"]["lift"]["status"] == "unknown"
+    calls = []
+
+    def fake(vin):
+        calls.append(vin)
+        raw = NEOVIN_RAW if vin == SYN_GT4RS else {**NEOVIN_RAW, "installed_options_details": NEOVIN_RAW["installed_options_details"][1:]}
+        return {"status": "ok", "http_status": 200, "data": neovin.compact(raw), "raw": raw}
+    st = ingest.run_decodes(con, cfg, T0, fake, state)
+    assert sorted(calls) == sorted([SYN_GT4RS, "WP0AE2A82SK270005"])        # the excluded $400k car is never paid for
+    assert st["decoded"] == 2 and st["lift_found"] == 1 and (state / "debug" / "neovin_sample.json").exists()
+    ingest.rebuild_vehicles(con, cfg, T0)
+    a, b = merged(con, SYN_GT4RS), merged(con, "WP0AE2A82SK270005")
+    chk = next(c for c in a["eligibility"]["checks"] if c["key"] == "lift")
+    assert (a["equipment"]["lift"]["status"], chk["status"], chk["provenance"]) == ("verified", "pass", "licensed VIN build data")
+    assert "474" in a["equipment"]["lift"]["detail"] and a["equipment"]["pccb"]["value"] is True and len(a["options"]) == 3
+    assert a["eligibility"]["category"] == "lead" and a["eligibility"]["unverified"] == ["accident"]
+    assert b["equipment"]["lift"]["status"] == "decode_absent" and b["eligibility"]["category"] == "lead"   # warned, not excluded
+    assert "lift" in b["eligibility"]["unverified"]
+    # a second run pays for nothing
+    assert ingest.run_decodes(con, cfg, ts(1), fake, state)["candidates"] == 0 and len(calls) == 2
+    assert ingest.month_calls(con, "2026-11") == 2
+
+
+def test_decode_respects_the_monthly_budget_and_plan_errors(con, cfg, state):
+    ingest.process_results(con, cfg, [_feed([_feed_only(SYN_GT4RS, "a1"), _feed_only("WP0AE2A82SK270005", "a2")])], now=T0)
+    ingest.add_month_calls(con, "2026-11", 200)          # 200 used; 17 days x 18 = 306 reserved of 500 -> nothing left
+    st = ingest.run_decodes(con, cfg, T0, lambda v: 1 / 0, state)
+    assert st["budget"] == 0 and st["decoded"] == 0 and "budget" in st["stopped"]
+    D.set_meta(con, "mc_calls:2026-11", 0)
+    st = ingest.run_decodes(con, cfg, T0, lambda v: {"status": "not_entitled", "http_status": 403}, state)
+    assert "plan" in st["stopped"] and con.execute("SELECT COUNT(*) c FROM vin_decodes").fetchone()["c"] == 0
+    assert ingest.month_calls(con, "2026-11") == 1      # stopped after the first refusal
+
+
+def test_lead_without_lift_in_build_data_is_not_emailed(con, cfg, state):
+    from pgt.sources import neovin
+    ingest.process_results(con, cfg, [_feed([_feed_only("WP0AC2A98RS260006", "seed", heading="2024 Porsche 911 GT3", price=230000,
+                                                        build={"year": 2024, "trim": "GT3"})])], now=T0)
+    a, b = _feed_only(SYN_GT4RS, "n1"), _feed_only("WP0AE2A82SK270005", "n2")
+    seed = _feed_only("WP0AC2A98RS260006", "seed", heading="2024 Porsche 911 GT3", price=230000, build={"year": 2024, "trim": "GT3"})
+    ingest.process_results(con, cfg, [_feed([seed, a, b])], now=ts(1))
+
+    def fake(vin):
+        raw = NEOVIN_RAW if vin == SYN_GT4RS else {**NEOVIN_RAW, "installed_options_details": NEOVIN_RAW["installed_options_details"][1:]}
+        return {"status": "ok", "http_status": 200, "data": neovin.compact(raw)}
+    ingest.run_decodes(con, cfg, ts(1), fake, state)
+    ingest.rebuild_vehicles(con, cfg, ts(1))
+    d = _digest(con, cfg, state, ts(1))
+    assert [c["vin"] for c in d["cars"]] == [SYN_GT4RS]

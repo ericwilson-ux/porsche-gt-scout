@@ -12,7 +12,7 @@ from pathlib import Path
 from . import alerts, config, export as exporter, ingest, photos
 from . import db as D
 from .http import Fetcher
-from .sources import marketcheck, porsche_finder
+from .sources import marketcheck, neovin, porsche_finder
 from .sources.base import SourceResult
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -96,10 +96,21 @@ def cmd_run(args) -> int:
                 (state / "debug").mkdir(exist_ok=True)
                 (state / "debug" / "marketcheck_sample.json").write_text(
                     json.dumps(res.detail["raw_sample"], indent=1, ensure_ascii=False), encoding="utf-8")
+            ingest.add_month_calls(con, D.now_iso()[:7], res.requests)
             results.append(res)
         except Exception as exc:
             results.append(SourceResult("marketcheck", status="failed", messages=[f"crash: {type(exc).__name__}: {exc}"]))
     summary = ingest.process_results(con, cfg, results, sales_csv=ROOT / "config" / "manual_sales.csv")
+    if os.environ.get("MARKETCHECK_API_KEY") and not args.no_decode:
+        try:
+            f = Fetcher(min_interval=0.4, respect_robots=False, max_retries=1)
+            summary["vin_decode"] = ingest.run_decodes(con, cfg, D.now_iso(), lambda v: neovin.decode(f, v), state)
+            if summary["vin_decode"]["decoded"] or summary["vin_decode"]["empty"]:
+                summary["rebuild_after_decode"] = ingest.rebuild_vehicles(con, cfg, D.now_iso())
+        except Exception as exc:
+            summary["vin_decode"] = {"error": f"{type(exc).__name__}: {exc}"}
+        D.set_meta(con, "last_decode_summary", json.dumps(summary["vin_decode"]))
+        summary["marketcheck_calls_this_month"] = ingest.month_calls(con, D.now_iso()[:7])
     if cfg["photos"]["archive"] == "repo":
         try:
             summary["photo_archive"] = photos.archive(con, state, cfg["photos"]["archive_width"])
@@ -182,6 +193,7 @@ def main(argv=None) -> int:
     r.add_argument("--max-dealers", type=int, default=None, help="limit dealer sitemaps (smoke tests)")
     r.add_argument("--interval", type=float, default=1.0, help="seconds between requests to one host")
     r.add_argument("--url", action="append", help="extra Porsche Finder listing URL to include")
+    r.add_argument("--no-decode", action="store_true", help="skip paid VIN build-data lookups")
     r.add_argument("--out", default=str(ROOT / "_site"))
     r.set_defaults(fn=cmd_run)
     e = sub.add_parser("export", help="rebuild the site from the existing database")

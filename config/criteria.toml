@@ -95,3 +95,11 @@ min_hours_before_removed = 36
 # Copying dealer photos may be restricted by the source's terms; owner's decision.
 archive = "off"
 archive_width = 1280
+
+# ---- Paid VIN build-data lookups (MarketCheck NeoVIN, about $0.08 per VIN) ------
+[decode]
+enabled = true
+max_per_run = 100              # first runs work through the backlog of leads, best matches first
+monthly_call_quota = 500       # all MarketCheck calls in a calendar month (sweeps + decodes)
+sweep_calls_per_day = 18       # held back for each remaining day's inventory sweep
+retry_failed_after_days = 30

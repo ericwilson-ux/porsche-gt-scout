@@ -20,6 +20,10 @@ COVERAGE_NOTES = [
      "note": "Licensed API for nationwide used dealer inventory (Porsche dealers and independents), swept daily in "
              "three model-year buckets. It carries VIN, price, mileage, colours, CPO flag and photo links, but no "
              "factory option list, so front lift and accident history need the seller's documentation."},
+    {"source": "MarketCheck VIN build data", "state": "covered for qualifying cars",
+     "note": "Paid per-VIN lookup of factory-installed options, run once for each car that passes every other hard "
+             "requirement, within a monthly call budget. Supplies front-lift, seat, brake and Weissach evidence. A decode "
+             "that lacks the lift option marks the car 'probably not fitted' rather than excluding it."},
     {"source": "Cars.com", "state": "not covered",
      "note": "Cars.com disallows automated access in robots.txt and offers no public inventory API. Dealer stock that "
              "appears there is reached through the MarketCheck feed instead."},
@@ -165,7 +169,11 @@ def export(con, cfg: dict, out: Path, state: Path | None = None) -> dict:
     cap = sum(c["nphotos"] or 0 for c in cards if c["status"] != "removed")
     incomplete = [{"key": c["key"], "label": f"{c['year']} {c['label']}", "captured": c["nphotos"], "advertised": c["nadv"]}
                   for c in cards if c["status"] != "removed" and not c["gcomplete"]]
-    health = {"generated_at": D.now_iso(), "runs": runs, "last_success": last_success, "coverage": COVERAGE_NOTES,
+    dec = {r["status"]: r["c"] for r in con.execute("SELECT status, COUNT(*) c FROM vin_decodes GROUP BY status")}
+    health = {"generated_at": D.now_iso(), "runs": runs, "decodes": dec,
+              "decode_last": json.loads(D.get_meta(con, "last_decode_summary", "null")),
+              "api_calls": {r["key"].split(":", 1)[1]: int(r["value"]) for r in con.execute("SELECT * FROM meta WHERE key LIKE 'mc_calls:%'")},
+              "last_success": last_success, "coverage": COVERAGE_NOTES,
               "digests": digests, "gallery": {"advertised": adv, "captured": cap, "incomplete": incomplete},
               "baseline": {r["key"].split(":", 1)[1]: r["value"] for r in con.execute("SELECT * FROM meta WHERE key LIKE 'baseline_at:%'")}}
     (out / "health.json").write_text(json.dumps(health, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
