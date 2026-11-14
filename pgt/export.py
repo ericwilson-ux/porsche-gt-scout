@@ -71,7 +71,7 @@ def card(m: dict, now: datetime) -> dict:
         "key": m["key"], "vin": m.get("vin"), "variant": m.get("variant"), "label": m.get("variant_label"),
         "gen": m.get("generation"), "year": m.get("year"), "price": m.get("price"),
         "psrc": ("page" if m.get("price_source") == "dealer's listing page" else "last" if (m.get("price_source") or "").endswith("last advertised") else None),
-        "por": bool(m.get("price_on_request")), "pnote": m.get("price_note"), "snote": m.get("status_note"), "pend": bool(m.get("sale_pending_note")),
+        "por": bool(m.get("price_on_request")), "pnote": m.get("price_note"), "snote": m.get("status_note"), "pend": bool(m.get("sale_pending_note")), "soon": bool(m.get("coming_soon_note")), "pok": m.get("page_verified_on"),
         "price0": m.get("original_price"), "dprice": m.get("price_change_total"), "lpc": lpc, "drop": recent_drop,
         "miles": m.get("mileage"), "ext": m.get("exterior_color"), "extf": m.get("exterior_family"),
         "hex": m.get("exterior_hex"), "int": m.get("interior_color"), "intf": m.get("interior_family"),

@@ -41,7 +41,7 @@ _PDK = re.compile(r"\bPDK\b|doppelkupplung|(?:dual|double)[\s-]*clutch|\b7[\s-]*
 _AUTOMATED = re.compile(r"(?:pdk|auto(?:mated|[\s-]?shift)?|(?:dual|double)[\s-]*clutch)[\s-]+manual", re.I)
 
 # price
-PRICE_MIN, PRICE_MAX = 60_000, 1_500_000
+PRICE_MIN, PRICE_MAX = 120_000, 1_500_000      # no tracked model is advertised below this
 _AMOUNT = r"\$\s?(\d{2,3}(?:,\d{3})+|\d{5,7})(?:\.\d{2})?(?!\s*(?:/|per|a)\s*mo)"
 _PRICE_LABEL_RE = re.compile(r"([^\n$]{0,45}\b(?:price|asking)\b[^\n$]{0,25})\s*:?\s*\n?\s*" + _AMOUNT, re.I)
 _ANY_PRICE_RE = re.compile(r"([^\n$]{0,30})" + _AMOUNT, re.I)
@@ -52,9 +52,14 @@ _ON_REQUEST = re.compile(r"call (?:us )?for (?:the )?pric|contact (?:us )?for (?
 
 # still for sale?
 _SOLD_HEAD = re.compile(r"\bsold\b(?!\s+(?:in|by|at|to|new|here|with|as|and\s+serviced)\b)", re.I)
-_SOLD_BODY = re.compile(r"(?:this|the)\s+(?:vehicle|car|listing|porsche|unit)\s+(?:has\s+been|is|was)\s+(?:sold|no\s+longer\s+available)|"
-                        r"no\s+longer\s+(?:available|in\s+(?:our\s+)?(?:inventory|stock))|\bvehicle\s+(?:is\s+)?sold\b|"
+_SOLD_BODY = re.compile(r"this\s+(?:vehicle|car|listing|porsche|unit)\s+(?:has\s+(?:already\s+)?been|is|was)\s+(?:sold|no\s+longer\s+available)|"
+                        r"the\s+(?:vehicle|car)\s+has\s+(?:already\s+)?been\s+sold|"
+                        r"no\s+longer\s+(?:available|in\s+(?:our\s+)?(?:inventory|stock))|"
                         r"\bstatus\s*:?\s*\n?\s*sold\b|\bprice\s*:?\s*\n?\s*sold\b|\bjust\s+sold\b|\bsold\s*!", re.I)
+_CONDITIONAL = re.compile(r"\b(?:before|until|once|when|if|after|time|whether)\b[^.\n]{0,25}$", re.I)   # "before this car is sold"
+# where a listing page stops being about this car
+_OTHER_CARS = re.compile(r"similar\s+(?:vehicles|inventory|cars|listings)|you\s+may\s+also\s+like|recommended\s+(?:vehicles|for\s+you)|"
+                         r"view\s+all\s+inventory|other\s+vehicles|more\s+(?:vehicles|inventory)|recently\s+(?:viewed|sold)|related\s+(?:vehicles|inventory)", re.I)
 _PENDING = re.compile(r"sale\s+pending|pending\s+sale|\bdeposit\s+(?:taken|received)\b|\bunder\s+contract\b", re.I)
 _LD_GONE = re.compile(r"SoldOut|OutOfStock|Discontinued", re.I)
 
@@ -174,18 +179,21 @@ def read_page(page: str, vin: str) -> dict:
     if "price" not in data and _ON_REQUEST.search(text):
         data["price_on_request"] = True
 
-    # -- still for sale?
-    sold_ev = None
+    # -- still for sale?  Only the part of the page about this car counts, not the other cars shown under it.
+    cut = _OTHER_CARS.search(text, min(400, len(text) // 4))      # skip the site's top menu
+    text = text[:cut.start()] if cut else text
+    sold_ev, strong = None, False
     if any(_LD_GONE.search(a) for a in ld["availability"]):
-        sold_ev = "the page's structured data marks it sold or out of stock"
+        sold_ev, strong = "the page's structured data marks it sold or out of stock", True
     elif any(_SOLD_HEAD.search(h) for h in head[:2]):
-        sold_ev = _clean(next(h for h in head[:2] if _SOLD_HEAD.search(h)))[:90]
+        sold_ev, strong = _clean(next(h for h in head[:2] if _SOLD_HEAD.search(h)))[:90], True
     else:
-        m = _SOLD_BODY.search(text)
+        m = next((m for m in _SOLD_BODY.finditer(text) if not _CONDITIONAL.search(text[max(0, m.start() - 40):m.start()])), None)
         if m:
             sold_ev = _clean(text[max(0, m.start() - 20):m.end() + 20])[:90]
     if sold_ev:
-        data["avail"], data["avail_evidence"] = "sold", sold_ev
+        # a headline or structured data is taken at once; a sentence in the body is confirmed on a second day
+        data["avail"], data["avail_evidence"], data["avail_strong"] = "sold", sold_ev, strong
     else:
         m = _PENDING.search(text)
         data["avail"] = "pending" if m else "ok"
@@ -230,7 +238,7 @@ def candidates(con, cfg: dict, now: str, limit: int) -> list[dict]:
             not m.get("transmission") or (m.get("transmission_note") or "").startswith("Per the dealer feed only"))
         if age is None or r["pdata"] is None:
             rank = 1                                             # never read (or read before prices and status were kept)
-        elif r["avail"] == "gone" and (r["avail_count"] or 0) < 2:
+        elif (r["avail"] == "gone" or (r["avail"] == "sold" and not json.loads(r["pdata"]).get("avail_strong"))) and (r["avail_count"] or 0) < 2:
             if age < timedelta(hours=20):
                 continue
             rank = 0                                             # a missing page is confirmed on a second day
@@ -279,7 +287,8 @@ def run(con, cfg: dict, fetcher, now: str | None = None, limit: int | None = Non
             res = {"result": "gone", "evidence": f"HTTP {resp.status}",
                    "data": {"avail": "gone", "avail_evidence": f"the page returns HTTP {resp.status}"}}
         elif resp.status != 200 or not resp.text:
-            res = {"result": "blocked" if resp.status in (401, 403, 406, 429, 503) else "error", "evidence": resp.error, "data": {}}
+            refused = resp.status in (202, 401, 403, 406, 429, 503) or (resp.error or "").startswith(("HTTP 429", "HTTP 503"))
+            res = {"result": "blocked" if refused else "error", "evidence": resp.error, "data": {}}
         else:
             res = read_page(resp.text, c["vin"])
             if res["result"] == "vin_missing" and "avail" not in res["data"] and _moved(c["url"], final):

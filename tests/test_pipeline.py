@@ -1051,6 +1051,14 @@ def test_dealer_page_gives_price_equipment_and_sold_status():
     assert pagecheck.read_page(_page("<p>Originally sold new in Texas. We have sold hundreds of GT cars.</p>",
                                      title="Used 2018 Porsche 911 GT3 sold in Dallas TX"), VIN_P)["data"]["avail"] == "ok"
     assert pagecheck.read_page(_page("<p>Sale pending</p>"), VIN_P)["data"]["avail"] == "pending"
+    # boilerplate, conditionals and other cars' badges are not this car's status
+    for body in ("<p>Warranty runs from the time a vehicle is sold to an authorized Porsche dealer.</p>",
+                 "<p>Call us before this car is sold!</p>",
+                 "<p>Great car.</p><h3>Similar vehicles</h3><div>Sale pending 2026 Mercedes-Benz</div><div>This vehicle has been sold</div>"):
+        assert pagecheck.read_page(_page(body), VIN_P)["data"]["avail"] == "ok", body
+    weak = pagecheck.read_page(_page("<p>This vehicle has been sold. View similar cars.</p>"), VIN_P)["data"]
+    assert weak["avail"] == "sold" and weak["avail_strong"] is False
+    assert "price" not in pagecheck.read_page(_page("<b>$104,980</b>"), VIN_P)["data"]          # implausible for these cars
 
 
 def test_page_price_fills_a_missing_price_and_a_sold_or_missing_page_retires_the_car(con, cfg):
@@ -1095,6 +1103,30 @@ def test_page_price_fills_a_missing_price_and_a_sold_or_missing_page_retires_the
     pagecheck.run(con, cfg, f, now=later)
     ingest.rebuild_vehicles(con, cfg, later, today=datetime.fromisoformat(ts(2).replace("Z", "+00:00")).date())
     assert merged(con, vins[0])["price"] == 239994
+
+
+def test_feed_sold_flag_and_very_old_unreadable_listings(con, cfg):
+    def one(i, vin, **extra):
+        return mc.normalise({**MC_RAW, "id": f"fs{i}", "vin": vin, "heading": "2018 Porsche 911 GT3", "price": 230000, "miles": 12000,
+                             "vdp_url": f"https://d{i}.example/c", "build": {"year": 2018, "trim": "GT3", "transmission": "Manual"},
+                             "ref_price": None, "last_seen_at_date": T0, **extra}, "us-used:2018-2019")
+    ls = [one(1, VIN_P, vehicle_status="Sold"), one(2, "WP0AC2A92JS175859", vehicle_status="Coming Soon"),
+          one(3, "WP0AC2A9XJS176676", vehicle_status="Available", first_seen_at_source_date="2026-01-05T00:00:00.000Z"),
+          one(4, "WP0AC2A9XKS149267", vehicle_status="Available", first_seen_at_source_date="2026-01-05T00:00:00.000Z")]
+    ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=ls, scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=T0)
+    sold = merged(con, VIN_P)
+    assert sold["status"] == "removed" and "feed marks this listing as sold" in sold["status_note"]
+    soon = merged(con, "WP0AC2A92JS175859")
+    assert soon["status"] == "active" and "Coming Soon" in soon["coming_soon_note"]
+    old = merged(con, "WP0AC2A9XJS176676")
+    assert old["status"] == "unverified" and "could not be read" in old["status_note"]
+    # once the dealer's page is read and shows the car, the old listing counts as live again
+    f = _FakeFetcher({"https://d4.example/c": (200, _page("<p>Great car</p>").replace(VIN_P, "WP0AC2A9XKS149267"))})
+    pagecheck.run(con, cfg, f, now=ts(0, 1))
+    ingest.rebuild_vehicles(con, cfg, ts(0, 1), today=datetime.fromisoformat(T0.replace("Z", "+00:00")).date())
+    ok = merged(con, "WP0AC2A9XKS149267")
+    assert ok["status"] == "active" and ok["page_verified_on"] == T0[:10]
+    assert merged(con, "WP0AC2A9XJS176676")["status"] == "unverified"
 
 
 def test_feed_listing_it_has_not_reread_for_long_is_unconfirmed(con, cfg):
