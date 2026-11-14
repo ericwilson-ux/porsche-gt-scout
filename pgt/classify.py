@@ -192,7 +192,8 @@ _TRACK_RE = re.compile(
 _NO_TRACK_RE = re.compile(r"never (been )?track|no track|not track|never raced|never seen (a |the )?track", re.I)
 _CLEAN_RE = re.compile(r"clean (car ?fax|auto ?check|history|title)|no accidents?|accident[\s-]*free|zero accidents", re.I)
 _ACCIDENT_RE = re.compile(
-    r"accident reported|damage reported|prior (accident|damage|paintwork repair)|"
+    r"accident reported|damage report(ed)?\b|reports? (of )?(an? )?(accident|damage)|(indicates|shows) (an? )?(minor |moderate )?(accident|damage)|"
+    r"(minor|moderate|previous|prior) (accident|damage|paintwork repair)|"
     r"salvage|rebuilt title|structural damage|frame damage|branded title", re.I)
 
 

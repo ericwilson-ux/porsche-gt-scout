@@ -588,12 +588,13 @@ def rebuild_vehicles(con, cfg: dict, now: str, today: date | None = None, backfi
             continue
         if m["status"] in ("active", "unverified") or (vrow["last_seen"] and _parse_ts(vrow["last_seen"]) >= cutoff):
             pool.append({"key": m["key"], "variant": m["variant"], "generation": m["generation"], "year": m["year"],
-                         "mileage": m["mileage"], "price": m["price"]})
+                         "mileage": m["mileage"], "price": m["price"], "transmission": m.get("transmission")})
     sales = [dict(r) for r in con.execute("SELECT variant, generation, year, mileage, sale_price FROM sales")]
 
     for vrow, m in merged_all:
         m["valuation"] = valuation.value({"key": m["key"], "variant": m["variant"], "generation": m["generation"],
-                                          "year": m["year"], "mileage": m["mileage"], "price": m["price"]}, pool, sales)
+                                          "year": m["year"], "mileage": m["mileage"], "price": m["price"],
+                                          "transmission": m.get("transmission")}, pool, sales)
         if m["status"] != vrow["status"]:
             stats["status_changes"] += 1
             D.event(con, m["key"], f"vehicle_{m['status']}", {"was": vrow["status"], "last_asking": m.get("price")}, None, now)

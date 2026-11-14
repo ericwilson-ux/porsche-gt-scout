@@ -938,3 +938,24 @@ def test_stale_source_listing_is_unconfirmed_and_rule_changes_do_not_alert(con, 
     evs = [json.loads(r[0]) for r in con.execute("SELECT detail FROM lifecycle_events WHERE event='category_change'")]
     assert evs and all(e.get("backfill") == "rules" for e in evs)
     assert alerts.prepare_digest(con, cfg2, tmp_path, now=datetime(2026, 11, 15, 12, tzinfo=timezone.utc)) is None
+
+
+def test_disclosed_damage_report_is_not_a_clean_history():
+    txt = ("Carfax indicates a damage report to the rear bumper area, the bumper cover and driver side taillamp were "
+           "replaced by a local authorized Porsche repair center.")
+    assert C.scan_seller_text(txt)["mentions_accident"]
+    assert not C.scan_seller_text("Clean Carfax! One owner! No accidents. PPF front to back.")["mentions_accident"]
+    assert not C.scan_seller_text("This Dealership checks the vehicle recall status prior to sale.")["mentions_accident"]
+
+
+def test_valuation_compares_within_a_confirmed_gearbox():
+    pool = [{"key": f"m{i}", "variant": "gt3", "generation": "991.2", "year": 2018, "mileage": 10000 + 500 * i, "price": 300000 - 900 * i,
+             "transmission": "manual"} for i in range(8)]
+    pool += [{"key": f"p{i}", "variant": "gt3", "generation": "991.2", "year": 2018, "mileage": 10000 + 500 * i, "price": 225000 - 900 * i,
+              "transmission": "pdk"} for i in range(8)]
+    pool += [{"key": f"u{i}", "variant": "gt3", "generation": "991.2", "year": 2018, "mileage": 12000, "price": 250000, "transmission": None} for i in range(4)]
+    subj = {"key": "s", "variant": "gt3", "generation": "991.2", "year": 2018, "mileage": 12000, "price": 270000}
+    mixed = valuation.value(subj, pool)
+    manual = valuation.value({**subj, "transmission": "manual"}, pool)
+    assert mixed["rating"] == "overpriced" and "gearbox" not in mixed
+    assert manual["gearbox"] == "manual" and manual["n"] == 8 and manual["rating"] == "great" and "manual gearbox" in manual["note"]

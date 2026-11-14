@@ -47,7 +47,16 @@ def value(subject: dict, pool: list[dict], sales: list[dict] | None = None) -> d
              if c.get("key") != subject.get("key")
              and c.get("variant") == subject.get("variant") and c.get("generation") == subject.get("generation")
              and c.get("price") and c.get("mileage") is not None]
+    # Gearbox moves GT3 prices a lot (a manual 991.2 asks far more than a PDK one), so compare like with
+    # like whenever enough comps have a confirmed gearbox; cars with an unconfirmed gearbox stay out of that set.
+    gearbox = None
+    if subject.get("transmission"):
+        same = [c for c in comps if c.get("transmission") == subject["transmission"]]
+        if len(same) >= MIN_COMPS and len(same) < len(comps):
+            comps, gearbox = same, subject["transmission"]
     out = {"basis": "asking prices", "n": len(comps), "confidence": "insufficient", "method": "theil-sen mileage adjustment"}
+    if gearbox:
+        out["gearbox"] = gearbox
     sales_comps = [s for s in (sales or [])
                    if s.get("variant") == subject.get("variant") and s.get("generation") == subject.get("generation")]
     if sales_comps:
@@ -81,5 +90,6 @@ def value(subject: dict, pool: list[dict], sales: list[dict] | None = None) -> d
     out.update({"n": n, "n_pool": len(comps), "confidence": conf, "fair_low": round(lo), "fair_mid": round(mid),
                 "fair_high": round(hi), "slope_per_mile": round(slope, 3), "delta_pct": round(delta, 4),
                 "rating": rating, "year_window": "±1 model year" if used is near else "all model years",
-                "note": f"Based on {n} asking-price comps; asking prices are not sale prices."})
+                "note": f"Based on {n} asking-price comps" + (f" with a confirmed {'manual' if gearbox == 'manual' else 'PDK'} gearbox"
+                                                                if gearbox else "") + "; asking prices are not sale prices."})
     return out
