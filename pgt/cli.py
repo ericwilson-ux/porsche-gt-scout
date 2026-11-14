@@ -199,7 +199,8 @@ def cmd_import_finder(args) -> int:
     else:
         capture = json.loads(src.read_text(encoding="utf-8"))
     res = porsche_finder.collect_from_capture(capture)
-    summary = ingest.process_results(con, cfg, [res], sales_csv=ROOT / "config" / "manual_sales.csv")
+    summary = ingest.process_results(con, cfg, [res], sales_csv=ROOT / "config" / "manual_sales.csv",
+                                     backfill="porsche_finder" if args.backfill else None)
     digest = alerts.prepare_digest(con, cfg, state)
     summary["digest"] = {"date": digest["digest_date"], "cars": len(digest["cars"])} if digest else None
     summary["site"] = build_site(con, cfg, state, Path(args.out))
@@ -253,6 +254,8 @@ def main(argv=None) -> int:
     imp = sub.add_parser("import-finder", help="load a Porsche Finder browser capture (JSON) into the database")
     imp.add_argument("file", help="capture .json file, or a directory of lite line files (c*.txt + meta.json)")
     imp.add_argument("--out", default=str(ROOT / "_site"))
+    imp.add_argument("--backfill", action="store_true",
+                     help="this capture only adds detail to cars already imported: re-grade without alerting")
     imp.set_defaults(fn=cmd_import_finder)
     o = sub.add_parser("outreach", help="private brief for contacting a seller: target price, open questions, draft email")
     o.add_argument("cars", nargs="+", help="VIN (or its last 6+ characters)")

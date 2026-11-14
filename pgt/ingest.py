@@ -774,7 +774,7 @@ def record_source(con, run_id: int, result: SourceResult, started: str, up: dict
 
 
 def process_results(con, cfg: dict, results: list[SourceResult], now: str | None = None,
-                    sales_csv: Path | None = None) -> dict:
+                    sales_csv: Path | None = None, backfill: str | None = None) -> dict:
     """Apply a set of source results as one run.  Used by the CLI and by tests."""
     now = now or D.now_iso()
     baseline = not any(D.get_meta(con, f"baseline_done:{r.source}") == "1" for r in results)
@@ -787,6 +787,8 @@ def process_results(con, cfg: dict, results: list[SourceResult], now: str | None
     if D.get_meta(con, "rules_signature") != sig:        # criteria or grading rules changed since the last run
         first_import.insert(0, "rules")
         D.set_meta(con, "rules_signature", sig)
+    if backfill:                                         # caller says this run only adds detail to known cars
+        first_import.insert(0, backfill)
     any_ok = False
     for res in results:
         up = lc = None
