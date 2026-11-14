@@ -85,3 +85,25 @@ and only the deciding options for cars that already fail one. The site labels bo
 The daily cloud run cannot refresh Finder listings. A listing whose source has not been re-read for
 `lifecycle.stale_after_days` shows as "availability unconfirmed" until the next capture. The first import of a
 source, and any change to the criteria or grading rules, re-grades existing cars without sending an alert.
+
+
+### Daily capture (scheduled)
+
+`site/finder_capture.js` is the capture script; it is published with the site so a browser tab on
+finder.porsche.com can load it, and `tools/finder_capture.fnv` pins its fingerprint (a test keeps the two in
+step). The Claude scheduled task "GT Scout Finder capture" runs every morning on the owner's computer:
+
+1. opens finder.porsche.com in the browser, loads the script, checks the fingerprint, calls `__pfStart()`;
+2. polls `__pfStatus()` until the capture finishes, then `__pfSave()` downloads
+   `gt-scout-finder-capture-<UTC timestamp>.json` to the Downloads folder;
+3. imports it with `python -m pgt import-finder <file>`, pushes the `state` branch and triggers an export run.
+
+It needs the computer on with the Claude desktop app open. If it cannot run, Finder listings older than
+`lifecycle.stale_after_days` show as "availability unconfirmed" and nothing else breaks.
+
+## Gearbox from dealer pages
+
+For cars that are not on Porsche Finder, the daily run reads the dealer's own listing page once
+(`pgt/pagecheck.py`; robots.txt respected, no retries on refusal, at most `page_checks.max_per_run` per run).
+Only specific wording settles a gearbox ("6-speed manual", "PDK", "Doppelkupplung", "dual-clutch", "7-speed");
+a bare "Automatic" is the feed's default and is ignored, and mixed wording is recorded as a conflict.

@@ -987,6 +987,10 @@ def test_dealer_page_reading_only_trusts_specific_wording():
     assert pagecheck.read_page(_page("", title="2018 Porsche 911 GT3 6-Speed Manual for sale"), VIN_P)["result"] == "manual"
     # a facet list or mixed wording is a conflict, not an answer
     assert pagecheck.read_page(_page("<div>Transmission</div><div>Manual</div><div>Transmission: PDK</div>"), VIN_P)["result"] == "conflict"
+    assert pagecheck.read_page(_page("<td>Transmission</td><td>AUTO, 7-SPD PDK MANUAL</td>"), VIN_P)["result"] == "pdk"
+    assert pagecheck.read_page(_page("<dt>Transmission</dt><dd>7-Speed Double Clutch</dd>"), VIN_P)["result"] == "pdk"
+    prose = "<p>You could have the six-speed transmission, but for whip-crack shifts the PDK, as this car shows, is quicker.</p>"
+    assert pagecheck.read_page(_page(prose), VIN_P)["result"] == "inconclusive"
     # a page that does not show this VIN is not this car's page
     assert pagecheck.read_page("<html><body>Transmission: Manual</body></html>", VIN_P)["result"] == "vin_missing"
 
@@ -1024,3 +1028,20 @@ def test_page_reading_settles_an_unknown_gearbox_and_is_not_repeated(con, cfg):
     assert pagecheck.run(con, cfg, f, now=ts(2))["checked"] == 0
     later = (datetime.fromisoformat(T0.replace("Z", "+00:00")) + timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:%SZ")
     assert pagecheck.run(con, cfg, f, now=later)["checked"] == 1
+
+
+def test_browser_capture_script_matches_its_fingerprint_and_parses_a_real_page():
+    import shutil, subprocess
+    root = Path(__file__).resolve().parents[1]
+    text = (root / "site" / "finder_capture.js").read_text(encoding="utf-8")
+    h = 0x811C9DC5
+    for ch in text:
+        h = ((h ^ ord(ch)) * 0x01000193) & 0xFFFFFFFF
+    # the scheduled capture refuses to run a script whose fingerprint differs from this file
+    assert format(h, "08x") == (root / "tools" / "finder_capture.fnv").read_text().strip()
+    if shutil.which("node"):
+        out = subprocess.run(["node", str(root / "tests" / "check_capture_js.mjs"), str(root / "site" / "finder_capture.js"),
+                              str(root / "tests" / "fixtures" / "finder_058WLN.html")], capture_output=True, text=True, timeout=60)
+        rec = json.loads(out.stdout)
+        assert (rec["vin"], rec["tr"], rec["vp"], rec["imgs"], rec["opts"]) == ("WP0AC2A98NS268519", "Manual", 239992, 36, 13)
+        assert rec["fns"] == ["function"] * 3

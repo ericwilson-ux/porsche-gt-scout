@@ -27,13 +27,15 @@ _CONTENT_RE = re.compile(r"content=[\"']([^\"']*)[\"']", re.I)
 _LABEL_RE = re.compile(r"\btransmission(?:\s+(?:type|description))?\s*:?\s*\n?\s*([^\n]{2,70})", re.I)
 _NOT_GEARBOX = re.compile(r"owner'?s?\s+manuals?|manuals?\s*(?:,|and|&)\s*(?:books?|keys?|records?)|service manual|"
                           r"manual\s+(?:shift\s+)?mode|manual(?:ly)?\s+adjust\w*|manual\s+(?:seats?|climate|air)", re.I)
-_MANUAL = re.compile(r"\bmanual\b|\b6[\s-]*speed\s*m/?t\b|\bstick[\s-]?shift\b|\b6MT\b", re.I)
-_PDK = re.compile(r"\bPDK\b|doppelkupplung|dual[\s-]*clutch|\b7[\s-]*speed\b|\bDCT\b", re.I)
+_MANUAL = re.compile(r"\bmanual\b|\b6[\s-]*(?:speed|spd)\s*m/?t\b|\bstick[\s-]?shift\b|\b6MT\b", re.I)
+_PDK = re.compile(r"\bPDK\b|doppelkupplung|(?:dual|double)[\s-]*clutch|\b7[\s-]*(?:speed|spd)\b|\bDCT\b", re.I)
+# "PDK manual", "auto-shift manual", "automated manual" all describe the PDK, not a manual gearbox
+_AUTOMATED = re.compile(r"(?:pdk|auto(?:mated|[\s-]?shift)?|(?:dual|double)[\s-]*clutch)[\s-]+manual", re.I)
 
 
 def kind_of(value: str | None) -> str | None:
     """'manual' | 'pdk' | 'conflict' for specific wording, else None (a bare "Automatic" is None)."""
-    t = _NOT_GEARBOX.sub(" ", value or "")
+    t = _AUTOMATED.sub(" PDK ", _NOT_GEARBOX.sub(" ", value or ""))
     man, pdk = bool(_MANUAL.search(t)), bool(_PDK.search(t))
     if man and pdk:
         return "conflict"
@@ -75,7 +77,9 @@ def read_page(page: str, vin: str) -> dict:
     text = htmllib.unescape(_TAG_RE.sub("\n", _SCRIPT_RE.sub("\n", page)))
     text = re.sub(r"[ \t\r\f\v]+", " ", text)
     text = re.sub(r"\s*\n\s*", "\n", text)
-    labelled = [m.group(1).strip() for m in _LABEL_RE.finditer(text)]
+    # a labelled value is short and starts with a word; running prose after the word "transmission" is not one
+    labelled = [v for v in (m.group(1).strip() for m in _LABEL_RE.finditer(text))
+                if v[:1].isalnum() and len(v.split()) <= 7]
     found: dict[str, str] = {}
     for value in stated + labelled + head:
         k = kind_of(value)
