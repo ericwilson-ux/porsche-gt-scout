@@ -268,6 +268,12 @@ def test_marketcheck_normalise_and_trim_selection():
     l = mc.normalise(MC_RAW, "us-used")
     assert (l.variant, l.generation, l.price, l.mileage, l.transmission, l.cpo) == ("gt3", "992.1", 244500.0, 24150, "manual", False)
     assert len(l.photos) == 2 and l.has_equipment_list is False and l.seller["kind"] == "porsche_dealer"
+    assert l.photos_advertised is None and l.extra["photo_links_in_feed"] == 3
+    # Porsche's image host serves each photo at many sizes and formats: 16 links here are 2 photos
+    uid = ["e2839c3c-0a31-44e5-b0d2-4511992d1812", "1be8ca21-6f60-470e-9d40-d16ad45244bc"]
+    links = [f"https://images.finder.porsche.com/{u}/{w}.{e}" for u in uid for w in (320, 640, 960, 1280) for e in ("avif", "webp")]
+    sized = mc.normalise({**MC_RAW, "media": {"photo_links": links}}, "us-used")
+    assert [p["id"] for p in sized.photos] == uid and sized.photos[0]["url"].endswith(uid[0] + "/1280")
     assert mc.normalise({**MC_RAW, "heading": "2022 Porsche 911 Carrera S", "build": {"year": 2022, "trim": "Carrera S"}}, "x") is None
     assert mc.normalise({**MC_RAW, "heading": "2023 Porsche 911 GT3 RS", "build": {"year": 2023, "trim": "GT3 RS"}}, "x") is None
     trims = mc.pick_trims([{"item": "GT3", "count": 9}, {"item": "GT3 RS", "count": 5}, {"item": "GT3 Touring", "count": 4},
@@ -342,7 +348,7 @@ def test_same_vin_from_two_sources_is_one_vehicle_with_conflicts(con, cfg):
     assert any(c["field"] == "price" for c in m["conflicts"])                         # $239,992 vs $244,500 is flagged
     assert m["equipment"]["lift"]["status"] == "verified"                             # option data carried from Finder
     assert m["seller"]["phone"] == "804-555-0100"                                     # gap filled from the second source
-    assert m["gallery"]["captured"] == 36                                             # richest gallery chosen
+    assert m["gallery"]["captured"] == 36 and m["gallery"]["verified_against_source"]  # richest gallery chosen
     assert m["listed_since"].startswith("2026-10-03") and m["listed_since_basis"] == "source-reported"
     # the feed's earlier price is kept as a labelled observation, not as our own
     kinds = {p["kind"] for p in m["price_history"]}
@@ -669,3 +675,28 @@ def test_lead_without_lift_in_build_data_is_not_emailed(con, cfg, state):
     assert b["equipment"]["lift"]["status"] == "decode_absent"            # 12 options, none of them the lift
     d = _digest(con, cfg, state, ts(1))
     assert [c["vin"] for c in d["cars"]] == [SYN_GT4RS]
+
+
+def test_feed_galleries_dedupe_sizes_and_flag_preview_only(con, cfg, tmp_path):
+    uid = [f"e2839c3c-0a31-44e5-b0d2-45119{i:07d}" for i in range(5)]
+    links = [f"https://images.finder.porsche.com/{u}/{w}.{e}" for u in uid for w in (320, 640, 960, 1280) for e in ("avif", "webp")]
+    preview = _feed_only(SYN_GT4RS, "p1", media={"photo_links": links})
+    full = _feed_only("WP0AE2A82SK270005", "p2", media={"photo_links": [f"https://pictures.dealer.example/x/{i}.jpg" for i in range(30)]})
+    none = _feed_only("WP0AC2A98RS260006", "p3", heading="2024 Porsche 911 GT3", build={"year": 2024, "trim": "GT3"}, media={})
+    ingest.process_results(con, cfg, [_feed([preview, full, none])], now=T0)
+    a, b, c = merged(con, SYN_GT4RS), merged(con, "WP0AE2A82SK270005"), merged(con, "WP0AC2A98RS260006")
+    assert a["gallery"]["captured"] == 5 and a["gallery"]["complete"] is False and "preview" in a["gallery"]["note"]
+    assert b["gallery"]["captured"] == 30 and b["gallery"]["complete"] is True and b["gallery"]["advertised"] is None
+    assert b["gallery"]["verified_against_source"] is False
+    assert c["gallery"]["captured"] == 0 and c["gallery"]["complete"] is False
+    # rows stored before the fix (one row per size) are also collapsed when the vehicle is merged
+    lid = con.execute("SELECT id FROM listings WHERE source_listing_id='p2'").fetchone()["id"]
+    for w in (320, 640):
+        con.execute("INSERT INTO photos(listing_id, vehicle_key, source_image_id, url, position, first_seen, last_seen) VALUES(?,?,?,?,?,?,?)",
+                    (lid, "WP0AE2A82SK270005", f"old{w}", f"https://images.finder.porsche.com/{uid[0]}/{w}.webp", 99, T0, T0))
+    ingest.rebuild_vehicles(con, cfg, T0)
+    assert merged(con, "WP0AE2A82SK270005")["gallery"]["captured"] == 31
+    export.export(con, cfg, tmp_path / "data")
+    idx = json.loads((tmp_path / "data" / "index.json").read_text())
+    card = next(v for v in idx["vehicles"] if v["key"] == SYN_GT4RS)
+    assert card["nphotos"] == 5 and card["gcomplete"] is False and card["thumbs"][0] == {"k": "pf", "u": f"https://images.finder.porsche.com/{uid[0]}", "c": "uncategorized", "a": None}

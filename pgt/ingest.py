@@ -398,22 +398,41 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
     # -- photos: the richest gallery among the listings, de-duplicated by source image id
     best, best_n = None, -1
     for l in ls:
-        n = con.execute("SELECT COUNT(*) c FROM photos WHERE listing_id=?", (l["_row"]["id"],)).fetchone()["c"]
+        n = len({C.canonical_photo(r["url"])[0] for r in con.execute(
+            "SELECT url FROM photos WHERE listing_id=? AND last_seen=(SELECT MAX(last_seen) FROM photos WHERE listing_id=?)",
+            (l["_row"]["id"], l["_row"]["id"]))})
         bonus = 0.5 if (l.get("photos_are_real") and l["source"] == "porsche_finder") else 0
         if n + bonus > best_n:
             best, best_n = l, n + bonus
-    photos = []
+    photos, seen_keys = [], set()
     if best is not None:
         last = con.execute("SELECT MAX(last_seen) m FROM photos WHERE listing_id=?", (best["_row"]["id"],)).fetchone()["m"]
-        for p in con.execute("""SELECT * FROM photos WHERE listing_id=? AND last_seen=? ORDER BY position""",
+        for p in con.execute("""SELECT * FROM photos WHERE listing_id=? AND last_seen=? ORDER BY position, id""",
                              (best["_row"]["id"], last)):
-            photos.append({"id": p["source_image_id"], "url": p["url"], "category": p["category"],
-                           "archived": p["archived_path"]})
+            key, display = C.canonical_photo(p["url"])
+            if key in seen_keys:
+                continue
+            seen_keys.add(key)
+            photos.append({"id": key, "url": display, "category": p["category"], "archived": p["archived_path"]})
     advertised = best.get("photos_advertised") if best else None
+    from_finder_page = bool(best) and best["source"] == "porsche_finder"
+    preview_only = bool(photos) and not from_finder_page and all(C.is_finder_image(p["url"]) for p in photos)
+    if not from_finder_page:
+        advertised = None            # aggregator feeds carry links, not the listing's own photo count
+    if not photos:
+        complete, note = False, "No photos published in any source"
+    elif preview_only:
+        complete, note = False, (f"Only the {len(photos)} preview photos from the dealer's Porsche page reach the feed; "
+                                 "the full gallery is on the original listing")
+    elif advertised is not None:
+        complete = len(photos) >= advertised
+        note = None if complete else f"{len(photos)} of {advertised} advertised photos captured"
+    else:
+        complete, note = True, "Every photo link in the feed is shown; the source does not publish a count to check against"
     m["photos"] = photos
     m["gallery"] = {"source": SOURCE_LABEL.get(best["source"], best["source"]) if best else None,
-                    "advertised": advertised, "captured": len(photos),
-                    "complete": bool(photos) and (advertised is None or len(photos) >= advertised),
+                    "advertised": advertised, "captured": len(photos), "complete": complete, "note": note,
+                    "verified_against_source": bool(from_finder_page and advertised is not None),
                     "real_photos": best.get("photos_are_real") if best else None}
 
     # -- sources, conflicts, price history, timing

@@ -86,13 +86,18 @@ def normalise(raw: dict, scope: str) -> Listing | None:
     media = raw.get("media") or {}
     links = media.get("photo_links") or []
     seen = set()
-    for i, link in enumerate(links):
-        if not link or link in seen:
+    for link in links:
+        if not link:
             continue
-        seen.add(link)
-        lst.photos.append({"id": link, "url": link, "category": "uncategorized", "position": i, "aspect": None})
-    lst.photos_advertised = len(links) or None
-    lst.photos_are_real = True if links else None
+        key, display = C.canonical_photo(link)      # several sizes/formats of one image count once
+        if key in seen:
+            continue
+        seen.add(key)
+        lst.photos.append({"id": key, "url": display, "category": "uncategorized", "position": len(lst.photos), "aspect": None})
+    # The feed publishes links, not the listing's own photo count, so there is no advertised figure to check against.
+    lst.photos_advertised = None
+    lst.photos_are_real = True if lst.photos else None
+    lst.extra["photo_links_in_feed"] = len(links)
     lst.carfax_clean_title = raw.get("carfax_clean_title")
     lst.one_owner = raw.get("carfax_1_owner")
     lst.stock_number = raw.get("stock_no")

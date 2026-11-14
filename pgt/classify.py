@@ -229,3 +229,23 @@ def scan_seller_text(text: str | None) -> dict:
         "mentions_lift": bool(_LIFT_RE.search(t)),
         "mentions_weissach": bool(_WEISSACH_RE.search(t)),
     }
+
+
+# ---- photos --------------------------------------------------------------------
+_FINDER_IMG_RE = re.compile(r"^https://images\.finder\.porsche\.com/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})(?:/(\d+)(?:\.\w+)?)?$")
+
+
+def canonical_photo(url: str) -> tuple[str, str]:
+    """(identity key, display URL) for a photo link.
+
+    Porsche's image host serves one photo at many widths and formats
+    (<id>/320.webp ... <id>/1280.avif); those are one photo, keyed by its id.
+    """
+    m = _FINDER_IMG_RE.match(url or "")
+    if m:
+        return m.group(1), f"https://images.finder.porsche.com/{m.group(1)}/1280"
+    return url, url
+
+
+def is_finder_image(url: str) -> bool:
+    return bool(_FINDER_IMG_RE.match(url or ""))

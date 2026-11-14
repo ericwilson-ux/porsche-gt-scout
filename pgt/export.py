@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from statistics import median
 
+from . import classify as C
 from . import db as D
 from . import valuation
 
@@ -48,8 +49,8 @@ METHODOLOGY = {
 
 def _photo_ref(p: dict) -> dict:
     u = p["url"]
-    if "images.finder.porsche.com/" in u:
-        return {"k": "pf", "u": u.rsplit("/", 1)[0], "c": p.get("category"), "a": p.get("archived")}
+    if C.is_finder_image(u):
+        return {"k": "pf", "u": C.canonical_photo(u)[1].rsplit("/", 1)[0], "c": p.get("category"), "a": p.get("archived")}
     return {"k": "url", "u": u, "c": p.get("category"), "a": p.get("archived")}
 
 
@@ -82,7 +83,7 @@ def card(m: dict, now: datetime) -> dict:
         "new": (not m.get("baseline")) and (now - first) <= timedelta(days=7), "baseline": bool(m.get("baseline")),
         "thumbs": [_photo_ref(p) for p in (m.get("photos") or [])[:6]],
         "nphotos": (m.get("gallery") or {}).get("captured", 0), "nadv": (m.get("gallery") or {}).get("advertised"),
-        "gcomplete": (m.get("gallery") or {}).get("complete"),
+        "gcomplete": (m.get("gallery") or {}).get("complete"), "gnote": (m.get("gallery") or {}).get("note"),
         "sources": [x["label"] for x in m.get("sources") or []], "quality": (m.get("quality") or {}).get("level"),
         "conflicts": len(m.get("conflicts") or []), "sale": m.get("sale"),
         "last_seen": max((x["last_seen"] for x in m.get("sources") or []), default=None),
@@ -166,16 +167,20 @@ def export(con, cfg: dict, out: Path, state: Path | None = None) -> dict:
     digests = [{"date": d["digest_date"], "status": d["status"], "created_at": d["created_at"], "sent_at": d["sent_at"],
                 "channel": d["channel"], "attempts": d["attempts"], "error": d["last_error"],
                 "vehicles": len(json.loads(d["vehicle_keys"]))} for d in con.execute("SELECT * FROM digests ORDER BY digest_date DESC LIMIT 60")]
-    adv = sum(c["nadv"] or 0 for c in cards if c["status"] != "removed")
-    cap = sum(c["nphotos"] or 0 for c in cards if c["status"] != "removed")
-    incomplete = [{"key": c["key"], "label": f"{c['year']} {c['label']}", "captured": c["nphotos"], "advertised": c["nadv"]}
-                  for c in cards if c["status"] != "removed" and not c["gcomplete"]]
+    listed = [c for c in cards if c["status"] != "removed"]
+    adv = sum(c["nadv"] or 0 for c in listed)
+    cap = sum(c["nphotos"] or 0 for c in listed)
+    incomplete = [{"key": c["key"], "label": f"{c['year']} {c['label']}", "captured": c["nphotos"], "advertised": c["nadv"],
+                   "note": c["gnote"], "cat": c["cat"]} for c in listed if not c["gcomplete"]]
     dec = {r["status"]: r["c"] for r in con.execute("SELECT status, COUNT(*) c FROM vin_decodes GROUP BY status")}
     health = {"generated_at": D.now_iso(), "runs": runs, "decodes": dec,
               "decode_last": json.loads(D.get_meta(con, "last_decode_summary", "null")),
               "api_calls": {r["key"].split(":", 1)[1]: int(r["value"]) for r in con.execute("SELECT * FROM meta WHERE key LIKE 'mc_calls:%'")},
               "last_success": last_success, "coverage": COVERAGE_NOTES,
-              "digests": digests, "gallery": {"advertised": adv, "captured": cap, "incomplete": incomplete},
+              "digests": digests, "gallery": {"advertised": adv, "captured": cap, "cars": len(listed), "complete_cars": sum(1 for c in listed if c["gcomplete"]),
+                          "preview_only": sum(1 for c in listed if c["gnote"] and "preview" in c["gnote"]),
+                          "no_photos": sum(1 for c in listed if not c["nphotos"]),
+                          "incomplete": [g for g in incomplete if g["cat"] in ("lead", "confirmed", "near_miss")][:200]},
               "baseline": {r["key"].split(":", 1)[1]: r["value"] for r in con.execute("SELECT * FROM meta WHERE key LIKE 'baseline_at:%'")}}
     (out / "health.json").write_text(json.dumps(health, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
