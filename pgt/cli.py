@@ -88,6 +88,16 @@ def cmd_run(args) -> int:
                                                   max_dealers=args.max_dealers, extra_urls=args.url or None))
         except Exception as exc:            # a crashing source must not take the run (or its neighbours) down
             results.append(SourceResult("porsche_finder", status="failed", messages=[f"crash: {type(exc).__name__}: {exc}"]))
+    # GitHub can fire the daily schedule hours late, and the morning capture task starts a run when it has
+    # not fired yet; a second sweep the same day would spend the month's call allowance twice.
+    recent = None
+    last = D.get_meta(con, "last_success:marketcheck")
+    min_gap = float((cfg.get("decode") or {}).get("min_hours_between_sweeps", 16))
+    if "marketcheck" in wanted and last and not args.force:
+        age = (datetime.now(timezone.utc) - datetime.fromisoformat(last.replace("Z", "+00:00"))).total_seconds() / 3600
+        if age < min_gap:
+            recent = f"dealer feed already swept {age:.1f} h ago; not repeated within {min_gap:g} h"
+            wanted.remove("marketcheck")
     if "marketcheck" in wanted:
         try:
             cached = _mc_trims(con)
@@ -104,6 +114,10 @@ def cmd_run(args) -> int:
         except Exception as exc:
             results.append(SourceResult("marketcheck", status="failed", messages=[f"crash: {type(exc).__name__}: {exc}"]))
     summary = ingest.process_results(con, cfg, results, sales_csv=ROOT / "config" / "manual_sales.csv")
+    if recent:
+        summary["skipped"] = {"marketcheck": recent}
+        if not results:
+            summary["status"] = "ok"            # nothing was due; the rest of the run still happens
     if not args.no_pagecheck:
         try:
             summary["page_checks"] = _pagecheck(con, cfg)
@@ -267,6 +281,7 @@ def main(argv=None) -> int:
     r.add_argument("--url", action="append", help="extra Porsche Finder listing URL to include")
     r.add_argument("--no-decode", action="store_true", help="skip paid VIN build-data lookups")
     r.add_argument("--no-pagecheck", action="store_true", help="skip reading dealer pages for unknown gearboxes")
+    r.add_argument("--force", action="store_true", help="sweep the dealer feed even if it was swept recently")
     r.add_argument("--out", default=str(ROOT / "_site"))
     r.set_defaults(fn=cmd_run)
     e = sub.add_parser("export", help="rebuild the site from the existing database")

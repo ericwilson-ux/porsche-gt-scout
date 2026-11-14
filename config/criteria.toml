@@ -109,6 +109,7 @@ enabled = true
 max_per_run = 100              # first runs work through the backlog of leads, best matches first
 monthly_call_quota = 500       # all MarketCheck calls in a calendar month (sweeps + decodes)
 sweep_calls_per_day = 20       # held back for each remaining day's inventory sweep
+min_hours_between_sweeps = 16        # a second run the same day skips the paid feed sweep
 retry_failed_after_days = 30
 
 [page_checks]                        # read the gearbox from the dealer's own listing page when no trusted source states it
