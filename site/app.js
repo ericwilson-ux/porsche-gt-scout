@@ -69,8 +69,15 @@ const TABS = [['qualifying', 'Qualifying', c => c.cat === 'confirmed' || c.cat =
   ['lead', 'Leads to verify', c => c.cat === 'lead'], ['near_miss', 'Near misses', c => c.cat === 'near_miss'], ['all', 'Everything tracked', () => true]];
 function passes(c) {
   const f = S.f;
-  if (f.variants?.length && !f.variants.includes(c.variant)) return false;
-  if (f.gens?.length && !f.gens.includes(c.gen)) return false;
+  // Generation applies to GT3 and GT3 Touring. With a generation picked, 718s show only if their model is ticked.
+  const isGT3 = c.variant === 'gt3' || c.variant === 'gt3_touring', gens = f.gens?.length ? f.gens : null, vars = f.variants?.length ? f.variants : null;
+  const gt3ModelTicked = vars && vars.some(v => v === 'gt3' || v === 'gt3_touring');
+  if (isGT3) {
+    if (gens && !gens.includes(c.gen)) return false;
+    if (vars && !vars.includes(c.variant) && (gt3ModelTicked || !gens)) return false;
+  } else {
+    if (vars ? !vars.includes(c.variant) : !!gens) return false;
+  }
   if (f.pmin && (c.price ?? 0) < f.pmin) return false;
   if (f.pmax && (c.price ?? Infinity) > f.pmax) return false;
   if (f.ymin && (c.year ?? 0) < f.ymin) return false;
@@ -134,6 +141,8 @@ function cardHTML(c, archive) {
       <span class="acts"><button class="act" data-fav aria-pressed="${S.favs.has(c.key)}" title="Save to favourites">${S.favs.has(c.key) ? 'Saved' : 'Save'}</button><button class="act" data-cmp aria-pressed="${S.cmp.has(c.key)}" title="Add to comparison">Compare</button></span></div>
   </div></article>`;
 }
+const GENS = [['991.2', '2018-19'], ['992.1', '2022-24'], ['992.2', '2025 on']];
+function genCount(g) { const t = TABS.find(x => x[0] === S.tab) || TABS[0]; return live().filter(t[2]).filter(c => (c.variant === 'gt3' || c.variant === 'gt3_touring') && c.gen === g).length; }
 function filterPanel() {
   const f = S.f, v = S.idx.variants, all = live();
   const fams = k => [...new Set(all.map(c => c[k]).filter(Boolean))].sort();
@@ -145,8 +154,9 @@ function filterPanel() {
   const sel = (name, opts) => `<select data-s="${name}" aria-label="${name}">${opts.map(([val, l]) => `<option value="${val}" ${String(f[name] ?? '') === val ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
   return `<form class="filters" id="filters" onsubmit="return false">
   <fieldset><legend>Search</legend><input type="search" data-q placeholder="VIN, colour, dealer, city" value="${esc(f.q || '')}" aria-label="Search"></fieldset>
-  <fieldset><legend>Model</legend>${Object.entries(v).map(([k, o]) => multi('variants', k, esc(o.label))).join('')}
-    ${multi('gens', '991.2', '991.2 generation (manual only)')}${multi('gens', '992.1', '992.1 generation')}${multi('gens', '992.2', '992.2 generation')}</fieldset>
+  <fieldset><legend>Model</legend>${Object.entries(v).map(([k, o]) => multi('variants', k, esc(o.label))).join('')}</fieldset>
+  <fieldset><legend>GT3 generation</legend><div class="swatches">${GENS.map(([g, yrs]) => `<button type="button" class="sw gen" data-sw="gens" value="${g}" aria-pressed="${!!f.gens?.includes(g)}"><b>${g}</b><span>${yrs}</span><em>${genCount(g)}</em></button>`).join('')}</div>
+    <p class="hint">Narrows GT3 and GT3 Touring. Pick more than one to combine. 991.2 cars must be manual.</p></fieldset>
   <fieldset><legend>Price</legend><div class="pair">${n('pmin', 'Min $')}${n('pmax', 'Max $')}</div></fieldset>
   <fieldset><legend>Year and mileage</legend><div class="pair">${n('ymin', 'From year')}${n('ymax', 'To year')}</div><div class="pair" style="margin-top:8px">${n('mmax', 'Max miles')}${n('smin', 'Min match')}</div></fieldset>
   <fieldset><legend>Exterior</legend><div class="swatches">${fams('extf').map(x => sw('ext', x)).join('')}</div></fieldset>
