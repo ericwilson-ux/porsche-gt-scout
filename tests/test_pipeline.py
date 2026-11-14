@@ -1074,7 +1074,7 @@ def test_page_price_fills_a_missing_price_and_a_sold_or_missing_page_retires_the
         ls = [feed(1, vins[0]), feed(2, vins[1], 230000), feed(3, vins[2], 235000), feed(4, vins[3], 240000)]
         return ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=ls, scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=now)
     sweep(T0)
-    assert merged(con, vins[0])["price"] is None and "No price" in merged(con, vins[0])["price_note"]
+    assert merged(con, vins[0])["price"] is None and "could not be read" in merged(con, vins[0])["price_note"]
     pages = {"https://dealer1.example/car/1": (200, _page("<div>Internet Price</div><div>$239,994</div><li>Front Axle Lift</li>")),
              "https://dealer2.example/car/2": (200, _page("", title="SOLD 2018 Porsche 911 GT3").replace(VIN_P, vins[1])),
              "https://dealer3.example/car/3": (404, ""),

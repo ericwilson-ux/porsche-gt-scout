@@ -315,8 +315,10 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
             m["price_note"] = "The feed no longer carries a price; this is the last figure it advertised. Confirm with the seller"
         else:
             m["price_on_request"] = any(r["data"].get("price_on_request") for r in pages.values())
+            read = max((r["checked_at"][:10] for r in pages.values() if r["avail"] in ("ok", "pending")), default=None)
             m["price_note"] = ("The dealer's page says the price is on request" if m["price_on_request"]
-                               else "No price in the feed or on the dealer's page")
+                               else f"The dealer publishes no price for this car (its page was read on {read}); ask the seller" if read
+                               else "No price in the feed, and the dealer's page could not be read")
 
     # seller: from the best listing's seller row
     r0 = live[0]["_row"]
@@ -618,6 +620,12 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
                 st = "unverified"
                 notes["unverified"] = (f"Listed for {m['days_on_market']} days and the dealer's page could not be read to confirm "
                                        "it is still for sale. Confirm with the seller")
+            elif (l["source"] != "porsche_finder" and m.get("price") is None
+                  and (m["days_on_market"] or 0) > int(lc.get("no_price_listing_days", 365))):
+                # a page kept up for over a year with no price is usually a showcase of a car already sold
+                st = "unverified"
+                notes["unverified"] = (f"Listed for {m['days_on_market']} days with no price; this is likely a showcase page for a car "
+                                       "already sold. Confirm with the seller")
         statuses.add(st)
     m["status"] = "active" if "active" in statuses else "unverified" if "unverified" in statuses else "removed"
     m["status_note"] = notes.get(m["status"])
