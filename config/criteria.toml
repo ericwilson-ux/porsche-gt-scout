@@ -110,3 +110,9 @@ max_per_run = 100              # first runs work through the backlog of leads, b
 monthly_call_quota = 500       # all MarketCheck calls in a calendar month (sweeps + decodes)
 sweep_calls_per_day = 20       # held back for each remaining day's inventory sweep
 retry_failed_after_days = 30
+
+[page_checks]                        # read the gearbox from the dealer's own listing page when no trusted source states it
+enabled = true
+max_per_run = 60                     # one request per listing; 991.2s and cars still in contention go first
+retry_after_days = 14                # a page that was blocked or said nothing is not asked again sooner
+min_interval_seconds = 2.0           # per-host spacing

@@ -959,3 +959,68 @@ def test_valuation_compares_within_a_confirmed_gearbox():
     manual = valuation.value({**subj, "transmission": "manual"}, pool)
     assert mixed["rating"] == "overpriced" and "gearbox" not in mixed
     assert manual["gearbox"] == "manual" and manual["n"] == 8 and manual["rating"] == "great" and "manual gearbox" in manual["note"]
+
+
+# ------------------------------------------------------------ dealer page gearbox ----
+from pgt import pagecheck  # noqa: E402
+
+VIN_P = "WP0AC2A90JS175097"
+
+
+def _page(body, title="2018 Porsche 911 GT3 | Example Motors", ld=None):
+    ldtag = f'<script type="application/ld+json">{json.dumps(ld)}</script>' if ld else ""
+    return f"<html><head><title>{title}</title>{ldtag}</head><body><p>VIN {VIN_P}</p>{body}</body></html>"
+
+
+def test_dealer_page_reading_only_trusts_specific_wording():
+    r = pagecheck.read_page(_page("<dl><dt>Transmission</dt><dd>6-Speed Manual</dd></dl>"), VIN_P)
+    assert r == {"result": "manual", "evidence": "6-Speed Manual"}
+    assert pagecheck.read_page(_page("<li>Transmission: 7-Speed Porsche Doppelkupplung (PDK)</li>"), VIN_P)["result"] == "pdk"
+    # a bare "Automatic" is the feed's own default and proves nothing
+    assert pagecheck.read_page(_page("<span>Transmission</span><span>Automatic</span>"), VIN_P)["result"] == "inconclusive"
+    # structured data for this VIN counts; another car's does not
+    ld = [{"@type": "Car", "vehicleIdentificationNumber": VIN_P, "vehicleTransmission": "Manual"},
+          {"@type": "Car", "vehicleIdentificationNumber": "WP0AC2A9XKS149267", "vehicleTransmission": "7-Speed PDK"}]
+    assert pagecheck.read_page(_page("", ld=ld), VIN_P)["result"] == "manual"
+    # wording that is not about the gearbox
+    assert pagecheck.read_page(_page("<p>Includes owner's manual, books and both keys. PDK-style paddles not fitted.</p>"), VIN_P)["result"] == "inconclusive"
+    assert pagecheck.read_page(_page("", title="2018 Porsche 911 GT3 6-Speed Manual for sale"), VIN_P)["result"] == "manual"
+    # a facet list or mixed wording is a conflict, not an answer
+    assert pagecheck.read_page(_page("<div>Transmission</div><div>Manual</div><div>Transmission: PDK</div>"), VIN_P)["result"] == "conflict"
+    # a page that does not show this VIN is not this car's page
+    assert pagecheck.read_page("<html><body>Transmission: Manual</body></html>", VIN_P)["result"] == "vin_missing"
+
+
+class _FakeFetcher:
+    def __init__(self, pages): self.pages, self.asked = pages, []
+
+    def get(self, url, **_):
+        from pgt.http import Response
+        self.asked.append(url)
+        status, text = self.pages.get(url, (403, ""))
+        return Response(url, status, text=text)
+
+
+def test_page_reading_settles_an_unknown_gearbox_and_is_not_repeated(con, cfg):
+    def feed(i, vin, raw="Automatic"):
+        return mc.normalise({**MC_RAW, "id": f"pc{i}", "vin": vin, "heading": "2018 Porsche 911 GT3", "price": 240000, "miles": 12000,
+                             "vdp_url": f"https://dealer{i}.example/car", "build": {"year": 2018, "trim": "GT3", "transmission": raw},
+                             "ref_price": None}, "us-used:2018-2019")
+    ls = [feed(1, VIN_P), feed(2, "WP0AC2A92JS175859"), feed(3, "WP0AC2A9XJS176676")]
+    ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=ls, scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=T0)
+    assert merged(con, VIN_P)["transmission"] is None
+    f = _FakeFetcher({"https://dealer1.example/car": (200, _page("<dt>Transmission</dt><dd>6-Speed Manual</dd>")),
+                      "https://dealer2.example/car": (200, _page("<dt>Transmission</dt><dd>7-Speed PDK</dd>").replace(VIN_P, "WP0AC2A92JS175859"))})
+    out = pagecheck.run(con, cfg, f, now=ts(1))
+    assert out["checked"] == 3 and out["results"] == {"manual": 1, "pdk": 1, "blocked": 1}
+    ingest.rebuild_vehicles(con, cfg, ts(1))
+    m = merged(con, VIN_P)
+    assert m["transmission"] == "manual" and "dealer's own listing page" in m["transmission_note"]
+    chk = {c["key"]: c["status"] for c in m["eligibility"]["checks"]}
+    assert chk["transmission"] == "pass"
+    assert merged(con, "WP0AC2A92JS175859")["eligibility"]["category"] == "excluded"       # a PDK 991.2
+    assert merged(con, "WP0AC2A9XJS176676")["transmission"] is None                        # blocked page: still unknown
+    # nothing is asked again inside the retry window; the blocked page is retried after it
+    assert pagecheck.run(con, cfg, f, now=ts(2))["checked"] == 0
+    later = (datetime.fromisoformat(T0.replace("Z", "+00:00")) + timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    assert pagecheck.run(con, cfg, f, now=later)["checked"] == 1

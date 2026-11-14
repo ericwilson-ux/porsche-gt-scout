@@ -9,7 +9,7 @@ on:
         description: "Comma-separated sources (blank = repository variable PGT_SOURCES, else marketcheck)"
         default: ""
       mode:
-        description: "run = collect from sources; export = rebuild and republish the site from stored data only"
+        description: "run = collect from sources; export = rebuild and republish from stored data only; pagecheck = read dealer pages for unknown gearboxes, then republish"
         default: "run"
       max_dealers:
         description: "Limit Porsche Finder dealer sitemaps (smoke test); blank = all"
@@ -77,6 +77,8 @@ jobs:
           if [ -n "${{ github.event.inputs.max_dealers }}" ]; then ARGS="$ARGS --max-dealers ${{ github.event.inputs.max_dealers }}"; fi
           if [ "${{ github.event.inputs.mode }}" = "export" ]; then
             python -m pgt export --out _site | tee run-summary.json
+          elif [ "${{ github.event.inputs.mode }}" = "pagecheck" ]; then
+            python -m pgt pagecheck --out _site | tee run-summary.json
           else
             python -m pgt run $ARGS | tee run-summary.json
           fi

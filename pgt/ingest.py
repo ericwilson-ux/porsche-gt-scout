@@ -10,7 +10,7 @@ from statistics import median
 
 from . import classify as C
 from . import db as D
-from . import evaluate, geo, otd, valuation
+from . import evaluate, geo, otd, pagecheck, valuation
 from . import vin as vinlib
 from .sources.base import Listing, SourceResult
 
@@ -264,6 +264,16 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
             m["transmission"], m["transmission_note"] = t, note
             break
         m["transmission_note"] = m["transmission_note"] or note
+    # The dealer's own page outranks the feed's label (never Porsche's data, and never a model-wide rule).
+    feed_only = (m["transmission_note"] or "").startswith("Per the dealer feed only")
+    if not m["transmission"] or feed_only:
+        page = pagecheck.stated_for(con, [f"{l['_row']['source']}:{l['_row']['source_listing_id']}" for l in live])
+        if page and feed_only and page["result"] != m["transmission"]:
+            m["transmission"], m["transmission_note"] = None, (
+                f"The dealer feed says manual but the dealer's page reads \u201c{page['evidence']}\u201d; confirm with the seller")
+        elif page:
+            m["transmission"] = page["result"]
+            m["transmission_note"] = f"From the dealer's own listing page: \u201c{page['evidence']}\u201d"
     m["variant_label"] = C.VARIANT_LABEL.get(m["variant"] or "", m["variant"])
     m["cpo"] = any(l.get("cpo") for l in live)
     m["exterior_family"] = C.exterior_family(m["exterior_color"])

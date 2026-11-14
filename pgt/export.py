@@ -15,8 +15,7 @@ FINDER_BROWSER_NOTE = (
     "Read through the owner's own browser, not from the cloud: every US dealer sitemap and each matching listing page "
     "(VIN, transmission, factory option codes, CPO, fees). finder.porsche.com answers GitHub's servers with a bot-check "
     "page that is not bypassed, so the daily cloud run cannot refresh these listings; they are as of the capture time "
-    "shown here until the next browser capture. Cars that already fail a hard requirement carry their deciding options "
-    "only, and photo galleries are partial until a full capture file is imported.")
+    "shown here until the next browser capture.")
 
 COVERAGE_NOTES = [
     {"source": "Porsche Finder", "state": "not covered from the cloud",
@@ -188,7 +187,9 @@ def export(con, cfg: dict, out: Path, state: Path | None = None) -> dict:
     if fin and "browser" in (fin["detail"] or ""):
         coverage[0].update({"state": "covered by browser capture", "note": FINDER_BROWSER_NOTE,
                             "captured_at": json.loads(fin["detail"]).get("captured_at"), "listings": fin["listings_seen"]})
-    health = {"generated_at": D.now_iso(), "runs": runs, "decodes": dec,
+    pages = {r["result"]: r["c"] for r in con.execute("SELECT result, COUNT(*) c FROM page_checks GROUP BY result")}
+    health = {"generated_at": D.now_iso(), "runs": runs, "decodes": dec, "page_checks": pages,
+              "gearbox_unknown": sum(1 for c in listed if not c["trans"]),
               "decode_last": json.loads(D.get_meta(con, "last_decode_summary", "null")),
               "api_calls": {r["key"].split(":", 1)[1]: int(r["value"]) for r in con.execute("SELECT * FROM meta WHERE key LIKE 'mc_calls:%'")},
               "last_success": last_success, "coverage": coverage,

@@ -9,7 +9,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from . import alerts, config, export as exporter, ingest, outreach, photos
+from . import alerts, config, export as exporter, ingest, outreach, pagecheck, photos
 from . import db as D
 from .http import Fetcher
 from .sources import marketcheck, neovin, porsche_finder
@@ -104,6 +104,11 @@ def cmd_run(args) -> int:
         except Exception as exc:
             results.append(SourceResult("marketcheck", status="failed", messages=[f"crash: {type(exc).__name__}: {exc}"]))
     summary = ingest.process_results(con, cfg, results, sales_csv=ROOT / "config" / "manual_sales.csv")
+    if not args.no_pagecheck:
+        try:
+            summary["page_checks"] = _pagecheck(con, cfg)
+        except Exception as exc:  # noqa: BLE001 - never let a page read break the run
+            summary["page_checks"] = {"error": f"{type(exc).__name__}: {exc}"}
     if os.environ.get("MARKETCHECK_API_KEY") and not args.no_decode:
         try:
             f = Fetcher(min_interval=0.4, respect_robots=False, max_retries=1)
@@ -188,6 +193,31 @@ def cmd_digest(args) -> int:
     return 2
 
 
+def _pagecheck(con, cfg, limit: int | None = None) -> dict:
+    """Read dealer pages for cars with an unknown gearbox, then re-merge if any reading settled one."""
+    pc = cfg.get("page_checks") or {}
+    f = Fetcher(min_interval=float(pc.get("min_interval_seconds", 2.0)), timeout=20.0, max_retries=0)
+    out = pagecheck.run(con, cfg, f, limit=limit)
+    D.set_meta(con, "last_pagecheck_summary", json.dumps(out))
+    if out.get("settled"):
+        out["rebuild"] = ingest.rebuild_vehicles(con, cfg, D.now_iso())
+    return out
+
+
+def cmd_pagecheck(args) -> int:
+    """Dealer-page gearbox readings only (no source sweep), then rebuild and republish."""
+    cfg, state = config.load_config(), config.state_dir()
+    con = _db(state)
+    ingest.rebuild_vehicles(con, cfg, D.now_iso())          # merged rows are not stored in the dump
+    summary = {"page_checks": _pagecheck(con, cfg, args.limit)}
+    digest = alerts.prepare_digest(con, cfg, state)
+    summary["digest"] = {"date": digest["digest_date"], "cars": len(digest["cars"])} if digest else None
+    summary["site"] = build_site(con, cfg, state, Path(args.out))
+    save_state(con, state)
+    print(json.dumps(summary, indent=1, default=str))
+    return 0
+
+
 def cmd_import_finder(args) -> int:
     """Load a Porsche Finder browser capture file into the database and rebuild the site."""
     cfg, state = config.load_config(), config.state_dir()
@@ -236,6 +266,7 @@ def main(argv=None) -> int:
     r.add_argument("--interval", type=float, default=1.0, help="seconds between requests to one host")
     r.add_argument("--url", action="append", help="extra Porsche Finder listing URL to include")
     r.add_argument("--no-decode", action="store_true", help="skip paid VIN build-data lookups")
+    r.add_argument("--no-pagecheck", action="store_true", help="skip reading dealer pages for unknown gearboxes")
     r.add_argument("--out", default=str(ROOT / "_site"))
     r.set_defaults(fn=cmd_run)
     e = sub.add_parser("export", help="rebuild the site from the existing database")
@@ -251,6 +282,10 @@ def main(argv=None) -> int:
     d.add_argument("--channel", default="gmail")
     d.add_argument("--message-id")
     d.set_defaults(fn=cmd_digest)
+    pgc = sub.add_parser("pagecheck", help="read dealer listing pages for cars whose gearbox is unknown")
+    pgc.add_argument("--limit", type=int, default=None)
+    pgc.add_argument("--out", default=str(ROOT / "_site"))
+    pgc.set_defaults(fn=cmd_pagecheck)
     imp = sub.add_parser("import-finder", help="load a Porsche Finder browser capture (JSON) into the database")
     imp.add_argument("file", help="capture .json file, or a directory of lite line files (c*.txt + meta.json)")
     imp.add_argument("--out", default=str(ROOT / "_site"))

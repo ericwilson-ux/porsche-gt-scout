@@ -171,6 +171,16 @@ CREATE TABLE IF NOT EXISTS alert_log (
   category TEXT, claimed_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS page_checks (
+  listing_key TEXT PRIMARY KEY,        -- "<source>:<source_listing_id>"; one reading of the dealer's own page
+  vin TEXT,
+  url TEXT,
+  checked_at TEXT NOT NULL,
+  http_status INTEGER,
+  result TEXT NOT NULL,                -- manual | pdk | conflict | inconclusive | vin_missing | blocked | robots | error
+  evidence TEXT                        -- the wording found on the page
+);
+
 CREATE TABLE IF NOT EXISTS vin_decodes (
   vin TEXT PRIMARY KEY,                -- one paid build-data lookup per VIN, kept forever
   fetched_at TEXT NOT NULL,
