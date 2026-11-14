@@ -81,7 +81,7 @@ def normalise(raw: dict, scope: str) -> Listing | None:
     lst.extra["first_seen_anywhere"] = raw.get("first_seen_at_mc_date")
     lst.seller = {"name": dealer.get("name"), "kind": kind, "street": dealer.get("street"),
                   "city": dealer.get("city"), "state": dealer.get("state"), "zip": dealer.get("zip"),
-                  "phone": dealer.get("phone"), "website": website,
+                  "phone": dealer.get("phone"), "website": website, "email": dealer.get("seller_email"),
                   "lat": _f(dealer.get("latitude")), "lon": _f(dealer.get("longitude")),
                   "source_seller_id": dealer.get("id")}
     media = raw.get("media") or {}

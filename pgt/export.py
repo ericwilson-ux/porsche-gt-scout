@@ -130,6 +130,8 @@ def export(con, cfg: dict, out: Path, state: Path | None = None) -> dict:
         c = card(m, now)
         cards.append(c)
         m["photos"] = [_photo_ref(p) for p in m.get("photos") or []]
+        if m.get("seller"):
+            m["seller"] = {k: v for k, v in m["seller"].items() if k != "email"}     # contact emails stay in the private database
         m["events"] = [{"at": e["at"], "event": e["event"], "detail": json.loads(e["detail"]) if e["detail"] and e["detail"][:1] in "{[" else e["detail"]}
                        for e in con.execute("SELECT * FROM lifecycle_events WHERE vehicle_key=? ORDER BY at, id", (row["key"],))]
         m["evidence"] = [dict(e) for e in con.execute(

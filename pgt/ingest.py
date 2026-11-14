@@ -45,14 +45,14 @@ def _upsert_seller(con, s: dict, now: str) -> int | None:
     if row:
         con.execute("""UPDATE sellers SET name=?, kind=COALESCE(?,kind), street=COALESCE(?,street), city=COALESCE(?,city),
                        state=COALESCE(?,state), zip=COALESCE(?,zip), phone=COALESCE(?,phone), website=COALESCE(?,website),
-                       lat=COALESCE(?,lat), lon=COALESCE(?,lon), last_seen=? WHERE id=?""",
+                       email=COALESCE(?,email), lat=COALESCE(?,lat), lon=COALESCE(?,lon), last_seen=? WHERE id=?""",
                     (s["name"], s.get("kind"), s.get("street"), s.get("city"), s.get("state"), s.get("zip"),
-                     s.get("phone"), s.get("website"), lat, lon, now, row["id"]))
+                     s.get("phone"), s.get("website"), s.get("email"), lat, lon, now, row["id"]))
         return row["id"]
-    cur = con.execute("""INSERT INTO sellers(key,name,kind,street,city,state,zip,phone,website,lat,lon,first_seen,last_seen)
-                         VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+    cur = con.execute("""INSERT INTO sellers(key,name,kind,street,city,state,zip,phone,website,email,lat,lon,first_seen,last_seen)
+                         VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                       (key, s["name"], s.get("kind"), s.get("street"), s.get("city"), s.get("state"), s.get("zip"),
-                       s.get("phone"), s.get("website"), lat, lon, now, now))
+                       s.get("phone"), s.get("website"), s.get("email"), lat, lon, now, now))
     return cur.lastrowid
 
 
@@ -237,7 +237,7 @@ def _warranty_summary(merged: dict, today: date) -> dict:
 def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
     rows = con.execute("""SELECT l.*, s.name AS s_name, s.kind AS s_kind, s.street AS s_street, s.city AS s_city,
                           s.state AS s_state, s.zip AS s_zip, s.phone AS s_phone, s.website AS s_website,
-                          s.lat AS s_lat, s.lon AS s_lon
+                          s.email AS s_email, s.lat AS s_lat, s.lon AS s_lon
                           FROM listings l LEFT JOIN sellers s ON s.id=l.seller_id WHERE l.vehicle_key=?""",
                        (vrow["key"],)).fetchall()
     status_rank = {"active": 0, "unverified": 1, "removed": 2}
@@ -280,10 +280,11 @@ def merge_vehicle(con, vrow, cfg: dict, today: date) -> dict:
     # seller: from the best listing's seller row
     r0 = live[0]["_row"]
     m["seller"] = {"name": r0["s_name"], "kind": r0["s_kind"], "street": r0["s_street"], "city": r0["s_city"],
-                   "state": r0["s_state"], "zip": r0["s_zip"], "phone": r0["s_phone"], "website": r0["s_website"]}
+                   "state": r0["s_state"], "zip": r0["s_zip"], "phone": r0["s_phone"], "website": r0["s_website"],
+                   "email": r0["s_email"]}
     for l in live:                       # fill gaps (e.g. phone) from other sources listing the same car
         s = l.get("seller") or {}
-        for f in ("phone", "website", "street"):
+        for f in ("phone", "website", "street", "email"):
             if not m["seller"].get(f) and s.get(f):
                 m["seller"][f] = s[f]
     m["distance"] = geo.distance_from(cfg["buyer"]["home_zip"], r0["s_zip"], r0["s_lat"], r0["s_lon"],

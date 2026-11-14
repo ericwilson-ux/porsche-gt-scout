@@ -9,7 +9,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from . import alerts, config, export as exporter, ingest, photos
+from . import alerts, config, export as exporter, ingest, outreach, photos
 from . import db as D
 from .http import Fetcher
 from .sources import marketcheck, neovin, porsche_finder
@@ -188,6 +188,22 @@ def cmd_digest(args) -> int:
     return 2
 
 
+def cmd_outreach(args) -> int:
+    """Print the private outreach brief (target price, open questions, draft inquiry) for one or more cars."""
+    cfg, state = config.load_config(), config.state_dir()
+    con = _db(state)
+    ingest.rebuild_vehicles(con, cfg, D.now_iso())
+    out = []
+    for ident in args.cars:
+        rows = con.execute("SELECT merged FROM vehicles WHERE key=? OR vin=? OR vin LIKE ?", (ident, ident, f"%{ident}")).fetchall()
+        if len(rows) != 1:
+            out.append({"query": ident, "error": f"{len(rows)} vehicles match; give the full VIN"})
+            continue
+        out.append(outreach.brief(json.loads(rows[0]["merged"]), cfg))
+    print(json.dumps(out, indent=1, ensure_ascii=False))
+    return 0
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(prog="pgt")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -212,6 +228,9 @@ def main(argv=None) -> int:
     d.add_argument("--channel", default="gmail")
     d.add_argument("--message-id")
     d.set_defaults(fn=cmd_digest)
+    o = sub.add_parser("outreach", help="private brief for contacting a seller: target price, open questions, draft email")
+    o.add_argument("cars", nargs="+", help="VIN (or its last 6+ characters)")
+    o.set_defaults(fn=cmd_outreach)
     args = p.parse_args(argv)
     return args.fn(args)
 

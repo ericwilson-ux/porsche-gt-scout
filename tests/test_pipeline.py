@@ -759,3 +759,54 @@ def test_transmission_evidence_rules():
     assert R(None, "Steering Column Casing In Leather I.C.W. Manual Steering Column", "gt3", "992.1")[0] is None
     assert R(None, "6-speed GT Sport Manual Transmission | BOSE", "gt3", "992.1")[0] == "manual"
     assert R("PDK (Automatic)", None, "gt3", "992.1", trusted=True)[0] == "pdk"                       # manufacturer data stands
+
+
+# ------------------------------------------------------------------ outreach ----
+def test_outreach_target_price_logic(cfg):
+    from pgt import outreach
+    base = {"variant": "gt4rs", "generation": "982", "price": 215000, "days_on_market": 60,
+            "valuation": {"fair_mid": 210000, "fair_low": 204000, "fair_high": 216000, "n": 22, "confidence": "moderate", "delta_pct": 0.0238}}
+    t = outreach.target_price(base, cfg)
+    assert t["target"] == 197000 and t["opening"] == 191000 and t["ceiling"] == 205500      # 94% / 97% of that / 98% of median
+    assert round(t["discount_needed"], 3) == 0.084 and any("60 days" in n for n in t["notes"])
+    cheap = outreach.target_price({**base, "price": 196000, "valuation": {**base["valuation"], "delta_pct": -0.0667}}, cfg)
+    assert cheap["target"] == 190000 and any("Already priced" in n for n in cheap["notes"])    # 3% ask on an already-great price
+    capped = outreach.target_price({**base, "variant": "gt3", "generation": "992.1", "price": 262000,
+                                    "valuation": {**base["valuation"], "fair_mid": 275000}}, cfg)
+    assert capped["target"] == 249500 and capped["ceiling"] <= 249999                           # never above the hard cap
+    none = outreach.target_price({**base, "valuation": {"note": "Only 3 comparable listing(s)"}}, cfg)
+    assert none["target"] is None and "Only 3" in none["notes"][0]
+
+
+def test_outreach_brief_asks_about_gaps_and_never_reveals_numbers(con, cfg, tmp_path):
+    from pgt import outreach
+    car = _gt3_991("WP0AC2A93JS174011", "o1", build={"year": 2018, "trim": "GT3", "transmission": "Automatic"},
+                   dealer={**MC_RAW["dealer"], "seller_email": "sales@dealer.example"})
+    ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=[car], scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=T0)
+    m = merged(con, car.vin)
+    b = outreach.brief(m, cfg)
+    keys = [q["key"] for q in b["questions"]]
+    assert keys[0] == "availability" and {"lift", "documents", "accident", "track", "transmission", "seats", "otd"} <= set(keys)
+    assert "weissach" not in keys and "DME over-rev" in next(q["ask"] for q in b["questions"] if q["key"] == "track")
+    e = b["email"]
+    assert e["to_email"] == "sales@dealer.example" and "2018 911 GT3" in e["subject"] and car.vin in e["body"]
+    assert "manual or PDK" in e["body"] and "out-the-door" in e["body"] and e["body"].rstrip().endswith("Eric")
+    for secret in ("250,000", "250000", "target", "budget", "$"):
+        assert secret not in e["body"]                                  # the first email asks; it carries no numbers
+    # the contact email is in the private brief but never in the public site export
+    export.export(con, cfg, tmp_path / "data")
+    assert "sales@dealer.example" not in "".join(p.read_text() for p in (tmp_path / "data").rglob("*.json"))
+    # a fully documented Porsche Finder car needs far fewer questions
+    con2 = D.connect(tmp_path / "x.sqlite")
+    ingest.process_results(con2, cfg, [finder_result([example("ZO80OE")])], now=T0)
+    k2 = [q["key"] for q in outreach.open_questions(merged(con2, "WP0AE2A80SK271606"))]
+    assert "lift" not in k2 and "accident" not in k2 and "transmission" not in k2 and "seats" not in k2
+
+
+def test_old_dump_without_seller_email_column_is_migrated(tmp_path):
+    import sqlite3
+    raw = sqlite3.connect(tmp_path / "old.sqlite")
+    raw.execute("CREATE TABLE sellers (id INTEGER PRIMARY KEY, key TEXT UNIQUE NOT NULL, name TEXT, kind TEXT, street TEXT, city TEXT, state TEXT, zip TEXT, phone TEXT, website TEXT, lat REAL, lon REAL, first_seen TEXT, last_seen TEXT)")
+    raw.commit(); raw.close()
+    con = D.connect(tmp_path / "old.sqlite")
+    assert "email" in {r["name"] for r in con.execute("PRAGMA table_info(sellers)")}

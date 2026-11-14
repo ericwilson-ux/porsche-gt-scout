@@ -21,3 +21,12 @@ email; each car links to its full gallery on the site.
 To send from the workflow instead, set variable `EMAIL_MODE=smtp` and the `SMTP_*` secrets
 (for Gmail: an app password); the run then sends and marks the digest in one step, and photos
 are kept in the email. Turn the Claude task off if you switch.
+
+# Seller outreach
+
+`python -m pgt outreach <VIN>` prints a private brief for one car: a target price (the level at
+which the car is a "great" deal against comparables), an opening figure, a ceiling, the open
+questions that decide the match, and a first-contact email draft. The first email asks; it
+carries no numbers. Briefs, seller contact emails and the outreach log (`outreach/<VIN>.json`
+on the `state` branch) stay in the private repository and are never exported to the site.
+Nothing is sent by the pipeline: every message is approved by the owner before it leaves Gmail.

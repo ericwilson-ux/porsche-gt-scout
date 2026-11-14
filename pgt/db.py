@@ -193,6 +193,8 @@ def connect(path: str | Path) -> sqlite3.Connection:
     con = sqlite3.connect(str(path))
     con.row_factory = sqlite3.Row
     con.executescript(SCHEMA)
+    if "email" not in {r["name"] for r in con.execute("PRAGMA table_info(sellers)")}:     # added 2026-11-14
+        con.execute("ALTER TABLE sellers ADD COLUMN email TEXT")
     con.execute("INSERT OR IGNORE INTO meta(key, value) VALUES('schema_version', ?)", (str(SCHEMA_VERSION),))
     con.commit()
     return con
