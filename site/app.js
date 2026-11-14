@@ -146,7 +146,7 @@ function filterPanel() {
   return `<form class="filters" id="filters" onsubmit="return false">
   <fieldset><legend>Search</legend><input type="search" data-q placeholder="VIN, colour, dealer, city" value="${esc(f.q || '')}" aria-label="Search"></fieldset>
   <fieldset><legend>Model</legend>${Object.entries(v).map(([k, o]) => multi('variants', k, esc(o.label))).join('')}
-    ${multi('gens', '992.1', '992.1 generation')}${multi('gens', '992.2', '992.2 generation')}</fieldset>
+    ${multi('gens', '991.2', '991.2 generation (manual only)')}${multi('gens', '992.1', '992.1 generation')}${multi('gens', '992.2', '992.2 generation')}</fieldset>
   <fieldset><legend>Price</legend><div class="pair">${n('pmin', 'Min $')}${n('pmax', 'Max $')}</div></fieldset>
   <fieldset><legend>Year and mileage</legend><div class="pair">${n('ymin', 'From year')}${n('ymax', 'To year')}</div><div class="pair" style="margin-top:8px">${n('mmax', 'Max miles')}${n('smin', 'Min match')}</div></fieldset>
   <fieldset><legend>Exterior</legend><div class="swatches">${fams('extf').map(x => sw('ext', x)).join('')}</div></fieldset>
@@ -167,7 +167,7 @@ function viewInventory() {
   const cnt = fn => all.filter(fn).length;
   const drive = all.filter(c => (c.cat === 'confirmed' || c.cat === 'lead') && c.dist != null && c.dist <= 600).length;
   $('#app').innerHTML = `<section class="head"><h1>${cnt(TABS[1][2])} confirmed, ${cnt(TABS[2][2])} to verify</h1>
-    <p>Used 992 GT3, GT3 Touring, 718 Cayman GT4 RS and 718 Spyder RS for sale across the US, checked against your hard requirements. ${drive} of the qualifying cars are within driving distance of ${esc(S.idx.home)}.</p></section>
+    <p>Used 991.2 and 992 GT3, GT3 Touring, 718 Cayman GT4 RS and 718 Spyder RS for sale across the US, checked against your hard requirements. ${drive} of the qualifying cars are within driving distance of ${esc(S.idx.home)}.</p></section>
     <div class="tabs" role="tablist">${TABS.map(([k, l, fn]) => `<button class="tab" role="tab" aria-selected="${k === S.tab}" data-tab="${k}"><span class="n">${cnt(fn)}</span>${l}</button>`).join('')}</div>
     <div class="layout">${filterPanel()}<section><div class="bar"><button class="btn alt filter-toggle" id="fToggle">Filters</button>
       <span class="grow">${rows.length} ${rows.length === 1 ? 'car' : 'cars'}${rows.length !== cnt(tabDef[2]) ? ` of ${cnt(tabDef[2])} (filtered)` : ''}</span>

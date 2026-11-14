@@ -10,13 +10,13 @@ timezone = "America/Chicago"
 # ---- Target variants ---------------------------------------------------------
 [variants.gt3]
 label = "911 GT3"
-generations = ["992.1", "992.2"]
+generations = ["991.2", "992.1", "992.2"]
 max_price = 250000
 max_miles = 35000
 
 [variants.gt3_touring]
 label = "911 GT3 Touring"
-generations = ["992.1", "992.2"]
+generations = ["991.2", "992.1", "992.2"]
 max_price = 250000
 max_miles = 35000
 
@@ -31,6 +31,12 @@ label = "718 Spyder RS"
 generations = ["982"]
 max_price = 225000
 preferred_max_miles = 10000
+
+# ---- Extra hard requirements for one generation ---------------------------------
+# 991.2 GT3 (model years 2018-2019): manual transmission only, under $250,000.
+[generation_rules."991.2"]
+required_transmission = "manual"
+max_price = 250000
 
 # ---- Hard requirements -------------------------------------------------------
 [hard]
@@ -101,5 +107,5 @@ archive_width = 1280
 enabled = true
 max_per_run = 100              # first runs work through the backlog of leads, best matches first
 monthly_call_quota = 500       # all MarketCheck calls in a calendar month (sweeps + decodes)
-sweep_calls_per_day = 18       # held back for each remaining day's inventory sweep
+sweep_calls_per_day = 20       # held back for each remaining day's inventory sweep
 retry_failed_after_days = 30

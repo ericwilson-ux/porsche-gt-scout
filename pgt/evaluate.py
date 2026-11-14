@@ -51,11 +51,24 @@ def eligibility(v: dict, cfg: dict) -> dict:
         checks.append(_check("lift", "Front axle lift", UNVERIFIED,
                              lift.get("detail") or "No equipment list or window sticker available from any source; confirm with the seller"))
 
+    # -- generation-specific requirements (e.g. 991.2: manual only)
+    grule = (cfg.get("generation_rules") or {}).get(v.get("generation") or "", {})
+    need_trans = grule.get("required_transmission")
+    if vcfg and need_trans:
+        label = f"{need_trans.capitalize()} transmission ({v.get('generation')})"
+        trans = v.get("transmission")
+        if trans is None:
+            checks.append(_check("transmission", label, UNVERIFIED, "Transmission not published"))
+        elif trans == need_trans:
+            checks.append(_check("transmission", label, PASS, v.get("transmission_raw") or trans, "listing"))
+        else:
+            checks.append(_check("transmission", label, FAIL, f"Listed as {v.get('transmission_raw') or trans.upper()}", "listing"))
+
     # -- price cap
     near_miss_only = False
     price = v.get("price")
     if vcfg:
-        cap = vcfg["max_price"]
+        cap = grule.get("max_price", vcfg["max_price"])
         if price is None:
             checks.append(_check("price", f"Under ${cap:,.0f}", UNVERIFIED, "No advertised price"))
         elif price < cap:

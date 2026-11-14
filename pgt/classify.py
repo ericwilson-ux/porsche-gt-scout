@@ -17,7 +17,10 @@ VARIANT_LABEL = {
     "gt4rs": "718 Cayman GT4 RS",
     "spyder_rs": "718 Spyder RS",
 }
-_EXPECTED_TYPE = {"gt3": "992", "gt3_touring": "992", "gt4rs": "982", "spyder_rs": "982"}
+_EXPECTED_TYPES = {"gt3": {"992", "991"}, "gt3_touring": {"992", "991"}, "gt4rs": {"982"}, "spyder_rs": {"982"}}
+# Generations that are tracked at all.  The 991.1 GT3 (MY2014-2016) is deliberately not one of them.
+TARGET_GENERATIONS = {"gt3": {"991.2", "992.1", "992.2"}, "gt3_touring": {"991.2", "992.1", "992.2"},
+                      "gt4rs": {"982"}, "spyder_rs": {"982"}}
 
 
 def _norm(text: str | None) -> str:
@@ -45,7 +48,7 @@ def classify_text(text: str | None) -> str | None:
 
 
 def generation_for(variant: str, year: int | None, platform_text: str | None = None) -> str | None:
-    """992.1 / 992.2 for GT3s, 982 for the 718 RS cars."""
+    """991.2 / 992.1 / 992.2 for GT3s (991.1 is recognised so it can be rejected), 982 for the 718 RS cars."""
     if variant in ("gt4rs", "spyder_rs"):
         return "982"
     p = _norm(platform_text)
@@ -53,12 +56,16 @@ def generation_for(variant: str, year: int | None, platform_text: str | None = N
         return "992.2"
     if re.search(r"\b992 ?(i|1)\b|992\.1", p):
         return "992.1"
-    if re.search(r"\b991\b", p):
-        return "991"
+    if re.search(r"\b991 ?(ii|2)\b|991\.2", p):
+        return "991.2"
+    if re.search(r"\b991 ?(i|1)\b|991\.1", p):
+        return "991.1"
     if year is None:
         return None
-    if year <= 2019:
-        return "991"
+    if 2014 <= year <= 2016:
+        return "991.1"
+    if 2018 <= year <= 2019:
+        return "991.2"
     if 2022 <= year <= 2024:
         return "992.1"
     if year >= 2025:
@@ -82,19 +89,25 @@ def classify(text: str | None, vin: str | None = None, year: int | None = None,
     if year and vin_year and abs(year - vin_year) > 0:
         issues.append(f"year_mismatch_listing_{year}_vin_{vin_year}")
     yr = vin_year or year
+    ptype = None
     if variant and v:
         if not vinlib.is_porsche_sports_car(v):
             issues.append("vin_not_porsche_sports_car")
             variant = None
         else:
             ptype = vinlib.porsche_type(v)
-            if ptype and ptype != _EXPECTED_TYPE[variant]:
-                issues.append(f"vin_type_{ptype}_not_{_EXPECTED_TYPE[variant]}")
+            if ptype and ptype not in _EXPECTED_TYPES[variant]:
+                issues.append(f"vin_type_{ptype}_not_{'_or_'.join(sorted(_EXPECTED_TYPES[variant]))}")
                 variant = None
     gen = generation_for(variant, yr, platform_text) if variant else None
-    if variant in ("gt3", "gt3_touring") and gen == "991":
-        issues.append("generation_991_not_target")
+    if variant and gen and ptype and not gen.startswith(ptype):
+        issues.append(f"vin_type_{ptype}_contradicts_generation_{gen}")
         variant = None
+    if variant and gen not in TARGET_GENERATIONS[variant]:
+        issues.append(f"generation_{gen or 'unknown'}_not_tracked")
+        variant = None
+    if not variant:
+        gen = None
     return {"variant": variant, "generation": gen, "year": yr, "issues": issues}
 
 

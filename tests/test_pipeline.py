@@ -44,14 +44,26 @@ def test_only_the_four_targets_classify(text, expected):
 
 
 def test_vin_contradiction_rejects_listing():
-    # a "GT3" title on a 991-generation VIN must not be accepted as a 992 GT3
-    out = C.classify("2018 Porsche 911 GT3", "WP0AC2A96JS170003", 2018)
-    assert out["variant"] is None and any("991" in i for i in out["issues"])
-    # a GT4 RS title on a 911 VIN is rejected too
+    # a GT4 RS title on a 911 VIN is rejected
     assert C.classify("718 Cayman GT4 RS", "WP0AC2A98NS268519", 2022)["variant"] is None
     assert C.classify("911 GT3", "WP0AC2A98NS268519", 2022) == {"variant": "gt3", "generation": "992.1", "year": 2022, "issues": []}
     assert C.classify("911 GT3", "WP0AC2A98RS260006", 2024)["generation"] == "992.1"
     assert C.generation_for("gt3", 2025) == "992.2" and C.generation_for("gt3", 2022, "992 I") == "992.1"
+    # a listing year that contradicts the VIN's platform is rejected (992 year on a 991 VIN)
+    out = C.classify("2022 Porsche 911 GT3", None, 2022)
+    assert out["generation"] == "992.1"
+
+
+def test_991_2_gt3_is_tracked_and_991_1_is_not():
+    a = C.classify("2018 Porsche 911 GT3", "WP0AC2A93JS174011", 2018)
+    assert (a["variant"], a["generation"], a["year"], a["issues"]) == ("gt3", "991.2", 2018, [])
+    b = C.classify("2019 Porsche 911 GT3 Touring", "WP0AC2A96KS174022", 2019)
+    assert (b["variant"], b["generation"]) == ("gt3_touring", "991.2")
+    old = C.classify("2015 Porsche 911 GT3", "WP0AC2A94FS183033", 2015)          # 991.1: not on the list
+    assert old["variant"] is None and old["generation"] is None and any("991.1" in i for i in old["issues"])
+    assert C.classify("2019 Porsche 911 GT3 RS", "WP0AC2A96KS174022", 2019)["variant"] is None
+    assert C.classify("2019 Porsche 911 Carrera T", "WP0AC2A96KS174022", 2019)["variant"] is None
+    assert C.generation_for("gt3", 2017) is None and C.generation_for("gt3", None, "991 II") == "991.2"
 
 
 # ------------------------------------------------------------ porsche finder ----
@@ -303,17 +315,17 @@ def test_marketcheck_year_buckets_cover_the_paging_cap():
         calls.append(dict(params))
         if "facets" in params:
             return (200, json.dumps({"facets": {"trim": [{"item": "GT3", "count": 3}]}}))
-        n = {"2022-2023": 120, "2024-2025": 30, "2026-2027": 620}[params["year_range"]]
+        n = {"2018-2019": 40, "2022-2023": 120, "2024-2025": 30, "2026-2027": 620}[params["year_range"]]
         row = {**MC_RAW, "id": f"{params['year_range']}-{params['start']}"}
         return (200, json.dumps({"num_found": n, "listings": [row]}))
     res = mc.collect(FakeFetcher({mc.ENDPOINT: api}), api_key="k")
     # two buckets complete; the third exceeds 500 rows and is reported, never silently truncated
-    assert res.scopes_ok == {"us-used:2022-2023", "us-used:2024-2025"} and res.status == "partial"
+    assert res.scopes_ok == {"us-used:2018-2019", "us-used:2022-2023", "us-used:2024-2025"} and res.status == "partial"
     assert res.detail["buckets"]["2026-2027"] == {"num_found": 620, "complete": False}
     assert any("exceed" in m for m in res.messages)
     pages = [c for c in calls if "facets" not in c]
-    assert len(pages) == 3 + 1 + 10 and res.detail["raw_sample"]["vin"] == MC_RAW["vin"]
-    assert len(mc.collect(FakeFetcher({mc.ENDPOINT: api}), api_key="k", cached_trims=["GT3"]).listings) == 14
+    assert len(pages) == 1 + 3 + 1 + 10 and res.detail["raw_sample"]["vin"] == MC_RAW["vin"]
+    assert len(mc.collect(FakeFetcher({mc.ENDPOINT: api}), api_key="k", cached_trims=["GT3"]).listings) == 15
 
 
 def test_state_round_trips_through_the_sql_dump(tmp_path, cfg, examples):
@@ -700,3 +712,33 @@ def test_feed_galleries_dedupe_sizes_and_flag_preview_only(con, cfg, tmp_path):
     idx = json.loads((tmp_path / "data" / "index.json").read_text())
     card = next(v for v in idx["vehicles"] if v["key"] == SYN_GT4RS)
     assert card["nphotos"] == 5 and card["gcomplete"] is False and card["thumbs"][0] == {"k": "pf", "u": f"https://images.finder.porsche.com/{uid[0]}", "c": "uncategorized", "a": None}
+
+
+def _gt3_991(vin, lid, **kw):
+    raw = {**MC_RAW, "id": lid, "vin": vin, "heading": "2018 Porsche 911 GT3", "price": 215000, "miles": 14000, "ref_price": None,
+           "build": {"year": 2018, "trim": "GT3", "transmission": "Manual"}, **kw}
+    return mc.normalise(raw, "us-used:2018-2019")
+
+
+@pytest.mark.parametrize("changes,category,failed,unverified", [
+    ({}, "lead", [], ["lift", "accident"]),                                            # manual, $215k, 14k mi
+    ({"build": {"year": 2018, "trim": "GT3", "transmission": "Automatic"}}, "excluded", ["transmission"], ["lift", "accident"]),
+    ({"build": {"year": 2018, "trim": "GT3"}}, "lead", [], ["lift", "transmission", "accident"]),   # transmission not published
+    ({"price": 250000}, "near_miss", ["price"], ["lift", "accident"]),                  # under $250,000 is strict
+    ({"price": 249500}, "lead", [], ["lift", "accident"]),
+    ({"miles": 36000}, "excluded", ["mileage"], ["lift", "accident"]),
+    ({"price": 251000, "build": {"year": 2018, "trim": "GT3", "transmission": "Automatic"}}, "excluded", ["transmission", "price"], ["lift", "accident"]),
+])
+def test_991_2_requires_manual_and_the_price_cap(con, cfg, changes, category, failed, unverified):
+    lst = _gt3_991("WP0AC2A93JS174011", "g1", **changes)
+    assert lst.generation == "991.2"
+    ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=[lst], scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=T0)
+    e = merged(con, "WP0AC2A93JS174011")["eligibility"]
+    assert (e["category"], e["failed"], e["unverified"]) == (category, failed, unverified)
+
+
+def test_manual_rule_does_not_touch_992_cars(con, cfg):
+    pdk_992 = mc.normalise({**MC_RAW, "id": "x9", "build": {"year": 2022, "trim": "GT3", "transmission": "Automatic"}}, "us-used:2022-2023")
+    ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=[pdk_992], scopes_ok={"us-used:2022-2023"}, scopes_total=1)], now=T0)
+    e = merged(con, pdk_992.vin)["eligibility"]
+    assert e["category"] == "lead" and not any(c["key"] == "transmission" for c in e["checks"])

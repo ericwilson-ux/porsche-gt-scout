@@ -27,8 +27,8 @@ ROWS = 50
 BASE_PARAMS = {"make": "porsche", "car_type": "used", "country": "us"}
 # The feed refuses to page past 500 rows per query, so the sweep is split into model-year
 # buckets that each stay under that cap.  Each bucket is its own coverage unit.
-YEAR_BUCKETS = ["2022-2023", "2024-2025", "2026-2027"]
-ALL_YEARS = "2022-2027"
+YEAR_BUCKETS = ["2018-2019", "2022-2023", "2024-2025", "2026-2027"]    # 2018-2019 = 991.2 GT3
+ALL_YEARS = "2018-2027"
 PAGE_CAP = 500
 _TRIM_RE = re.compile(r"gt3|gt4\s*rs|spyder\s*rs|^rs$", re.I)
 _TRIM_EXCLUDE_RE = re.compile(r"gt3\s*rs|gt2|cup|clubsport", re.I)

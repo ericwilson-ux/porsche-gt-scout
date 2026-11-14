@@ -55,9 +55,9 @@ def _known_finder(con) -> dict:
 
 
 def _mc_trims(con) -> list[str] | None:
-    at = D.get_meta(con, "mc_trims_at")
+    at = D.get_meta(con, "mc_trims2_at")
     if at and datetime.now(timezone.utc) - datetime.strptime(at, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc) < timedelta(days=7):
-        return json.loads(D.get_meta(con, "mc_trims", "[]")) or None
+        return json.loads(D.get_meta(con, "mc_trims2", "[]")) or None
     return None
 
 
@@ -77,6 +77,9 @@ def cmd_run(args) -> int:
     cfg, state = config.load_config(), config.state_dir()
     con = _db(state)
     alerts.import_receipts(con, state)
+    if D.get_meta(con, "mc_calls_seeded") != "1":       # the first two sweeps on 2026-11-14 ran before calls were counted
+        ingest.add_month_calls(con, "2026-11", 30)
+        D.set_meta(con, "mc_calls_seeded", "1")
     wanted = [s.strip() for s in args.sources.split(",") if s.strip()]
     results: list[SourceResult] = []
     if "porsche_finder" in wanted:
@@ -90,8 +93,8 @@ def cmd_run(args) -> int:
             cached = _mc_trims(con)
             res = marketcheck.collect(Fetcher(min_interval=0.4, respect_robots=False), cached_trims=cached)
             if res.detail.get("trims") and not cached:
-                D.set_meta(con, "mc_trims", json.dumps(res.detail["trims"]))
-                D.set_meta(con, "mc_trims_at", D.now_iso())
+                D.set_meta(con, "mc_trims2", json.dumps(res.detail["trims"]))
+                D.set_meta(con, "mc_trims2_at", D.now_iso())
             if res.detail.get("raw_sample"):      # one raw feed row, kept for adapter maintenance
                 (state / "debug").mkdir(exist_ok=True)
                 (state / "debug" / "marketcheck_sample.json").write_text(

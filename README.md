@@ -1,7 +1,8 @@
 # GT Scout
 
 Inventory discovery, hard-requirement verification, preference scoring, market data and a
-conditional daily email for four cars: 992 GT3, 992 GT3 Touring, 718 Cayman GT4 RS, 718 Spyder RS.
+conditional daily email for: 911 GT3 and GT3 Touring (992.1, 992.2, and 991.2 with a manual gearbox only),
+718 Cayman GT4 RS, 718 Spyder RS.
 
 ## How it runs
 
