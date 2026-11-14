@@ -162,7 +162,7 @@ function filterPanel() {
   <fieldset><legend>Model</legend>${Object.entries(v).map(([k, o]) => multi('variants', k, esc(o.label))).join('')}</fieldset>
   <fieldset><legend>GT3 generation</legend><div class="swatches">${GENS.map(([g, yrs]) => `<button type="button" class="sw gen" data-sw="gens" value="${g}" aria-pressed="${!!f.gens?.includes(g)}"><b>${g}</b><span>${yrs}</span><em>${genCount(g)}</em></button>`).join('')}</div>
     <p class="hint">Narrows GT3 and GT3 Touring. Pick more than one to combine. 991.2 cars must be manual.</p></fieldset>
-  <fieldset><legend>Porsche CPO</legend><div class="swatches">${CPOS.map(([k, name, sub]) => `<button type="button" class="sw cpo" data-sw="cpos" value="${k}" aria-pressed="${!!f.cpos?.includes(k)}"><span><b>${name}</b>${sub ? `<small>${sub}</small>` : ''}</span><em>${cpoCount(k)}</em></button>`).join('')}</div>
+  <fieldset><legend>Porsche CPO</legend><div class="swatches">${CPOS.map(([k, name, sub]) => `<button type="button" class="sw cpof" data-sw="cpos" value="${k}" aria-pressed="${!!f.cpos?.includes(k)}"><span><b>${name}</b>${sub ? `<small>${sub}</small>` : ''}</span><em>${cpoCount(k)}</em></button>`).join('')}</div>
     <p class="hint">Counts are for the tab you are on. Pick more than one to combine.</p></fieldset>
   <fieldset><legend>Price</legend><div class="pair">${n('pmin', 'Min $')}${n('pmax', 'Max $')}</div></fieldset>
   <fieldset><legend>Year and mileage</legend><div class="pair">${n('ymin', 'From year')}${n('ymax', 'To year')}</div><div class="pair" style="margin-top:8px">${n('mmax', 'Max miles')}${n('smin', 'Min match')}</div></fieldset>

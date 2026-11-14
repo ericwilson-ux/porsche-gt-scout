@@ -80,14 +80,14 @@ input[type="checkbox"] { accent-color: var(--ink); width: 16px; height: 16px; ma
 .sw.gen em { font-style: normal; font-size: 12px; font-weight: 600; }
 .sw.gen[aria-pressed="true"] span { color: #B9B8B2; }
 .sw.gen[aria-pressed="true"] em { color: var(--marker); }
-.sw.cpo { flex: 1 1 100%; justify-content: space-between; padding: 8px 10px; text-align: left; }
-.sw.cpo span { display: grid; gap: 1px; }
-.sw.cpo b { font-weight: 700; font-size: 13.5px; }
-.sw.cpo small { font-size: 11.5px; color: var(--ink-3); }
-.sw.cpo em { font-style: normal; font-weight: 800; font-size: 14px; font-stretch: var(--wide); }
-.sw.cpo[value="verified"] { border-left: 6px solid var(--marker); }
-.sw.cpo[aria-pressed="true"] small { color: #B9B8B2; }
-.sw.cpo[aria-pressed="true"] em { color: var(--marker); }
+.sw.cpof { flex: 1 1 100%; justify-content: space-between; padding: 8px 10px; text-align: left; }
+.sw.cpof span { display: grid; gap: 1px; }
+.sw.cpof b { font-weight: 700; font-size: 13.5px; }
+.sw.cpof small { font-size: 11.5px; color: var(--ink-3); }
+.sw.cpof em { font-style: normal; font-weight: 800; font-size: 14px; font-stretch: var(--wide); }
+.sw.cpof[value="verified"] { border-left: 6px solid var(--marker); }
+.sw.cpof[aria-pressed="true"] small { color: #B9B8B2; }
+.sw.cpof[aria-pressed="true"] em { color: var(--marker); }
 .hint { clear: both; margin: 8px 0 0; font-size: 12.5px; color: var(--ink-3); }
 .linkbtn { background: none; border: 0; padding: 0; text-decoration: underline; text-underline-offset: 3px; font-weight: 600; }
 .bar { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; flex-wrap: wrap; }
