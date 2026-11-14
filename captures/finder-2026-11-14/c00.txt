@@ -1,0 +1,189 @@
+D|18520|Porsche Bakersfield|Bakersfield|93313|yx8
+D|13259|Porsche San Diego|San Diego|92126|p7p
+D|6027|Porsche Richmond|Midlothian|23113|dej
+D|10926|Porsche Okemos|Okemos|48864|z6t
+D|1334|Porsche West Houston|Houston|77079|9qf
+D|13787|The Porsche Exchange|Highland Park|60035|9nk
+D|10340|Porsche Beachwood|Beachwood|44122|uwa
+D|16927|Porsche Monmouth|West Long Branch|07764|8sk
+D|16252|Porsche Beaverton|Beaverton|97005|1mw
+D|18992|Porsche North Olmsted|North Olmsted|44070|uoz
+D|1500007381|Porsche Atlanta Northeast|Buford|30519|hnd
+D|1500001454|Porsche Conshohocken|Conshohocken|19428|c7j
+D|1826|Porsche Lehi|Lehi|84048|yfw
+D|1500006795|Porsche Minneapolis|Minneapolis|55426|ffs
+D|6835|Porsche Princeton|Lawrenceville|08648|als
+D|18054|Porsche Irvine|Irvine|92618|t35
+D|16878|Porsche West Broward|Davie|33331|tsp
+D|1500000675|Porsche Chantilly|Chantilly|20151|v72
+D|14248|Porsche Nashua|Nashua|03062|1u5
+D|7367|Porsche Naples|Naples|34104|iq4
+D|11822|Autobahn Motorcars|Fort Worth|76107|na3
+D|2551|Porsche Newport Beach|Newport Beach|92660|9rf
+D|2122|Porsche Plano|Plano|75093|5so
+D|11398|Porsche West Palm Beach|West Palm Beach|33409|b04
+D|15000003161|Porsche Greensboro|Greensboro|27409|ilu
+D|10614|Porsche Colorado Springs|Colorado Springs|80905|mmx
+D|18984|Porsche Hawaii|Honolulu|96813|0wj
+D|15000003501|Porsche Walnut Creek|Walnut Creek|94597|4c8
+D|2296|Porsche Clearwater|Clearwater|33764|6yf
+D|13072|Porsche Main Line|Newtown Square|19073|i98
+D|10457|Manhattan Motorcars|New York|10019|6h2
+D|4773|Porsche Santa Barbara|Santa Barbara|93105|sim
+D|13987|Suncoast Porsche|Sarasota|34231|cxm
+D|15000003162|Porsche Fremont|Fremont|94538|ozu
+D|1521|Porsche Rocklin|Rocklin|95677|xac
+D|20026|Porsche Salt Lake City|Millcreek|84124|k8q
+D|8248|Porsche Charleston|Charleston|29407|jeb
+D|14404|Rusnak/Pasadena|Pasadena|91105|eej
+D|1500009692|Porsche Arrowhead|Glendale|85308|4ds
+D|1500004076|Porsche Long Beach|Long Beach|90815|kfd
+D|9817|Porsche Greenwich|Greenwich|06830|dol
+D|1500003676|Porsche Mobile|Mobile|36606|rvk
+D|1500007377|Porsche Fort Collins|Fort Collins|80525|jfz
+D|3654|Porsche Charlottesville|Charlottesville|22911|4yg
+D|1388|Porsche North Houston|Houston|77090-4913|743
+D|13529|Porsche Cincinnati Kings|Cincinnati|45249|svd
+D|12280|Porsche Atlanta Perimeter|Atlanta|30360|yx9
+D|11205|Porsche Carlsbad|Carlsbad|92011|o6z
+D|19657|Porsche Santa Clarita|Santa Clarita|91355|q7q
+D|1500005356|Porsche San Francisco|San Francisco|94103|z6h
+D|12158|Porsche Tulsa|Tulsa|74133|r2s
+D|15000001562|Porsche Dublin|Dublin|43017|cg0
+D|17011|Porsche Jacksonville|Jacksonville|32225|li7
+D|15000003050|Porsche Omaha|Elkhorn|68022|tea
+D|15000002337|Porsche North Miami|North Miami|33181|9wi
+D|12067|Porsche Norwell|Norwell|02061|w66
+D|15862|The Collection|Coral Gables|33146|h5k
+D|13553|Porsche Orland Park|Orland Park|60462|zp6
+D|1500007384|Porsche Little Rock|Little Rock|72210|asx
+D|13846|Champion Porsche|Pompano Beach|33064|zw3
+D|6638|Tom Wood Porsche|Indianapolis|46240|qa8
+D|17642|Porsche Fresno|Fresno|93650|15q
+D|15000001543|Porsche Beverly Hills|Los Angeles|90025|d6i
+D|16570|Porsche St. Louis|St. Louis|63143|l45
+D|5404|McKenna Porsche|Norwalk|90650|r09
+D|18993|Porsche Pittsburgh|Pittsburgh|15213|kkj
+D|5968|Porsche Tucson|Tucson|85711|vbb
+D|20027|Porsche South Shore|Freeport|11520|7uk
+D|8828|Porsche Rochester|Rochester|14623|eq5
+D|5890|Hendrick Porsche|Charlotte|28227|3fa
+D|3290|Porsche Westlake|Thousand Oaks|91362|758
+D|15164|Porsche Birmingham|Irondale|35210|9gr
+D|12058|Porsche Palm Springs|Palm Springs|92264|rpq
+D|14642|Isringhausen Imports|Springfield|62701|p5p
+D|19470|Porsche Seattle North|Lynnwood|98037|j4g
+D|13894|Porsche Spokane|Liberty Lake|99019|6m3
+D|17012|Porsche Milwaukee North|Milwaukee|53209|7ru
+D|9012|Porsche South Bay|Hawthorne|90250|zue
+D|1500006915|Porsche St. Paul|Maplewood|55109|5o9
+D|15000001037|Porsche Louisville|Louisville|40207|adx
+D|1500000031|Porsche Boise|Bosie|83709|wea
+D|4278|Porsche Huntington|Huntington Station|11746|zyp
+D|15000004086|Porsche Atlanta Northwest|Marietta|30067|3pn
+D|13610|Porsche San Antonio|San Antonio|78230|ci8
+D|15000001544|Porsche Livermore|Livermore|94551|v0p
+D|3023|Porsche Bellevue|Bellevue|98005|fs9
+D|5478|Porsche Stevens Creek|Santa Clara|95051|zwd
+D|1500009507|Porsche Burlington|Burlington|01803|ufo
+D|19499|Porsche Marin|Mill Valley|94941|9j6
+D|13641|Porsche Annapolis|Annapolis|21401|3ji
+D|18525|Porsche Woodland Hills|Woodland Hills|91364|j87
+D|6268|Paul Miller Porsche|Parsippany|07054|oyx
+D|1500008713|Porsche Sewickley|Sewickley|15143|6yu
+D|3234|Porsche Englewood|Englewood|07631|xwm
+D|15000002382|Porsche Greenville|Greenville|29607|4eq
+D|1915|Porsche Lincolnwood|Lincolnwood|60712|44x
+D|18374|Porsche South Orlando|Orlando|32811|5ka
+D|1500001453|Porsche Hilton Head|Hardeeville|29927|4do
+D|11364|Porsche Southpoint|Durham|27713|mg6
+D|7630|Porsche Madison|Madison|53713|3ea
+D|1500001157|Porsche Detroit North|Shelby Township|48317|kir
+D|1500007382|Porsche Charlotte Northlake|Charlotte|28216|1jo
+D|17939|Porsche Downtown LA|Los Angeles|90007|1hi
+D|17112|Porsche Warrington|Warrington|18976|d4c
+D|1500003495|Porsche San Luis Obispo|San Luis Obispo|93405|2k9
+D|6540|Porsche North Scottsdale|Phoenix|85054|cti
+D|15206|Porsche Fort Myers|Fort Myers|33913|aki
+D|8893|Porsche Edison|Edison|08817|b8d
+D|5381|Porsche Fox Valley|Appleton|54913|1df
+D|16968|Porsche Austin|Austin|78759|g29
+D|15000004158|Porsche Atlanta North|Roswell|30076|pc3
+D|13652|Porsche Monterey|Seaside|93955|kck
+D|15000002545|Porsche Des Moines|West Des Moines|50266|4ll
+D|8441|Gossett Porsche|Memphis|38128|e7k
+D|3577|Porsche Columbus|Columbus|43213|f1i
+D|9376|Porsche Oklahoma City|Oklahoma City|73114|qwg
+D|3748|Porsche Burlingame|Burlingame|94010|bo5
+D|18373|Porsche El Paso|El Paso|79932|gbt
+D|1500004075|Porsche Danbury|Danbury|06810|v0k
+D|8237|Porsche Kansas City|Merriam|66203|xdz
+D|18371|Porsche Grapevine|Grapevine|76051|j2k
+D|11565|Napleton Westmont Porsche|Westmont|60559|6qp
+D|1500005974|Porsche Sugar Land|Sugar Land|77478|9ih
+D|15000001275|Porsche Arlington|Arlington|22202|zmu
+D|4983|Porsche Tysons Corner|Vienna|22182|jbi
+D|8412|Porsche Stratham|Stratham|03885|fmm
+D|13029|Porsche Bethesda|North Bethesda|20852|wuy
+D|1500000099|Porsche Peoria|Peoria|61615|rxe
+D|8580|Porsche Denver West|Lakewood|80215|qy5
+D|6536|Porsche Latham|Latham|12110|e0g
+D|1500007334|Porsche Sacramento|Sacramento|95821|3a7
+D|1500002156|Porsche Tampa|Tampa|33612|xgm
+D|1500001908|Porsche Brooklyn|Brooklyn|11232|9bg
+D|16852|Porsche Chandler|Chandler|85286|opa
+D|15519|Porsche Southampton|Southampton|11968|73r
+D|1500000098|Porsche Asheville|Asheville|28806|fr6
+D|1500002163|Porsche Westwood|Westwood|02090|6nm
+D|19748|Porsche Dallas|Dallas|75209|zb7
+D|4424|Porsche Orlando|Maitland|32751|0p0
+D|833|Porsche Riverside|Riverside|92504|773
+E|0|Racing Yellow|#ffcc00|ta1
+E|1|Black|#101820|x0n
+E|2|Shark Blue|#0067b9|p0y
+E|3|White|#dce0dc|d24
+E|4|Preparation For Paint To Sample: Rivierablue|#0f80c0|b5x
+E|5|Vanadium Grey Metallic|#646970|mz1
+E|6|Gt-silver Metallic|#bcbfc3|4cm
+E|7|Paint To Sample: Superiorredmetallic|#241c21|u4j
+E|8|Gt Silver Metallic|#bcbfc3|2r9
+E|9|Oak Green Metallic Neo|#3b473a|8kp
+E|10|Paint To Sample: Chinagrey|#525355|nmq
+E|11|Preparation For Paint To Sample: Geminimetallic|#476381|clx
+E|12|Dolomite Silver Metallic|#b5bcc3|6cz
+E|13|Preparation For Paint To Sample: Puregreen|#0d8b31|zjd
+E|14|Slate Grey Neo|#4e4e53|bbo
+E|15|Paint To Sample: Amazongreenmetallic|#0d303d|2mo
+E|16|Chalk|#9ea2a2|8sn
+E|17|Arctic Grey|#6a6c70|efb
+E|18|Guards Red|#cc0033|n2v
+E|19|Jet Black Metallic|#16161e|c7g
+E|20|Lugano Blue|#264375|y3u
+E|21|Carrara White Metallic|#d9d9d6|xhk
+E|22|Paint To Sample: Stonegreymetallic|#7d7b7a|rv9
+E|23|Preparation For Paint To Sample: Greyblack|#353437|oqk
+E|24|Gentian Blue Metallic|#1b365D|yt7
+E|25|Ice Grey Metallic|#c5c9ca|1g3
+E|26|Paint To Sample: Violapurplemetallic|#6d5e97|ivm
+E|27|Paint To Sample: Bahamayellow|#bf7a13|78x
+E|28|Preparation For Paint To Sample: Signalgreen|#0ea14b|yew
+E|29|Preparation For Paint To Sample: Bahamayellow|#bf7a13|5dx
+E|30|Preparation For Paint To Sample: Fjordgreen|#0d2c33|trw
+E|31|Exterior In Custom Color, Metallic: Grigiotelestometallic|#45484c|7yd
+E|32|Preparation For Paint To Sample: Chinagrey|#525355|m2k
+E|33|Paint To Sample: Macadamiametallic|#443731|ptj
+E|34|Agate Grey Metallic|#707372|0yq
+E|35|Paint To Sample: Gulforange|#de531e|mnf
+E|36|Paint To Sample: Verdezeltwegmetallic|#1f2b28|qnb
+E|37|Preparation For Paint To Sample: Acidgreen|#cbf10f|ldq
+E|38|Exterior In Custom Color, Non-metallic: Gulforange|#de531e|n3n
+E|39|Paint To Sample: Fjordgreen|#0d2c33|pll
+E|40|Paint To Sample: Signalorange|#dc710d|rh9
+E|41|Paint To Sample: Blackolive|#36392e|luv
+E|42|Paint To Sample: Turquoiseblue|#0c527d|7rq
+E|43|Exterior In Custom Color, Non-metallic: Sportclassicgrey|#92989a|n2t
+E|44|Paint To Sample Plus: Explosive Gold Chromaflair|#d28b20|3tx
+E|45|Miami Blue|#008596|fbt
+E|46|Paint To Sample: Violametallic|#1e1928|wkc
+E|47|Ruby Star Neo|#773553|0hg
+E|48|Paint To Sample: Vipergreen|#0e9132|5p9

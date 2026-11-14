@@ -1,0 +1,201 @@
+E|49|Paint To Sample: Rivierablue|#0f80c0|yn2
+E|50|Preparation For Paint To Sample: Lindengreen|#8d8f22|mje
+E|51|Exterior In Custom Color, Non-metallic: Brewstergreen|#19231e|y11
+E|52|Paint To Sample: Speedyellow|#e3a70e|rn1
+E|53|Exterior In Custom Color, Non-metallic: Signalyellow|#f4960e|ytp
+E|54|Cartagena Yellow Metallic|#cccd80|ag8
+E|55|Paint To Sample: Carbonsteelgreymetallic|#31343a|62b
+E|56|Exterior In Custom Color, Non-metallic: Greenyellow|#63b831|4ya
+E|57|Paint To Sample: Chalk|#8f8e89|anp
+E|58|Paint To Sample: Peridotmetallic|#bbbd5b|tw6
+E|59|Preparation For Paint To Sample: Irishgreen|#1a3826|y2j
+E|60|Paint To Sample: Signalgreen|#0ea14b|qta
+E|61|Preparation For Paint To Sample: Darkseablue|#171b29|o9c
+E|62|Paint To Sample: Osloblue|#124661|sx5
+E|63|Paint To Sample: Amethystmetallic|#362133|skp
+E|64|Paint To Sample: Cremewhite|#decfb5|ask
+E|65|Preparation For Paint To Sample: Basaltblackmetallic|#19191e|ww6
+E|66|Preparation For Paint To Sample: Blackolive|#36392e|ziq
+E|67|Paint To Sample: Mintgreen|#61cba7|glm
+E|68|Paint To Sample: Natoolive|#3b3f2d|rxn
+E|69|Paint To Sample: Moongem|#b7b5c5|gy9
+I|0|Leather/Race-Tex Interior in Black with Guards Red Stitching|xgd
+I|1|Standard Interior with Race-Tex and Stitching in GT Silver|z92
+I|2|Leather/Race-Tex Interior in Black with Arctic Grey Stitching i.c.w. Weissach Package|j5h
+I|3|Leather/Race-Tex Interior in Black with Deep Sea Blue Stitching i.c.w. Weissach Package|x9q
+I|4|Two-Tone Exclusive Manufaktur Leather Interior in Black and Choice of Color: Slate Grey|nsw
+I|5|Standard Interior in Black/Race-Tex with Arctic Grey Stitching|wfk
+I|6|Leather/Race-Tex Interior in Black with Carmine Red Stitching i.c.w. Weissach Package|8ug
+I|7|Leather/Race-Tex Interior in Black with Stitching in GT Silver|d2e
+I|8|Leather/Race-Tex Interior in Black with Arctic Grey Stitching|vdt
+I|9|Leather/Race-Tex Interior in Black with Carmine Red Stitching|mbn
+I|10|Leather/Alcantara Interior in Black i.c.w. Red Stitching|iyf
+I|11|Standard Interior in Black with Fabric Seat Centers|w35
+I|12|Leather/Alcantara Interior in Black with Platinum Grey Stitching|v9i
+F|0|Doc Fee|mnn
+F|1|Electronic Filing Fee|95t
+F|2|Processing Fee|sqm
+F|3|CVR Fee|lb1
+F|4|Documentation Fee|c13
+F|5|Dealer Services|oah
+F|6|ERT Fee|r56
+F|7|Dealer Fees|kia
+F|8|Service Fee|6ia
+F|9|DealerDoc|i17
+F|10|ANTI THEFT PROTECTION|w36
+F|11|DOC FEE|94n
+F|12|doc fee|1i6
+F|13|Total MSRP2|ql9
+F|14|Administration Fee|iqc
+F|15|Dealer Service Fee|081
+F|16|Document Processing Fee|4n4
+F|17|Tag Agency Fee|you
+F|18|Dealer Documentation Fee|nqt
+F|19|Documentation & Processing Fee|bus
+F|20|Private Tag Agency Fee|rbt
+F|21|Notary Fee|bnz
+F|22|Pre-Delivery Service Fee|4by
+F|23|EVR|pjf
+F|24|Emissions Testing Charge (if applicable)|mtw
+F|25|Dealer Add-Ons & Adjustments|3f1
+F|26|Dealer Conveyance Fee|70b
+F|27|D+H Fee|xe7
+F|28|Dealer Processing Fee|sv5
+F|29|indiGO Essentials|bb5
+F|30|StarGard GPS Vehicle Protection|14p
+F|31|Dealer Doc Fee|eve
+F|32|Emissions Testing Fee|3si
+F|33|Doc Fees|gvc
+F|34|Documentary Service Fee|6he
+F|35|Document Fee|xhw
+F|36|Electronic Processing Fee|lib
+F|37|Service and Handling Fee|c44
+F|38|Pre-Delivery Service Charge|8rt
+F|39|Reviver Plate|9hy
+F|40|Zurich Shield|b0f
+F|41|Administrative Fee|xam
+F|42|DMV Electronic Filing Fee|qg1
+F|43|Document fee|c5z
+F|44|Alabama Title Fee|61q
+F|45|Electronic Titling Fee|x1b
+F|46|Title Fee|xlr
+F|47|Service Fees|s86
+F|48|Emission Testing Charge|go2
+F|49|Documentary Preparation|370
+F|50|Dealer Admin Fee|o8s
+F|51|Emissions Testing Charge|a1j
+F|52|Documentary Fee|mp1
+F|53|Title Convenience Fee|pva
+F|54|Conveyance Fee|4j5
+F|55|Dealer Processing Fee (not required by law)|573
+F|56|Dealer Handling Fee|rli
+F|57|Dealer Administrative Fee|ip2
+F|58|Dealer Fee|naz
+F|59|Electronic filing Fee|fsy
+F|60|Electronic Filing Charge|eme
+G|0|Exterior|008
+G|1|Engine, transmission and chassis|cdc
+G|2|Wheels|cb0
+G|3|Interior|9t5
+G|4|Interior Leather|133
+G|5|Interior Aluminum|g4z
+G|6|Audio / Communication|yoz
+G|7|Lighting and vision|6ck
+G|8|Comfort and assistance systems|sxb
+G|9|Packages|rgu
+G|10|Stitching and seat centers|8v4
+G|11|Interior Carbon|l39
+G|12|Interior Race-Tex|8yg
+G|13|Interior Alcantara|539
+G|14|Other PCCD Categories|v6j
+O|0|UD1|Under Door Puddle Light Projectors|0|kb5
+O|1|AMU|Model Designation on Doors in Red|0|yzi
+O|2|2W6|Exclusive Design Fuel Cap|0|3up
+O|3|6EF|Stone Guard on Rear Fenders in Black|0|opm
+O|4|8LH|Chrono Package with Preparation for Lap Trigger|1|3ij
+O|5|0I2|Extended Range Fuel Tank (23.7 gal.)|1|wy0
+O|6|1LX|Porsche Ceramic Composite Brakes (PCCB) with Calipers in High Gloss Black|1|por
+O|7|2UH|Front Axle Lift System|1|dii
+O|8|1NX|Wheels Painted in Satin Black|2|1u1
+O|9|QQ2|Ambient Lighting|3|uzi
+O|a|Q1J|Adaptive Sport Seats Plus (18-way)|3|fbm
+O|b|QE1|Storage Package|3|ltt
+O|c|BYE|Vehicle Keys Painted incl. One Key Pouch in Leather|3|eat
+O|d|6A7|Fire Extinguisher|3|myq
+O|e|FZ1|Seat Belts in Guards Red|3|cac
+O|f|VN0|Sport Chrono Stopwatch Dial in Guards Red|3|4tl
+O|g|2C6|Steering Column Casing in Leather|4|4os
+O|h|BYX|Personalized Floor Mats with Leather Edging|4|2yb
+O|i|2TG|Sport Seats Plus Backrest Shells in Leather with Leather Inlay|4|8tu
+O|j|5TH|Interior Trim Inlays in Black Brushed Aluminum|5|2n3
+O|k|VT9|Door-Sill Guards in Black Brushed Aluminum, Illuminated|5|lsh
+O|l|9VL|BOSE Surround Sound System|6|t1a
+O|m|8JU|LED-Matrix Design Headlights in Black incl. Porsche Dynamic Light System Plus (PDLS+)|7|jp4
+O|n|8VH|Exclusive Design Taillights|7|d7u
+O|o|P14|Auto-Dimming Mirrors with Integrated Rain Sensor|7|jo7
+O|p|7X1|ParkAssist (Rear)|8|20o
+O|q|QR9|Traffic Sign Recognition|8|pcg
+O|r|04F|Lightweight Package in Black|9|54t
+O|s|F37|20"/21" 911 GT3 Forged Magnesium Lightweight Wheels|2|okl
+O|t|FZ5|Seat Belts in Silver Grey|3|4ae
+O|u|3UG|Rear Seats|3|ts1
+O|v|3FF|Carbon Fiber Roof|0|u32
+O|w|G0W|6-speed GT Sport Manual Transmission|1|1hd
+O|x|1MI|Steering Wheel and Gear Lever in Black Leather|3|lvd
+O|y|8JT|LED Headlights in Black incl. Porsche Dynamic Light System (PDLS)|7|i9q
+O|z|04I|Weissach Package|9|c4l
+O|10|CSX|Window Triangle Trims in Carbon Fiber|0|4gy
+O|11|AME|Accent Package Logos - Red|0|c4d
+O|12|5M4|Front Trunk Lid and Wing in Exposed Carbon Fiber/Partially Painted i.c.w. Weissach Package|0|y4p
+O|13|XJA|Door Handles in High Gloss Black|0|2sa
+O|14|474|Front Axle Lift System|1|cp6
+O|15|QR5|Chrono Package|1|fku
+O|16|XBS|Brake Calipers in High Gloss Black|1|vjj
+O|17|450|Porsche Ceramic Composite Brakes (PCCB)|1|qo8
+O|18|XDK|Wheels Painted in Satin Black|2|qyg
+O|19|XFG|Instrument Dials in Guards Red|3|cu6
+O|1a|XVX|Extended Deviated Stitching Interior Package|3|96p
+O|1b|XGN|Chrono Stopwatch Dial in Guards Red|3|83j
+O|1c|878|Steering Wheel and Gear Lever/Selector in Black Leather|3|8cx
+O|1d|XVA|Steering Column Casing in Leather with Deviated Stitching|3|xye
+O|1e|XSX|Seat Belts in Guards Red|3|hor
+O|1f|ADN|Door Trim Package in Leather/Race-Tex|3|t0n
+O|1g|BYE|Personalized Vehicle Keys Painted incl. One Key Pouch in Leather|3|gbq
+O|1h|XBB|Door Pull Loops in Guards Red|3|iqy
+O|1i|XXD|Door-Sill Guards in Carbon Fiber, Illuminated|3|n9k
+O|1j|XLU|Sun Visors in Race-Tex|3|g4x
+O|1k|ADP|Dashboard End Trims in Leather/Race-Tex - Guards Red|3|rb4
+O|1l|CHK|Climate Control Panel in Leather|3|c0m
+O|1m|XLJ|Storage Compartment Lid in Race-Tex with Porsche Crest|3|3u4
+O|1n|XVB|Inner Door-Sill Guards in Leather with Deviated Stitching|3|gyy
+O|1o|CHM|Carbon Fiber Floor Mats with Leather Edging - Guards Red|3|n0m
+O|1p|509|Fire Extinguisher|3|odx
+O|1q|9ZE|Smartphone Compartment|6|5z7
+O|1r|QH1|Voice Control|6|ig4
+O|1s|684|Deletion of SiriusXM Antenna|6|iou
+O|1t|00480|Color Selection for Stitching in Deviated Color - Guards Red|10|df7
+O|1u|634|LED Headlights incl. Porsche Dynamic Light System (PDLS)|7|ipu
+O|1v|P13|Auto-Dimming Mirrors with Integrated Rain Sensor|7|pk6
+O|1w|XWN|Preparation for Porsche Dashcam (Front)|8|90k
+O|1x|630|Light Design Package|8|dyk
+O|1y|583|Smoking Package|8|y08
+O|1z|581|Luggage Net in Passenger Footwell|8|g6j
+O|20|539|Spyder RS Top with Accents in Deviated Color|0|0zb
+O|21|5M4|Front Trunk Lid in Exposed Carbon Fiber/Partially Painted i.c.w. Weissach Package|0|rn1
+O|22|513|"PORSCHE" Logo on Rear in High Gloss Silver|0|vjn
+O|23|346|Wheels Painted in Silver|2|6dp
+O|24|XFJ|Instrument Dials in White|3|zh9
+O|25|XGM|Chrono Stopwatch Dial in White|3|xno
+O|26|XHN|Seat Belts in Racing Yellow|3|fqt
+O|27|XBC|Door Pull Loops in Racing Yellow|3|kyy
+O|28|349|Wheels Painted in Satin Indigo Blue|2|291
+O|29|422|20" 718 Cayman GT4 RS Forged Magnesium Wheels|2|7a5
+O|2a|1LQ|Porsche Ceramic Composite Brakes (PCCB) with Calipers in Yellow|1|6vy
+O|2b|Q1S|Folding Lightweight Bucket Seats|3|w1d
+O|2c|3B0|Seat Belt Outlet Trims in Race-Tex|3|x4p
+O|2d|1LR|Brake Calipers in High Gloss Black|1|wau
+O|2e|AGU|3D-Printed Bodyform Full Bucket Driver's Seat (Medium) - Arctic Grey|3|4b1
+O|2f|581|Luggage Net in Passenger Footwell|3|94t
+O|2g|583|Smoking Package|3|924
+O|2h|XBA|Door Pull Loops in Black|3|8fy
+O|2i|XTG|Inner Door-Sill Guards in Leather|4|o5l
