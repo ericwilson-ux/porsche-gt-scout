@@ -76,6 +76,8 @@ def normalise(raw: dict, scope: str) -> Listing | None:
     is_porsche = bool(re.search(r"porsche", f"{dealer.get('name') or ''} {website or ''}", re.I))
     kind = {"fsbo": "private", "auction": "auction"}.get(raw.get("seller_type"),
                                                          "porsche_dealer" if is_porsche else "dealer")
+    lst.extra["dealer_type"] = dealer.get("dealer_type")
+    lst.extra["first_seen_anywhere"] = raw.get("first_seen_at_mc_date")
     lst.seller = {"name": dealer.get("name"), "kind": kind, "street": dealer.get("street"),
                   "city": dealer.get("city"), "state": dealer.get("state"), "zip": dealer.get("zip"),
                   "phone": dealer.get("phone"), "website": website,
@@ -94,14 +96,14 @@ def normalise(raw: dict, scope: str) -> Listing | None:
     lst.carfax_clean_title = raw.get("carfax_clean_title")
     lst.one_owner = raw.get("carfax_1_owner")
     lst.stock_number = raw.get("stock_no")
-    lst.source_first_seen = raw.get("first_seen_at_date")
+    lst.source_first_seen = raw.get("first_seen_at_source_date") or raw.get("first_seen_at_date")
     lst.source_days_on_market = raw.get("dom_active") if isinstance(raw.get("dom_active"), int) else None
     ref = raw.get("ref_price")
     lst.source_previous_price = float(ref) if isinstance(ref, (int, float)) and ref > 0 else None
     lst.origin_site = raw.get("source")
-    lst.extra = {"model_code": raw.get("model_code"), "msrp": raw.get("msrp"), "dom": raw.get("dom"),
+    lst.extra.update({"model_code": raw.get("model_code"), "msrp": raw.get("msrp"), "dom": raw.get("dom"),
                  "dom_180": raw.get("dom_180"), "price_change_percent": raw.get("price_change_percent"),
-                 "data_source": raw.get("data_source"), "ref_price_dt": raw.get("ref_price_dt")}
+                 "data_source": raw.get("data_source"), "ref_price_dt": raw.get("ref_price_dt")})
     return lst
 
 
