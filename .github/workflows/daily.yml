@@ -96,7 +96,13 @@ jobs:
           git rm -q --cached --ignore-unmatch pgt.sqlite
           git add -A
           git diff --cached --quiet || git commit -q -m "state: run ${{ github.run_id }} $(date -u +%Y-%m-%dT%H:%MZ)"
-          git push origin state
+          # Other writers add small files to this branch while a run is under way (outreach logs, email
+          # receipts).  If the branch moved, replay this run's commit on top of it and try again.
+          for attempt in 1 2 3 4; do
+            if git push origin state; then exit 0; fi
+            git pull --rebase origin state || { git rebase --abort || true; echo "state branch changed in a conflicting way"; exit 1; }
+          done
+          exit 1
 
       - name: Publish the built site to the `site` branch (for Vercel / branch-based hosting)
         run: |
