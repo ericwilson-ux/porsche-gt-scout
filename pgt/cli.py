@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
+import re
 import shutil
 import sys
 from datetime import datetime, timedelta, timezone
@@ -66,6 +68,10 @@ def build_site(con, cfg, state: Path, out: Path) -> dict:
     for f in (ROOT / "site").iterdir():
         if f.is_file():
             shutil.copy2(f, out / f.name)
+    # Stamp the script and stylesheet links so a browser never pairs a new page with a cached old file.
+    stamp = hashlib.sha256((ROOT / "site" / "app.js").read_bytes() + (ROOT / "site" / "styles.css").read_bytes()).hexdigest()[:10]
+    index = (out / "index.html").read_text(encoding="utf-8")
+    (out / "index.html").write_text(re.sub(r'((?:app\.js|styles\.css))(?:\?v=\w+)?"', rf'\1?v={stamp}"', index), encoding="utf-8")
     stats = exporter.export(con, cfg, out / "data", state)
     if (state / "photos").exists():
         shutil.copytree(state / "photos", out / "data" / "photos", dirs_exist_ok=True)
