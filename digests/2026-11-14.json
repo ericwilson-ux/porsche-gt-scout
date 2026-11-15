@@ -1,7 +1,7 @@
 {
  "digest_date": "2026-11-14",
  "status": "pending",
- "subject": "[PGT-2026-11-14] 10 new qualifying Porsche GT listings (needs verification)",
+ "subject": "[PGT-2026-11-14] 14 new qualifying Porsche GT listings (needs verification)",
  "recipient": "",
  "cars": [
   {
@@ -44,7 +44,7 @@
     }
    ],
    "price": 239994.0,
-   "mileage": 11308,
+   "mileage": 11326,
    "transmission": "manual",
    "exterior": "Sapphire Blue Metallic",
    "interior": "Black",
@@ -58,7 +58,7 @@
    "distance_miles": 1424,
    "score": 82,
    "strengths": [
-    "Mileage for its age: 11,308 mi at ~9.1 yrs; your own pace would put it near 37,990 mi",
+    "Mileage for its age: 11,326 mi at ~9.1 yrs; your own pace would put it near 37,990 mi",
     "Exterior colour: Sapphire Blue Metallic (blue)",
     "Interior colour: Black (black)",
     "Transmission: 6-speed manual (your slight preference)"
@@ -68,19 +68,20 @@
     "Seller & documentation: Porsche dealer",
     "Distance from Austin, TX: ~1,424 road miles (fly-and-drive or enclosed transport)"
    ],
-   "otd_total": 257831.75,
+   "otd_total": 257884.88,
    "deal": {
     "rating": "great",
-    "delta_pct": -0.1948,
+    "delta_pct": -0.1946,
     "n": 30,
     "confidence": "moderate",
-    "fair_low": 276870,
-    "fair_high": 337541
+    "fair_low": 275733,
+    "fair_high": 337441
    },
    "photo": "https://porschelongbeach.com/wp-content/plugins/di-porsche-oem-plugin/assets/images/Porsche-OEM-Coming-Soon.jpg",
    "photo_count": 1,
    "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A94JS175359",
    "source_urls": [
+    "https://www.porschelongbeach.com/inventory/certified-used-2018-porsche-911-gt3-rear-wheel-drive-coupe-wp0ac2a94js175359/",
     "https://www.porschelongbeach.com/inventory/certified-used-2018-porsche-911-gt3-rear-wheel-drive-coupe-wp0ac2a94js175359/"
    ]
   },
@@ -141,20 +142,20 @@
    "misses": [
     "Seats: Seat type not documented",
     "No Weissach Package: Has the Weissach Package",
-    "Seller & documentation: independent dealer",
+    "Seller & documentation: independent dealer, one owner",
     "Distance from Austin, TX: ~1,429 road miles (fly-and-drive or enclosed transport)"
    ],
    "otd_total": 236851.62,
    "deal": {
     "rating": "fair",
-    "delta_pct": -0.0053,
-    "n": 66,
+    "delta_pct": -0.001,
+    "n": 67,
     "confidence": "moderate",
-    "fair_low": 212248,
-    "fair_high": 227746
+    "fair_low": 212416,
+    "fair_high": 227576
    },
-   "photo": "https://images.dealer.com/autodata/us/color/2024/USD40PRC161E0/A1.jpg",
-   "photo_count": 1,
+   "photo": "https://pictures.dealer.com/b/bobyrahalmercedes/0131/2a7e655bd1512d73206d2af9cf881cd9x.jpg",
+   "photo_count": 4,
    "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A88RK274909",
    "source_urls": [
     "https://www.mercedesbenzofpittsburgh.com/used/Porsche/2024-Porsche-718-Cayman-Pittsburgh-cfea2e62ac18100891b135efe4649218.htm"
@@ -227,7 +228,7 @@
    "deal": {
     "rating": null,
     "delta_pct": null,
-    "n": 143,
+    "n": 142,
     "confidence": "insufficient",
     "fair_low": null,
     "fair_high": null
@@ -302,11 +303,11 @@
    "otd_total": 219949.94,
    "deal": {
     "rating": "good",
-    "delta_pct": -0.0214,
-    "n": 43,
+    "delta_pct": -0.0227,
+    "n": 44,
     "confidence": "moderate",
-    "fair_low": 200997,
-    "fair_high": 217623
+    "fair_low": 201200,
+    "fair_high": 217582
    },
    "photo": "https://pictures.dealer.com/w/webuyitcarscavecreek/0580/d341b91c10de6f5de23fd8ab2b77a9c9x.jpg",
    "photo_count": 32,
@@ -352,7 +353,7 @@
    "price": null,
    "mileage": 8894,
    "transmission": "pdk",
-   "exterior": "Red",
+   "exterior": "Guards Red",
    "interior": "Black",
    "cpo": true,
    "cpo_label": "certified per dealer feed",
@@ -369,7 +370,7 @@
     "Transmission: PDK"
    ],
    "misses": [
-    "Exterior colour: Red (red) is outside white/silver/blue/gray/black",
+    "Exterior colour: Guards Red (red) is outside white/silver/blue/gray/black",
     "Seats: Full bucket seats (acceptable, not preferred)",
     "No Weissach Package: Has the Weissach Package",
     "Seller & documentation: independent dealer"
@@ -378,7 +379,7 @@
    "deal": {
     "rating": null,
     "delta_pct": null,
-    "n": 67,
+    "n": 68,
     "confidence": "insufficient",
     "fair_low": null,
     "fair_high": null
@@ -388,81 +389,6 @@
    "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A85RK274320",
    "source_urls": [
     "https://www.sunsetimports.com/certified/Porsche/2024-Porsche-718-Cayman-d234751eac18061cf5be9d53ce058d22.htm"
-   ]
-  },
-  {
-   "key": "WP0CE2A8XSK237262",
-   "vin": "WP0CE2A8XSK237262",
-   "title": "2025 718 Spyder RS",
-   "reason": "New listing",
-   "category": "lead",
-   "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Under $225,000, Clean accident history",
-   "checks": [
-    {
-     "label": "Target model",
-     "status": "pass",
-     "provenance": "listing + VIN"
-    },
-    {
-     "label": "Front axle lift",
-     "status": "unverified",
-     "provenance": null
-    },
-    {
-     "label": "Under $225,000",
-     "status": "unverified",
-     "provenance": null
-    },
-    {
-     "label": "Clean accident history",
-     "status": "unverified",
-     "provenance": null
-    },
-    {
-     "label": "No documented track use",
-     "status": "pass",
-     "provenance": "listing text scan"
-    }
-   ],
-   "price": null,
-   "mileage": 2436,
-   "transmission": "pdk",
-   "exterior": "GT Silver Metallic",
-   "interior": null,
-   "cpo": false,
-   "cpo_label": "not CPO",
-   "seats": null,
-   "weissach": null,
-   "pccb": null,
-   "seller": "Land Rover Louisville",
-   "location": "Louisville, KY",
-   "distance_miles": 1033,
-   "score": 74,
-   "strengths": [
-    "Mileage for its age: 2,436 mi at ~2.1 yrs; your own pace would put it near 9,987 mi",
-    "Exterior colour: GT Silver Metallic (silver)",
-    "Transmission: PDK"
-   ],
-   "misses": [
-    "Interior colour: Interior not published",
-    "Seats: Seat type not documented",
-    "No Weissach Package: Weissach status not documented",
-    "Seller & documentation: independent dealer"
-   ],
-   "otd_total": null,
-   "deal": {
-    "rating": null,
-    "delta_pct": null,
-    "n": 55,
-    "confidence": "insufficient",
-    "fair_low": null,
-    "fair_high": null
-   },
-   "photo": "https://media.chromedata.com/MediaGallery/media/MjkzOTU4Xk1lZGlhIEdhbGxlcnk/qcUXVEbv3QRnIJy3YPcb1vZPpPrwI8KFu9HxeezIlFlgz0d2teKUgGnUTLJZrMf0uyTLBzMnbM1igF4v9TXrtFbrqsiBfCeMbDXjVFM730JEQRODlG_V7_jqAa5St-jEQoIFf3eFbH9ERQUU8ZZqdTj2eLipQr1jq8LPayPuwyw0l6BE27AH2g/cc_2025PRC190011_01_640_U2.png",
-   "photo_count": 3,
-   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0CE2A8XSK237262",
-   "source_urls": [
-    "https://www.landroverlouisville.com/inventory/used-2025-porsche-718-spyder-rs-rwd-2d-convertible-wp0ce2a8xsk237262/"
    ]
   },
   {
@@ -532,7 +458,7 @@
    "deal": {
     "rating": null,
     "delta_pct": null,
-    "n": 156,
+    "n": 159,
     "confidence": "insufficient",
     "fair_low": null,
     "fair_high": null
@@ -545,12 +471,12 @@
    ]
   },
   {
-   "key": "WP0AC2A92RS263001",
-   "vin": "WP0AC2A92RS263001",
-   "title": "2024 911 GT3",
+   "key": "WP0AE2A84PS280588",
+   "vin": "WP0AE2A84PS280588",
+   "title": "2023 718 Cayman GT4 RS",
    "reason": "New listing",
    "category": "lead",
-   "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history",
+   "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Under $225,000, Clean accident history",
    "checks": [
     {
      "label": "Target model",
@@ -563,13 +489,8 @@
      "provenance": null
     },
     {
-     "label": "Under $250,000",
+     "label": "Under $225,000",
      "status": "unverified",
-     "provenance": null
-    },
-    {
-     "label": "At most 35,000 miles",
-     "status": "pass",
      "provenance": null
     },
     {
@@ -584,48 +505,126 @@
     }
    ],
    "price": null,
-   "mileage": 6089,
-   "transmission": null,
-   "exterior": "GREY",
+   "mileage": 5716,
+   "transmission": "pdk",
+   "exterior": "White",
    "interior": null,
    "cpo": false,
    "cpo_label": "not CPO",
    "seats": null,
    "weissach": null,
    "pccb": null,
-   "seller": "Mclaren Scottsdale",
-   "location": "Scottsdale, AZ",
-   "distance_miles": 1008,
-   "score": 72,
+   "seller": "Tactical Fleet Dallas",
+   "location": "Farmers Branch, TX",
+   "distance_miles": 225,
+   "score": 78,
    "strengths": [
-    "Mileage for its age: 6,089 mi at ~3.1 yrs; your own pace would put it near 13,996 mi",
-    "Exterior colour: GREY (gray)"
+    "Mileage for its age: 5,716 mi at ~4.1 yrs; your own pace would put it near 17,993 mi",
+    "Exterior colour: White (white)",
+    "Transmission: PDK",
+    "Distance from Austin, TX: ~225 road miles (drivable)"
    ],
    "misses": [
     "Interior colour: Interior not published",
     "Seats: Seat type not documented",
-    "Seller & documentation: independent dealer",
-    "Distance from Austin, TX: ~1,008 road miles (fly-and-drive or enclosed transport)"
+    "No Weissach Package: Weissach status not documented",
+    "CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)"
    ],
    "otd_total": null,
    "deal": {
     "rating": null,
     "delta_pct": null,
-    "n": 175,
+    "n": 68,
     "confidence": "insufficient",
     "fair_low": null,
     "fair_high": null
    },
-   "photo": "https://www.mclarenscottsdale.com/wp-content/themes/aanWordpress/images/ina_l.jpg",
+   "photo": "https://images.app.ridemotive.com/88xqzhphy13mrmhga71mz0nmlemc",
    "photo_count": 1,
-   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A92RS263001",
+   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A84PS280588",
    "source_urls": [
-    "https://www.mclarenscottsdale.com/used-vehicle-2024-porsche-911-c-2491/"
+    "https://tacticalfleet.com/inventory/Used-2023-Porsche-718%20Cayman-GT4%20RS-WP0AE2A84PS280588"
    ]
   },
   {
-   "key": "WP0AC2A93TS287668",
-   "vin": "WP0AC2A93TS287668",
+   "key": "WP0AE2A82PS280136",
+   "vin": "WP0AE2A82PS280136",
+   "title": "2023 718 Cayman GT4 RS",
+   "reason": "New listing",
+   "category": "lead",
+   "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Clean accident history",
+   "checks": [
+    {
+     "label": "Target model",
+     "status": "pass",
+     "provenance": "listing + VIN"
+    },
+    {
+     "label": "Front axle lift",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "Under $225,000",
+     "status": "pass",
+     "provenance": "MarketCheck dealer feed"
+    },
+    {
+     "label": "Clean accident history",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "No documented track use",
+     "status": "pass",
+     "provenance": "listing text scan"
+    }
+   ],
+   "price": 211990.0,
+   "mileage": 4169,
+   "transmission": "pdk",
+   "exterior": "GT Silver Metallic",
+   "interior": "Black",
+   "cpo": false,
+   "cpo_label": "not CPO",
+   "seats": "bucket",
+   "weissach": true,
+   "pccb": true,
+   "seller": "D&c Motor Company",
+   "location": "Oak Grove, OR",
+   "distance_miles": 1990,
+   "score": 74,
+   "strengths": [
+    "Mileage for its age: 4,169 mi at ~4.1 yrs; your own pace would put it near 17,993 mi",
+    "Exterior colour: GT Silver Metallic (silver)",
+    "Interior colour: Black (black)",
+    "Transmission: PDK"
+   ],
+   "misses": [
+    "Seats: Full bucket seats (acceptable, not preferred)",
+    "No Weissach Package: Has the Weissach Package",
+    "CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)",
+    "Seller & documentation: independent dealer"
+   ],
+   "otd_total": 229088.06,
+   "deal": {
+    "rating": "fair",
+    "delta_pct": 0.0116,
+    "n": 44,
+    "confidence": "moderate",
+    "fair_low": 202634,
+    "fair_high": 218983
+   },
+   "photo": "http://cdn-ds.com/stock/2023-Porsche-718-Cayman-GT4-RS-Weissach-Package-CCB-Forged-Magnesium-Wheels-Portland-OR/seo/VAMP15926-WP0AE2A82PS280136/sz_1/a80e03de80efc7c785dd9fd7f47258af.jpg",
+   "photo_count": 37,
+   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A82PS280136",
+   "source_urls": [
+    "https://www.dcmotorcompany.com/vehicle-details/2023-porsche-718-cayman-gt4-rs-weissach-package-/-ccb-/-forged-magnesium-wheels-for-sale-portland-or-66213813"
+   ]
+  },
+  {
+   "key": "WP0AC2A98TS289139",
+   "vin": "WP0AC2A98TS289139",
    "title": "2026 911 GT3",
    "reason": "New listing",
    "category": "lead",
@@ -663,49 +662,286 @@
     }
    ],
    "price": null,
-   "mileage": 44,
+   "mileage": 2476,
    "transmission": null,
-   "exterior": "Slate Grey Neo",
-   "interior": "Red",
+   "exterior": "Silver",
+   "interior": "Undefined",
    "cpo": false,
    "cpo_label": "not CPO",
    "seats": null,
    "weissach": null,
    "pccb": null,
-   "seller": "Koenigsegg Charlotte",
-   "location": "Charlotte, NC",
-   "distance_miles": 1211,
-   "score": 71,
+   "seller": "Porsche North Miami",
+   "location": "North Miami, FL",
+   "distance_miles": 1301,
+   "score": 72,
    "strengths": [
-    "Mileage for its age: 44 mi at ~1.1 yrs; your own pace would put it near 5,990 mi",
-    "Exterior colour: Slate Grey Neo (gray)"
+    "Mileage for its age: 2,476 mi at ~1.1 yrs; your own pace would put it near 5,990 mi",
+    "Exterior colour: Silver (silver)"
    ],
    "misses": [
-    "Interior colour: Red (red) is outside black/beige/tan",
+    "Interior colour: Undefined (other) is outside black/beige/tan",
     "Seats: Seat type not documented",
-    "Seller & documentation: independent dealer",
-    "Distance from Austin, TX: ~1,211 road miles (fly-and-drive or enclosed transport)"
+    "Seller & documentation: Porsche dealer",
+    "Distance from Austin, TX: ~1,301 road miles (fly-and-drive or enclosed transport)"
    ],
    "otd_total": null,
    "deal": {
     "rating": null,
     "delta_pct": null,
-    "n": 156,
+    "n": 159,
     "confidence": "insufficient",
     "fair_low": null,
     "fair_high": null
    },
-   "photo": "https://www.koenigseggnc.com/wp-content/themes/aanWordpress/images/ina_l.jpg",
+   "photo": "https://www.porsche-northmiami.com/wp-content/plugins/di-porsche-oem-plugin/assets/images/Porsche-OEM-Coming-Soon.jpg",
    "photo_count": 1,
-   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A93TS287668",
+   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A98TS289139",
    "source_urls": [
-    "https://www.koenigseggnc.com/used-vehicle-2026-porsche-911-gt3-c-5302/"
+    "https://www.porsche-northmiami.com/inventory/used-2026-porsche-911-gt3-rwd-2d-coupe-wp0ac2a98ts289139/"
    ]
   },
   {
-   "key": "WP0CE2A88RK240252",
-   "vin": "WP0CE2A88RK240252",
-   "title": "2024 718 Spyder RS",
+   "key": "WP0AC2A94NS268758",
+   "vin": "WP0AC2A94NS268758",
+   "title": "2022 911 GT3",
+   "reason": "New listing",
+   "category": "lead",
+   "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history",
+   "checks": [
+    {
+     "label": "Target model",
+     "status": "pass",
+     "provenance": "listing + VIN"
+    },
+    {
+     "label": "Front axle lift",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "Under $250,000",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "At most 35,000 miles",
+     "status": "pass",
+     "provenance": null
+    },
+    {
+     "label": "Clean accident history",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "No documented track use",
+     "status": "pass",
+     "provenance": "listing text scan"
+    }
+   ],
+   "price": null,
+   "mileage": 9285,
+   "transmission": null,
+   "exterior": "Blue",
+   "interior": "Black",
+   "cpo": false,
+   "cpo_label": "not CPO",
+   "seats": null,
+   "weissach": null,
+   "pccb": null,
+   "seller": "SPADY AUTO GROUP",
+   "location": "Scottsdale, AZ",
+   "distance_miles": 1007,
+   "score": 69,
+   "strengths": [
+    "Mileage for its age: 9,285 mi at ~5.1 yrs; your own pace would put it near 21,990 mi",
+    "Exterior colour: Blue (blue)",
+    "Interior colour: Black (black)"
+   ],
+   "misses": [
+    "Seats: Seat type not documented",
+    "CPO / warranty: Not CPO; factory warranty likely expired",
+    "Seller & documentation: independent dealer",
+    "Distance from Austin, TX: ~1,007 road miles (fly-and-drive or enclosed transport)"
+   ],
+   "otd_total": null,
+   "deal": {
+    "rating": null,
+    "delta_pct": null,
+    "n": 178,
+    "confidence": "insufficient",
+    "fair_low": null,
+    "fair_high": null
+   },
+   "photo": "https://www.spadyauto.com/img/placeholder-vehicle.webp",
+   "photo_count": 1,
+   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A94NS268758",
+   "source_urls": [
+    "https://www.spadyauto.com/inventory/2022-porsche-911-wp0ac2a94ns268758"
+   ]
+  },
+  {
+   "key": "WP0AC2A90JS177190",
+   "vin": "WP0AC2A90JS177190",
+   "title": "2018 911 GT3",
+   "reason": "New listing",
+   "category": "lead",
+   "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history",
+   "checks": [
+    {
+     "label": "Target model",
+     "status": "pass",
+     "provenance": "listing + VIN"
+    },
+    {
+     "label": "Front axle lift",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "Under $250,000",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "At most 35,000 miles",
+     "status": "pass",
+     "provenance": null
+    },
+    {
+     "label": "Clean accident history",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "No documented track use",
+     "status": "pass",
+     "provenance": "listing text scan"
+    }
+   ],
+   "price": null,
+   "mileage": 18828,
+   "transmission": null,
+   "exterior": null,
+   "interior": null,
+   "cpo": false,
+   "cpo_label": "not CPO",
+   "seats": null,
+   "weissach": null,
+   "pccb": null,
+   "seller": "Tactical Fleet Dallas",
+   "location": "Farmers Branch, TX",
+   "distance_miles": 225,
+   "score": 65,
+   "strengths": [
+    "Mileage for its age: 18,828 mi at ~9.1 yrs; your own pace would put it near 37,990 mi",
+    "Distance from Austin, TX: ~225 road miles (drivable)"
+   ],
+   "misses": [
+    "Exterior colour: Colour not published",
+    "Interior colour: Interior not published",
+    "Seats: Seat type not documented",
+    "CPO / warranty: Not CPO; factory warranty likely expired"
+   ],
+   "otd_total": null,
+   "deal": {
+    "rating": null,
+    "delta_pct": null,
+    "n": 75,
+    "confidence": "insufficient",
+    "fair_low": null,
+    "fair_high": null
+   },
+   "photo": "https://images.app.ridemotive.com/prj9qyoqdon54pzgozrdln863olf",
+   "photo_count": 4,
+   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A90JS177190",
+   "source_urls": [
+    "https://tacticalfleet.com/inventory/Used-2018-Porsche-911-GT3-WP0AC2A90JS177190"
+   ]
+  },
+  {
+   "key": "WP0AC2A99TS287917",
+   "vin": "WP0AC2A99TS287917",
+   "title": "2026 911 GT3",
+   "reason": "New listing",
+   "category": "lead",
+   "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history",
+   "checks": [
+    {
+     "label": "Target model",
+     "status": "pass",
+     "provenance": "listing + VIN"
+    },
+    {
+     "label": "Front axle lift",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "Under $250,000",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "At most 35,000 miles",
+     "status": "pass",
+     "provenance": null
+    },
+    {
+     "label": "Clean accident history",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "No documented track use",
+     "status": "pass",
+     "provenance": "listing text scan"
+    }
+   ],
+   "price": null,
+   "mileage": 1432,
+   "transmission": null,
+   "exterior": "Oak Green Neo",
+   "interior": null,
+   "cpo": false,
+   "cpo_label": "not CPO",
+   "seats": "bucket",
+   "weissach": null,
+   "pccb": null,
+   "seller": "Paul Miller Auto Group",
+   "location": "West Caldwell, NJ",
+   "distance_miles": 1755,
+   "score": 65,
+   "strengths": [
+    "Mileage for its age: 1,432 mi at ~1.1 yrs; your own pace would put it near 5,990 mi"
+   ],
+   "misses": [
+    "Exterior colour: Oak Green Neo (green) is outside white/silver/blue/gray/black",
+    "Interior colour: Interior not published",
+    "Seats: Full bucket seats (acceptable, not preferred)",
+    "Seller & documentation: independent dealer"
+   ],
+   "otd_total": null,
+   "deal": {
+    "rating": null,
+    "delta_pct": null,
+    "n": 159,
+    "confidence": "insufficient",
+    "fair_low": null,
+    "fair_high": null
+   },
+   "photo": "https://images.dealer.com/autodata/us/color/2026/USD60PRC017B0/N4.jpg",
+   "photo_count": 1,
+   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A99TS287917",
+   "source_urls": [
+    "https://www.paulmiller.com/used/Porsche/2026-Porsche-911-new-jersey-d75efb7bac18540aa274e966c33d8b7c.htm"
+   ]
+  },
+  {
+   "key": "WP0AE2A87PS281055",
+   "vin": "WP0AE2A87PS281055",
+   "title": "2023 718 Cayman GT4 RS",
    "reason": "New listing",
    "category": "lead",
    "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Under $225,000, Clean accident history",
@@ -739,23 +975,23 @@
    "price": null,
    "mileage": null,
    "transmission": "pdk",
-   "exterior": null,
+   "exterior": "Ruby Star",
    "interior": null,
    "cpo": false,
    "cpo_label": "not CPO",
    "seats": null,
    "weissach": null,
    "pccb": null,
-   "seller": "Marshall Goldman Cleveland",
-   "location": "Warrensville Heights, OH",
-   "distance_miles": 1390,
-   "score": 58,
+   "seller": "Graham Rahal Performance",
+   "location": "Zionsville, IN",
+   "distance_miles": 1088,
+   "score": 54,
    "strengths": [
     "Transmission: PDK"
    ],
    "misses": [
     "Mileage for its age: Mileage or year unknown",
-    "Exterior colour: Colour not published",
+    "Exterior colour: Ruby Star (purple) is outside white/silver/blue/gray/black",
     "Interior colour: Interior not published",
     "Seats: Seat type not documented"
    ],
@@ -763,20 +999,96 @@
    "deal": {
     "rating": null,
     "delta_pct": null,
-    "n": 55,
+    "n": 68,
     "confidence": "insufficient",
     "fair_low": null,
     "fair_high": null
    },
-   "photo": "https://www.marshallgoldmanoh.com/wp-content/themes/aanWordpress/images/ina_f.jpg",
+   "photo": "https://cdn.dealerspike.com/imglib/v1/200x150/imglib/Assets/Inventory/A3/E0/A3E0206B-2AF4-4F5A-8A4A-95357642E935.jpg",
    "photo_count": 2,
-   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0CE2A88RK240252",
+   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A87PS281055",
    "source_urls": [
-    "https://www.marshallgoldmanoh.com/used-vehicle-2024-porsche-718-spyder-rs-c-6268/"
+    "https://www.grahamrahalperformance.com/USED-Inventory-2023-Porsche-Car-718-Cayman-GT4-RS-grahamrahalperformance-19399273?ref=list"
+   ]
+  },
+  {
+   "key": "WP0AC2A95TS287588",
+   "vin": "WP0AC2A95TS287588",
+   "title": "2026 911 GT3",
+   "reason": "New listing",
+   "category": "lead",
+   "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, At most 35,000 miles, Clean accident history",
+   "checks": [
+    {
+     "label": "Target model",
+     "status": "pass",
+     "provenance": "listing + VIN"
+    },
+    {
+     "label": "Front axle lift",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "Under $250,000",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "At most 35,000 miles",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "Clean accident history",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "No documented track use",
+     "status": "pass",
+     "provenance": "listing text scan"
+    }
+   ],
+   "price": null,
+   "mileage": null,
+   "transmission": null,
+   "exterior": "Other",
+   "interior": null,
+   "cpo": false,
+   "cpo_label": "not CPO",
+   "seats": null,
+   "weissach": null,
+   "pccb": null,
+   "seller": "Murgado Automotive Group",
+   "location": "Chicago, IL",
+   "distance_miles": 1147,
+   "score": 53,
+   "strengths": [],
+   "misses": [
+    "Mileage for its age: Mileage or year unknown",
+    "Exterior colour: Other (other) is outside white/silver/blue/gray/black",
+    "Interior colour: Interior not published",
+    "Seats: Seat type not documented"
+   ],
+   "otd_total": null,
+   "deal": {
+    "rating": null,
+    "delta_pct": null,
+    "n": 159,
+    "confidence": "insufficient",
+    "fair_low": null,
+    "fair_high": null
+   },
+   "photo": "https://content.homenetiol.com/2000157/2065512/0x0/803830abd964498981274c6c775f66fa.jpg",
+   "photo_count": 40,
+   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A95TS287588",
+   "source_urls": [
+    "https://www.murgadoautomotivegroup.com/viewdetails/used/wp0ac2a95ts287588/2026-porsche-911-2dr-car"
    ]
   }
  ],
  "site_url": "https://ericwilson-ux.github.io/porsche-gt-scout",
- "html": "<div style=\"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:#0d0d0e;color:#f2f0ea;padding:24px\">\n<div style=\"max-width:640px;margin:0 auto\">\n<div style=\"font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c8ff2e\">GT Scout &middot; 2026-11-14</div>\n<h1 style=\"font-size:24px;margin:6px 0 20px;color:#f2f0ea\">10 new qualifying listings</h1><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://porschelongbeach.com/wp-content/plugins/di-porsche-oem-plugin/assets/images/Porsche-OEM-Coming-Soon.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2018 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$239,994</b> &middot; 11,308 mi &middot; MANUAL &middot; certified per dealer feed</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Sapphire Blue Metallic over Black<br>Porsche Long Beach &middot; Long Beach, CA &middot; ~1,424 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $250,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">82<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$257,832</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Great deal (-19.5% vs 30 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 11,308 mi at ~9.1 yrs; your own pace would put it near 37,990 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Sapphire Blue Metallic (blue)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: 6-speed manual (your slight preference)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: Porsche dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,424 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A94JS175359\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://images.dealer.com/autodata/us/color/2024/USD40PRC161E0/A1.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2024 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$219,880</b> &middot; 1,418 mi &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Black over Black<br>Mercedes-benz Of Pittsburgh &middot; Pittsburgh, PA &middot; ~1,429 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; seller statement</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $225,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">76<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$236,852</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Fair deal (-0.5% vs 66 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 1,418 mi at ~3.1 yrs; your own pace would put it near 13,996 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Has the Weissach Package</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,429 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A88RK274909\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://www.mildcollection.com/imagetag/544/main/l/Used-2026-Porsche-911-GT3-Touring.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2026 911 GT3 Touring</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 2,268 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Paint To Sample Black Olive Green over Cognac<br>M.i.l.d Collection &middot; North Miami Beach, FL &middot; ~1,301 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $250,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">77<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 2,268 mi at ~1.1 yrs; your own pace would put it near 5,990 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Paint To Sample Black Olive Green (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Cognac (tan)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Full bucket seats (acceptable, not preferred)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,301 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A90TS290088\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 91 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://pictures.dealer.com/w/webuyitcarscavecreek/0580/d341b91c10de6f5de23fd8ab2b77a9c9x.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2023 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$204,104</b> &middot; 4,660 mi &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">GT Silver over Black<br>Auto Boom &middot; Scottsdale, AZ &middot; ~1,007 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; seller statement</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $225,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">74<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$219,950</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Good deal (-2.1% vs 43 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 4,660 mi at ~4.1 yrs; your own pace would put it near 17,993 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: GT Silver (silver)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Full bucket seats (acceptable, not preferred)</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Has the Weissach Package</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A81PS280354\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 32 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://images.dealer.com/autodata/us/color/2024/USD40PRC161E0/G1.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2024 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 8,894 mi &middot; PDK &middot; certified per dealer feed</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Red over Black<br>Sunset Imports &middot; Beaverton, OR &middot; ~2,004 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; seller statement</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $225,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">70<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 8,894 mi at ~3.1 yrs; your own pace would put it near 13,996 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Exterior colour: Red (red) is outside white/silver/blue/gray/black</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Full bucket seats (acceptable, not preferred)</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Has the Weissach Package</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A85RK274320\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://media.chromedata.com/MediaGallery/media/MjkzOTU4Xk1lZGlhIEdhbGxlcnk/qcUXVEbv3QRnIJy3YPcb1vZPpPrwI8KFu9HxeezIlFlgz0d2teKUgGnUTLJZrMf0uyTLBzMnbM1igF4v9TXrtFbrqsiBfCeMbDXjVFM730JEQRODlG_V7_jqAa5St-jEQoIFf3eFbH9ERQUU8ZZqdTj2eLipQr1jq8LPayPuwyw0l6BE27AH2g/cc_2025PRC190011_01_640_U2.png\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2025 718 Spyder RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 2,436 mi &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">GT Silver Metallic over ?<br>Land Rover Louisville &middot; Louisville, KY &middot; ~1,033 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $225,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">74<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 2,436 mi at ~2.1 yrs; your own pace would put it near 9,987 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: GT Silver Metallic (silver)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Interior not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Weissach status not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0CE2A8XSK237262\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 3 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://vehicle-images.carscommerce.inc/c4c0-11002414/WP0AC2A98TS287438/2562053e4df7b7baa341ecb32a00092c.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2026 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 3,236 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Blue over ?<br>Acura Of Wichita &middot; Wichita, KS &middot; ~602 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $250,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">73<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 3,236 mi at ~1.1 yrs; your own pace would put it near 5,990 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Blue (blue)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Interior not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~602 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A98TS287438\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 3 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://www.mclarenscottsdale.com/wp-content/themes/aanWordpress/images/ina_l.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2024 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 6,089 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">GREY over ?<br>Mclaren Scottsdale &middot; Scottsdale, AZ &middot; ~1,008 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $250,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">72<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 6,089 mi at ~3.1 yrs; your own pace would put it near 13,996 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: GREY (gray)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Interior not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,008 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A92RS263001\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://www.koenigseggnc.com/wp-content/themes/aanWordpress/images/ina_l.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2026 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 44 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Slate Grey Neo over Red<br>Koenigsegg Charlotte &middot; Charlotte, NC &middot; ~1,211 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $250,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">71<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 44 mi at ~1.1 yrs; your own pace would put it near 5,990 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Slate Grey Neo (gray)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Red (red) is outside black/beige/tan</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,211 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A93TS287668\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://www.marshallgoldmanoh.com/wp-content/themes/aanWordpress/images/ina_f.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2024 718 Spyder RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; mileage n/a &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">? over ?<br>Marshall Goldman Cleveland &middot; Warrensville Heights, OH &middot; ~1,390 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $225,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">58<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Mileage for its age: Mileage or year unknown</div><div style=\"color:#ffb020;font-size:13px\">&minus; Exterior colour: Colour not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Interior not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0CE2A88RK240252\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 2 PHOTOS</a></div>\n</div></div><div style=\"font-size:11px;color:#8b887f\">Sent only on days with newly qualifying cars. Asking prices are not sale prices.\nOut-the-door figures are estimates. <a style=\"color:#8b887f\" href=\"https://ericwilson-ux.github.io/porsche-gt-scout\">Open GT Scout</a></div></div></div>",
- "text": "[PGT-2026-11-14] 10 new qualifying Porsche GT listings (needs verification)\n\n2018 911 GT3 - $239,994 - 11,308 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Clean accident history\n  Sapphire Blue Metallic / Black | MANUAL | certified per dealer feed\n  Porsche Long Beach - Long Beach, CA (~1424 mi from Austin)\n  Preference match 82/100 | Est. out-the-door $257,832\n  + Mileage for its age: 11,308 mi at ~9.1 yrs; your own pace would put it near 37,990 mi\n  + Exterior colour: Sapphire Blue Metallic (blue)\n  + Interior colour: Black (black)\n  + Transmission: 6-speed manual (your slight preference)\n  - Seats: Seat type not documented\n  - Seller & documentation: Porsche dealer\n  - Distance from Austin, TX: ~1,424 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A94JS175359\n\n2024 718 Cayman GT4 RS - $219,880 - 1,418 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Clean accident history\n  Black / Black | PDK | not CPO\n  Mercedes-benz Of Pittsburgh - Pittsburgh, PA (~1429 mi from Austin)\n  Preference match 76/100 | Est. out-the-door $236,852\n  + Mileage for its age: 1,418 mi at ~3.1 yrs; your own pace would put it near 13,996 mi\n  + Exterior colour: Black (black)\n  + Interior colour: Black (black)\n  + Transmission: PDK\n  - Seats: Seat type not documented\n  - No Weissach Package: Has the Weissach Package\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,429 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A88RK274909\n\n2026 911 GT3 Touring - n/a - 2,268 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history\n  Paint To Sample Black Olive Green / Cognac | ? | not CPO\n  M.i.l.d Collection - North Miami Beach, FL (~1301 mi from Austin)\n  Preference match 77/100 | Est. out-the-door n/a\n  + Mileage for its age: 2,268 mi at ~1.1 yrs; your own pace would put it near 5,990 mi\n  + Exterior colour: Paint To Sample Black Olive Green (black)\n  + Interior colour: Cognac (tan)\n  - Seats: Full bucket seats (acceptable, not preferred)\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,301 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A90TS290088\n\n2023 718 Cayman GT4 RS - $204,104 - 4,660 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Clean accident history\n  GT Silver / Black | PDK | not CPO\n  Auto Boom - Scottsdale, AZ (~1007 mi from Austin)\n  Preference match 74/100 | Est. out-the-door $219,950\n  + Mileage for its age: 4,660 mi at ~4.1 yrs; your own pace would put it near 17,993 mi\n  + Exterior colour: GT Silver (silver)\n  + Interior colour: Black (black)\n  + Transmission: PDK\n  - Seats: Full bucket seats (acceptable, not preferred)\n  - No Weissach Package: Has the Weissach Package\n  - CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)\n  - Seller & documentation: independent dealer\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A81PS280354\n\n2024 718 Cayman GT4 RS - n/a - 8,894 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Under $225,000, Clean accident history\n  Red / Black | PDK | certified per dealer feed\n  Sunset Imports - Beaverton, OR (~2004 mi from Austin)\n  Preference match 70/100 | Est. out-the-door n/a\n  + Mileage for its age: 8,894 mi at ~3.1 yrs; your own pace would put it near 13,996 mi\n  + Interior colour: Black (black)\n  + Transmission: PDK\n  - Exterior colour: Red (red) is outside white/silver/blue/gray/black\n  - Seats: Full bucket seats (acceptable, not preferred)\n  - No Weissach Package: Has the Weissach Package\n  - Seller & documentation: independent dealer\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A85RK274320\n\n2025 718 Spyder RS - n/a - 2,436 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $225,000, Clean accident history\n  GT Silver Metallic / ? | PDK | not CPO\n  Land Rover Louisville - Louisville, KY (~1033 mi from Austin)\n  Preference match 74/100 | Est. out-the-door n/a\n  + Mileage for its age: 2,436 mi at ~2.1 yrs; your own pace would put it near 9,987 mi\n  + Exterior colour: GT Silver Metallic (silver)\n  + Transmission: PDK\n  - Interior colour: Interior not published\n  - Seats: Seat type not documented\n  - No Weissach Package: Weissach status not documented\n  - Seller & documentation: independent dealer\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0CE2A8XSK237262\n\n2026 911 GT3 - n/a - 3,236 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history\n  Blue / ? | ? | not CPO\n  Acura Of Wichita - Wichita, KS (~602 mi from Austin)\n  Preference match 73/100 | Est. out-the-door n/a\n  + Mileage for its age: 3,236 mi at ~1.1 yrs; your own pace would put it near 5,990 mi\n  + Exterior colour: Blue (blue)\n  - Interior colour: Interior not published\n  - Seats: Seat type not documented\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~602 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A98TS287438\n\n2024 911 GT3 - n/a - 6,089 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history\n  GREY / ? | ? | not CPO\n  Mclaren Scottsdale - Scottsdale, AZ (~1008 mi from Austin)\n  Preference match 72/100 | Est. out-the-door n/a\n  + Mileage for its age: 6,089 mi at ~3.1 yrs; your own pace would put it near 13,996 mi\n  + Exterior colour: GREY (gray)\n  - Interior colour: Interior not published\n  - Seats: Seat type not documented\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,008 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A92RS263001\n\n2026 911 GT3 - n/a - 44 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history\n  Slate Grey Neo / Red | ? | not CPO\n  Koenigsegg Charlotte - Charlotte, NC (~1211 mi from Austin)\n  Preference match 71/100 | Est. out-the-door n/a\n  + Mileage for its age: 44 mi at ~1.1 yrs; your own pace would put it near 5,990 mi\n  + Exterior colour: Slate Grey Neo (gray)\n  - Interior colour: Red (red) is outside black/beige/tan\n  - Seats: Seat type not documented\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,211 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A93TS287668\n\n2024 718 Spyder RS - n/a\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $225,000, Clean accident history\n  ? / ? | PDK | not CPO\n  Marshall Goldman Cleveland - Warrensville Heights, OH (~1390 mi from Austin)\n  Preference match 58/100 | Est. out-the-door n/a\n  + Transmission: PDK\n  - Mileage for its age: Mileage or year unknown\n  - Exterior colour: Colour not published\n  - Interior colour: Interior not published\n  - Seats: Seat type not documented\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0CE2A88RK240252\n"
+ "html": "<div style=\"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:#0d0d0e;color:#f2f0ea;padding:24px\">\n<div style=\"max-width:640px;margin:0 auto\">\n<div style=\"font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c8ff2e\">GT Scout &middot; 2026-11-14</div>\n<h1 style=\"font-size:24px;margin:6px 0 20px;color:#f2f0ea\">14 new qualifying listings</h1><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://porschelongbeach.com/wp-content/plugins/di-porsche-oem-plugin/assets/images/Porsche-OEM-Coming-Soon.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2018 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$239,994</b> &middot; 11,326 mi &middot; MANUAL &middot; certified per dealer feed</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Sapphire Blue Metallic over Black<br>Porsche Long Beach &middot; Long Beach, CA &middot; ~1,424 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $250,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">82<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$257,885</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Great deal (-19.5% vs 30 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 11,326 mi at ~9.1 yrs; your own pace would put it near 37,990 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Sapphire Blue Metallic (blue)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: 6-speed manual (your slight preference)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: Porsche dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,424 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A94JS175359\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://pictures.dealer.com/b/bobyrahalmercedes/0131/2a7e655bd1512d73206d2af9cf881cd9x.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2024 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$219,880</b> &middot; 1,418 mi &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Black over Black<br>Mercedes-benz Of Pittsburgh &middot; Pittsburgh, PA &middot; ~1,429 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; seller statement</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $225,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">76<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$236,852</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Fair deal (-0.1% vs 67 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 1,418 mi at ~3.1 yrs; your own pace would put it near 13,996 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Has the Weissach Package</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer, one owner</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,429 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A88RK274909\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 4 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://www.mildcollection.com/imagetag/544/main/l/Used-2026-Porsche-911-GT3-Touring.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2026 911 GT3 Touring</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 2,268 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Paint To Sample Black Olive Green over Cognac<br>M.i.l.d Collection &middot; North Miami Beach, FL &middot; ~1,301 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $250,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">77<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 2,268 mi at ~1.1 yrs; your own pace would put it near 5,990 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Paint To Sample Black Olive Green (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Cognac (tan)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Full bucket seats (acceptable, not preferred)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,301 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A90TS290088\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 91 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://pictures.dealer.com/w/webuyitcarscavecreek/0580/d341b91c10de6f5de23fd8ab2b77a9c9x.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2023 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$204,104</b> &middot; 4,660 mi &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">GT Silver over Black<br>Auto Boom &middot; Scottsdale, AZ &middot; ~1,007 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; seller statement</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $225,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">74<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$219,950</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Good deal (-2.3% vs 44 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 4,660 mi at ~4.1 yrs; your own pace would put it near 17,993 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: GT Silver (silver)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Full bucket seats (acceptable, not preferred)</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Has the Weissach Package</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A81PS280354\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 32 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://images.dealer.com/autodata/us/color/2024/USD40PRC161E0/G1.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2024 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 8,894 mi &middot; PDK &middot; certified per dealer feed</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Guards Red over Black<br>Sunset Imports &middot; Beaverton, OR &middot; ~2,004 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; seller statement</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $225,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">70<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 8,894 mi at ~3.1 yrs; your own pace would put it near 13,996 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Exterior colour: Guards Red (red) is outside white/silver/blue/gray/black</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Full bucket seats (acceptable, not preferred)</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Has the Weissach Package</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A85RK274320\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://vehicle-images.carscommerce.inc/c4c0-11002414/WP0AC2A98TS287438/2562053e4df7b7baa341ecb32a00092c.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2026 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 3,236 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Blue over ?<br>Acura Of Wichita &middot; Wichita, KS &middot; ~602 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $250,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">73<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 3,236 mi at ~1.1 yrs; your own pace would put it near 5,990 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Blue (blue)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Interior not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~602 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A98TS287438\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 3 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://images.app.ridemotive.com/88xqzhphy13mrmhga71mz0nmlemc\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2023 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 5,716 mi &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">White over ?<br>Tactical Fleet Dallas &middot; Farmers Branch, TX &middot; ~225 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $225,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">78<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 5,716 mi at ~4.1 yrs; your own pace would put it near 17,993 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: White (white)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#b9b6ad;font-size:13px\">+ Distance from Austin, TX: ~225 road miles (drivable)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Interior not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Weissach status not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A84PS280588\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"http://cdn-ds.com/stock/2023-Porsche-718-Cayman-GT4-RS-Weissach-Package-CCB-Forged-Magnesium-Wheels-Portland-OR/seo/VAMP15926-WP0AE2A82PS280136/sz_1/a80e03de80efc7c785dd9fd7f47258af.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2023 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$211,990</b> &middot; 4,169 mi &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">GT Silver Metallic over Black<br>D&amp;c Motor Company &middot; Oak Grove, OR &middot; ~1,990 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $225,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">74<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$229,088</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Fair deal (+1.2% vs 44 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 4,169 mi at ~4.1 yrs; your own pace would put it near 17,993 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: GT Silver Metallic (silver)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Full bucket seats (acceptable, not preferred)</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Has the Weissach Package</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A82PS280136\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 37 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://www.porsche-northmiami.com/wp-content/plugins/di-porsche-oem-plugin/assets/images/Porsche-OEM-Coming-Soon.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2026 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 2,476 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Silver over Undefined<br>Porsche North Miami &middot; North Miami, FL &middot; ~1,301 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $250,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">72<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 2,476 mi at ~1.1 yrs; your own pace would put it near 5,990 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Silver (silver)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Undefined (other) is outside black/beige/tan</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: Porsche dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,301 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A98TS289139\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://www.spadyauto.com/img/placeholder-vehicle.webp\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2022 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 9,285 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Blue over Black<br>SPADY AUTO GROUP &middot; Scottsdale, AZ &middot; ~1,007 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $250,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">69<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 9,285 mi at ~5.1 yrs; your own pace would put it near 21,990 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Blue (blue)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; factory warranty likely expired</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,007 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A94NS268758\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://images.app.ridemotive.com/prj9qyoqdon54pzgozrdln863olf\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2018 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 18,828 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">? over ?<br>Tactical Fleet Dallas &middot; Farmers Branch, TX &middot; ~225 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $250,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">65<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 18,828 mi at ~9.1 yrs; your own pace would put it near 37,990 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Distance from Austin, TX: ~225 road miles (drivable)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Exterior colour: Colour not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Interior not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; factory warranty likely expired</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A90JS177190\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 4 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://images.dealer.com/autodata/us/color/2026/USD60PRC017B0/N4.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2026 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 1,432 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Oak Green Neo over ?<br>Paul Miller Auto Group &middot; West Caldwell, NJ &middot; ~1,755 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $250,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">65<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 1,432 mi at ~1.1 yrs; your own pace would put it near 5,990 mi</div><div style=\"color:#ffb020;font-size:13px\">&minus; Exterior colour: Oak Green Neo (green) is outside white/silver/blue/gray/black</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Interior not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Full bucket seats (acceptable, not preferred)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A99TS287917\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://cdn.dealerspike.com/imglib/v1/200x150/imglib/Assets/Inventory/A3/E0/A3E0206B-2AF4-4F5A-8A4A-95357642E935.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2023 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; mileage n/a &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Ruby Star over ?<br>Graham Rahal Performance &middot; Zionsville, IN &middot; ~1,088 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $225,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">54<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Mileage for its age: Mileage or year unknown</div><div style=\"color:#ffb020;font-size:13px\">&minus; Exterior colour: Ruby Star (purple) is outside white/silver/blue/gray/black</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Interior not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A87PS281055\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 2 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://content.homenetiol.com/2000157/2065512/0x0/803830abd964498981274c6c775f66fa.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2026 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; mileage n/a &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Other over ?<br>Murgado Automotive Group &middot; Chicago, IL &middot; ~1,147 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $250,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">53<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#ffb020;font-size:13px\">&minus; Mileage for its age: Mileage or year unknown</div><div style=\"color:#ffb020;font-size:13px\">&minus; Exterior colour: Other (other) is outside white/silver/blue/gray/black</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Interior not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A95TS287588\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 40 PHOTOS</a></div>\n</div></div><div style=\"font-size:11px;color:#8b887f\">Sent only on days with newly qualifying cars. Asking prices are not sale prices.\nOut-the-door figures are estimates. <a style=\"color:#8b887f\" href=\"https://ericwilson-ux.github.io/porsche-gt-scout\">Open GT Scout</a></div></div></div>",
+ "text": "[PGT-2026-11-14] 14 new qualifying Porsche GT listings (needs verification)\n\n2018 911 GT3 - $239,994 - 11,326 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Clean accident history\n  Sapphire Blue Metallic / Black | MANUAL | certified per dealer feed\n  Porsche Long Beach - Long Beach, CA (~1424 mi from Austin)\n  Preference match 82/100 | Est. out-the-door $257,885\n  + Mileage for its age: 11,326 mi at ~9.1 yrs; your own pace would put it near 37,990 mi\n  + Exterior colour: Sapphire Blue Metallic (blue)\n  + Interior colour: Black (black)\n  + Transmission: 6-speed manual (your slight preference)\n  - Seats: Seat type not documented\n  - Seller & documentation: Porsche dealer\n  - Distance from Austin, TX: ~1,424 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A94JS175359\n\n2024 718 Cayman GT4 RS - $219,880 - 1,418 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Clean accident history\n  Black / Black | PDK | not CPO\n  Mercedes-benz Of Pittsburgh - Pittsburgh, PA (~1429 mi from Austin)\n  Preference match 76/100 | Est. out-the-door $236,852\n  + Mileage for its age: 1,418 mi at ~3.1 yrs; your own pace would put it near 13,996 mi\n  + Exterior colour: Black (black)\n  + Interior colour: Black (black)\n  + Transmission: PDK\n  - Seats: Seat type not documented\n  - No Weissach Package: Has the Weissach Package\n  - Seller & documentation: independent dealer, one owner\n  - Distance from Austin, TX: ~1,429 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A88RK274909\n\n2026 911 GT3 Touring - n/a - 2,268 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history\n  Paint To Sample Black Olive Green / Cognac | ? | not CPO\n  M.i.l.d Collection - North Miami Beach, FL (~1301 mi from Austin)\n  Preference match 77/100 | Est. out-the-door n/a\n  + Mileage for its age: 2,268 mi at ~1.1 yrs; your own pace would put it near 5,990 mi\n  + Exterior colour: Paint To Sample Black Olive Green (black)\n  + Interior colour: Cognac (tan)\n  - Seats: Full bucket seats (acceptable, not preferred)\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,301 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A90TS290088\n\n2023 718 Cayman GT4 RS - $204,104 - 4,660 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Clean accident history\n  GT Silver / Black | PDK | not CPO\n  Auto Boom - Scottsdale, AZ (~1007 mi from Austin)\n  Preference match 74/100 | Est. out-the-door $219,950\n  + Mileage for its age: 4,660 mi at ~4.1 yrs; your own pace would put it near 17,993 mi\n  + Exterior colour: GT Silver (silver)\n  + Interior colour: Black (black)\n  + Transmission: PDK\n  - Seats: Full bucket seats (acceptable, not preferred)\n  - No Weissach Package: Has the Weissach Package\n  - CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)\n  - Seller & documentation: independent dealer\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A81PS280354\n\n2024 718 Cayman GT4 RS - n/a - 8,894 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Under $225,000, Clean accident history\n  Guards Red / Black | PDK | certified per dealer feed\n  Sunset Imports - Beaverton, OR (~2004 mi from Austin)\n  Preference match 70/100 | Est. out-the-door n/a\n  + Mileage for its age: 8,894 mi at ~3.1 yrs; your own pace would put it near 13,996 mi\n  + Interior colour: Black (black)\n  + Transmission: PDK\n  - Exterior colour: Guards Red (red) is outside white/silver/blue/gray/black\n  - Seats: Full bucket seats (acceptable, not preferred)\n  - No Weissach Package: Has the Weissach Package\n  - Seller & documentation: independent dealer\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A85RK274320\n\n2026 911 GT3 - n/a - 3,236 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history\n  Blue / ? | ? | not CPO\n  Acura Of Wichita - Wichita, KS (~602 mi from Austin)\n  Preference match 73/100 | Est. out-the-door n/a\n  + Mileage for its age: 3,236 mi at ~1.1 yrs; your own pace would put it near 5,990 mi\n  + Exterior colour: Blue (blue)\n  - Interior colour: Interior not published\n  - Seats: Seat type not documented\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~602 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A98TS287438\n\n2023 718 Cayman GT4 RS - n/a - 5,716 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $225,000, Clean accident history\n  White / ? | PDK | not CPO\n  Tactical Fleet Dallas - Farmers Branch, TX (~225 mi from Austin)\n  Preference match 78/100 | Est. out-the-door n/a\n  + Mileage for its age: 5,716 mi at ~4.1 yrs; your own pace would put it near 17,993 mi\n  + Exterior colour: White (white)\n  + Transmission: PDK\n  + Distance from Austin, TX: ~225 road miles (drivable)\n  - Interior colour: Interior not published\n  - Seats: Seat type not documented\n  - No Weissach Package: Weissach status not documented\n  - CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A84PS280588\n\n2023 718 Cayman GT4 RS - $211,990 - 4,169 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Clean accident history\n  GT Silver Metallic / Black | PDK | not CPO\n  D&c Motor Company - Oak Grove, OR (~1990 mi from Austin)\n  Preference match 74/100 | Est. out-the-door $229,088\n  + Mileage for its age: 4,169 mi at ~4.1 yrs; your own pace would put it near 17,993 mi\n  + Exterior colour: GT Silver Metallic (silver)\n  + Interior colour: Black (black)\n  + Transmission: PDK\n  - Seats: Full bucket seats (acceptable, not preferred)\n  - No Weissach Package: Has the Weissach Package\n  - CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)\n  - Seller & documentation: independent dealer\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A82PS280136\n\n2026 911 GT3 - n/a - 2,476 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history\n  Silver / Undefined | ? | not CPO\n  Porsche North Miami - North Miami, FL (~1301 mi from Austin)\n  Preference match 72/100 | Est. out-the-door n/a\n  + Mileage for its age: 2,476 mi at ~1.1 yrs; your own pace would put it near 5,990 mi\n  + Exterior colour: Silver (silver)\n  - Interior colour: Undefined (other) is outside black/beige/tan\n  - Seats: Seat type not documented\n  - Seller & documentation: Porsche dealer\n  - Distance from Austin, TX: ~1,301 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A98TS289139\n\n2022 911 GT3 - n/a - 9,285 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history\n  Blue / Black | ? | not CPO\n  SPADY AUTO GROUP - Scottsdale, AZ (~1007 mi from Austin)\n  Preference match 69/100 | Est. out-the-door n/a\n  + Mileage for its age: 9,285 mi at ~5.1 yrs; your own pace would put it near 21,990 mi\n  + Exterior colour: Blue (blue)\n  + Interior colour: Black (black)\n  - Seats: Seat type not documented\n  - CPO / warranty: Not CPO; factory warranty likely expired\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,007 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A94NS268758\n\n2018 911 GT3 - n/a - 18,828 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history\n  ? / ? | ? | not CPO\n  Tactical Fleet Dallas - Farmers Branch, TX (~225 mi from Austin)\n  Preference match 65/100 | Est. out-the-door n/a\n  + Mileage for its age: 18,828 mi at ~9.1 yrs; your own pace would put it near 37,990 mi\n  + Distance from Austin, TX: ~225 road miles (drivable)\n  - Exterior colour: Colour not published\n  - Interior colour: Interior not published\n  - Seats: Seat type not documented\n  - CPO / warranty: Not CPO; factory warranty likely expired\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A90JS177190\n\n2026 911 GT3 - n/a - 1,432 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, Clean accident history\n  Oak Green Neo / ? | ? | not CPO\n  Paul Miller Auto Group - West Caldwell, NJ (~1755 mi from Austin)\n  Preference match 65/100 | Est. out-the-door n/a\n  + Mileage for its age: 1,432 mi at ~1.1 yrs; your own pace would put it near 5,990 mi\n  - Exterior colour: Oak Green Neo (green) is outside white/silver/blue/gray/black\n  - Interior colour: Interior not published\n  - Seats: Full bucket seats (acceptable, not preferred)\n  - Seller & documentation: independent dealer\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A99TS287917\n\n2023 718 Cayman GT4 RS - n/a\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $225,000, Clean accident history\n  Ruby Star / ? | PDK | not CPO\n  Graham Rahal Performance - Zionsville, IN (~1088 mi from Austin)\n  Preference match 54/100 | Est. out-the-door n/a\n  + Transmission: PDK\n  - Mileage for its age: Mileage or year unknown\n  - Exterior colour: Ruby Star (purple) is outside white/silver/blue/gray/black\n  - Interior colour: Interior not published\n  - Seats: Seat type not documented\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A87PS281055\n\n2026 911 GT3 - n/a\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $250,000, At most 35,000 miles, Clean accident history\n  Other / ? | ? | not CPO\n  Murgado Automotive Group - Chicago, IL (~1147 mi from Austin)\n  Preference match 53/100 | Est. out-the-door n/a\n  - Mileage for its age: Mileage or year unknown\n  - Exterior colour: Other (other) is outside white/silver/blue/gray/black\n  - Interior colour: Interior not published\n  - Seats: Seat type not documented\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A95TS287588\n"
 }
