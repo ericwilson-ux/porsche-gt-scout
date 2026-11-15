@@ -70,3 +70,10 @@ def clone(lst: Listing, **changes) -> Listing:
 # A second, synthetic vehicle used to exercise "new car" paths.  The VIN has a valid check digit.
 def synthetic(lst: Listing, vin: str, lid: str, **changes) -> Listing:
     return clone(lst, vin=vin, source_listing_id=lid, url=lst.url.replace(lst.source_listing_id, lid), **changes)
+
+
+@pytest.fixture
+def cfg_manual(cfg):
+    """The criteria with the optional one-gearbox rule switched on for the 991.2 (the search used it at first)."""
+    cfg["generation_rules"]["991.2"]["required_transmission"] = "manual"
+    return cfg

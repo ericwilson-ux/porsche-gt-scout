@@ -666,7 +666,12 @@ def data_quality(m: dict) -> dict:
 
 def rebuild_vehicles(con, cfg: dict, now: str, today: date | None = None, backfill: str | None = None) -> dict:
     """Re-merge and re-evaluate every vehicle.  `backfill` names a source whose first import is part of
-    this run: category changes it causes are existing cars seen in more detail, not news."""
+    this run: category changes it causes are existing cars seen in more detail, not news.  A change to the
+    criteria or grading rules since the last rebuild is treated the same way, whichever command triggered it."""
+    sig = evaluate.rules_signature(cfg)
+    if D.get_meta(con, "rules_signature") != sig:
+        backfill = backfill or "rules"
+        D.set_meta(con, "rules_signature", sig)
     today = today or datetime.now(timezone.utc).date()
     stats = {"vehicles": 0, "status_changes": 0}
     sold_keys = {r["vehicle_key"]: r for r in con.execute("SELECT * FROM sales WHERE vehicle_key IS NOT NULL")}
@@ -886,10 +891,8 @@ def process_results(con, cfg: dict, results: list[SourceResult], now: str | None
     summary = {"baseline": baseline, "sources": {}}
     first_import = [r.source for r in results if r.status in ("ok", "partial")
                     and D.get_meta(con, f"baseline_done:{r.source}") != "1"]
-    sig = evaluate.rules_signature(cfg)
-    if D.get_meta(con, "rules_signature") != sig:        # criteria or grading rules changed since the last run
+    if D.get_meta(con, "rules_signature") != evaluate.rules_signature(cfg):   # criteria or grading rules changed
         first_import.insert(0, "rules")
-        D.set_meta(con, "rules_signature", sig)
     if backfill:                                         # caller says this run only adds detail to known cars
         first_import.insert(0, backfill)
     any_ok = False

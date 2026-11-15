@@ -33,9 +33,9 @@ max_price = 225000
 preferred_max_miles = 10000
 
 # ---- Extra hard requirements for one generation ---------------------------------
-# 991.2 GT3 (model years 2018-2019): manual transmission only, under $250,000.
+# 991.2 GT3 (model years 2018-2019): manual or PDK, under $250,000.
+# (A generation can be limited to one gearbox with: required_transmission = "manual")
 [generation_rules."991.2"]
-required_transmission = "manual"
 max_price = 250000
 
 # ---- Hard requirements -------------------------------------------------------

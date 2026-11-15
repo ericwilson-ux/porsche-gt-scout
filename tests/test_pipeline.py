@@ -732,7 +732,8 @@ def _gt3_991(vin, lid, **kw):
     ({"miles": 36000}, "excluded", ["mileage"], ["lift", "accident"]),
     ({"price": 251000, "heading": "2018 Porsche 911 GT3 PDK", "build": {"year": 2018, "trim": "GT3", "transmission": "Automatic"}}, "excluded", ["transmission", "price"], ["lift", "accident"]),
 ])
-def test_991_2_requires_manual_and_the_price_cap(con, cfg, changes, category, failed, unverified):
+def test_a_generation_can_require_one_gearbox_and_has_its_price_cap(con, cfg_manual, changes, category, failed, unverified):
+    cfg = cfg_manual
     lst = _gt3_991("WP0AC2A93JS174011", "g1", **changes)
     assert lst.generation == "991.2"
     ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=[lst], scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=T0)
@@ -740,7 +741,23 @@ def test_991_2_requires_manual_and_the_price_cap(con, cfg, changes, category, fa
     assert (e["category"], e["failed"], e["unverified"]) == (category, failed, unverified)
 
 
-def test_manual_rule_does_not_touch_992_cars(con, cfg):
+@pytest.mark.parametrize("changes,category,failed,unverified", [
+    ({}, "lead", [], ["lift", "accident"]),                                                                    # manual
+    ({"heading": "2018 Porsche 911 GT3 PDK", "build": {"year": 2018, "trim": "GT3", "transmission": "Automatic"}}, "lead", [], ["lift", "accident"]),
+    ({"build": {"year": 2018, "trim": "GT3", "transmission": "Automatic"}}, "lead", [], ["lift", "accident"]),  # gearbox unknown: no longer a check
+    ({"price": 250000, "heading": "2018 Porsche 911 GT3 PDK"}, "near_miss", ["price"], ["lift", "accident"]),   # the cap still applies
+    ({"miles": 36000, "heading": "2018 Porsche 911 GT3 PDK"}, "excluded", ["mileage"], ["lift", "accident"]),
+])
+def test_991_2_takes_manual_or_pdk_under_the_price_cap(con, cfg, changes, category, failed, unverified):
+    lst = _gt3_991("WP0AC2A93JS174011", "g1", **changes)
+    ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=[lst], scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=T0)
+    e = merged(con, "WP0AC2A93JS174011")["eligibility"]
+    assert (e["category"], e["failed"], e["unverified"]) == (category, failed, unverified)
+    assert not any(c["key"] == "transmission" for c in e["checks"])
+
+
+def test_manual_rule_does_not_touch_992_cars(con, cfg_manual):
+    cfg = cfg_manual
     pdk_992 = mc.normalise({**MC_RAW, "id": "x9", "build": {"year": 2022, "trim": "GT3", "transmission": "Automatic"}}, "us-used:2022-2023")
     ingest.process_results(con, cfg, [SourceResult("marketcheck", listings=[pdk_992], scopes_ok={"us-used:2022-2023"}, scopes_total=1)], now=T0)
     e = merged(con, pdk_992.vin)["eligibility"]
@@ -827,7 +844,8 @@ CAPTURE_REC = {"id": "058WLN", "listed": True, "url": "https://finder.porsche.co
                                           "d0de0fed-0859-4764-8fcc-5d6403de165d"]}, "adv": 36, "real": True, "mc": "992810"}
 
 
-def test_browser_capture_import_matches_page_parse(con, cfg):
+def test_browser_capture_import_matches_page_parse(con, cfg_manual):
+    cfg = cfg_manual
     page = example("058WLN")
     cap = pf.from_capture(CAPTURE_REC)
     for f in ("vin", "variant", "generation", "year", "price", "price_as_listed", "dealer_fees_listed", "mileage", "transmission",
@@ -902,7 +920,8 @@ def test_lite_capture_roundtrip_and_price_breakdown(con, cfg):
         pf.parse_lite(bad)
 
 
-def test_first_import_of_a_source_regrades_cars_without_emailing(con, cfg, tmp_path):
+def test_first_import_of_a_source_regrades_cars_without_emailing(con, cfg_manual, tmp_path):
+    cfg = cfg_manual
     """The feed calls a 991.2 a PDK (excluded); Finder's first import shows it is a manual: a re-grade, not an alert."""
     feed = mc.normalise({**MC_RAW, "id": "f991", "vin": "WP0AC2A9XKS149267", "heading": "2019 Porsche 911 GT3 PDK", "price": 245999,
                          "miles": 9067, "build": {"year": 2019, "trim": "GT3", "transmission": "Automatic"}, "ref_price": None}, "us-used:2018-2019")
@@ -1007,7 +1026,8 @@ class _FakeFetcher:
         return Response(url, status, text=text)
 
 
-def test_page_reading_settles_an_unknown_gearbox_and_is_not_repeated(con, cfg):
+def test_page_reading_settles_an_unknown_gearbox_and_is_not_repeated(con, cfg_manual):
+    cfg = cfg_manual
     def feed(i, vin, raw="Automatic"):
         return mc.normalise({**MC_RAW, "id": f"pc{i}", "vin": vin, "heading": "2018 Porsche 911 GT3", "price": 240000, "miles": 12000,
                              "vdp_url": f"https://dealer{i}.example/car", "build": {"year": 2018, "trim": "GT3", "transmission": raw},
@@ -1202,3 +1222,16 @@ def test_queued_alert_drops_a_car_that_is_found_sold_before_the_email(con, cfg, 
     run([one(0, "WP0AC2A92JS175859"), one(1, VIN_P, vehicle_status="Sold"), one(2, "WP0AC2A9XJS176676", vehicle_status="Sold")], ts(1, 8))
     assert alerts.prepare_digest(con, cfg, tmp_path, now=datetime(2026, 11, 14, 21, tzinfo=timezone.utc)) is None
     assert json.loads((tmp_path / "digests" / "pending.json").read_text())["pending"] == []
+
+
+def test_dropping_the_gearbox_rule_regrades_through_any_rebuild_without_alerting(con, cfg, tmp_path):
+    strict = json.loads(json.dumps(cfg)); strict["generation_rules"]["991.2"]["required_transmission"] = "manual"
+    pdk = _gt3_991("WP0AC2A93JS174011", "g1", heading="2018 Porsche 911 GT3 PDK", build={"year": 2018, "trim": "GT3", "transmission": "Automatic"})
+    ingest.process_results(con, strict, [SourceResult("marketcheck", listings=[pdk], scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=T0)
+    ingest.process_results(con, strict, [SourceResult("marketcheck", listings=[pdk], scopes_ok={"us-used:2018-2019"}, scopes_total=1)], now=ts(1))
+    assert merged(con, "WP0AC2A93JS174011")["eligibility"]["category"] == "excluded"
+    ingest.rebuild_vehicles(con, cfg, ts(2))                 # the path the page-check and import commands take
+    assert merged(con, "WP0AC2A93JS174011")["eligibility"]["category"] == "lead"
+    ev = json.loads(con.execute("SELECT detail FROM lifecycle_events WHERE event='category_change' ORDER BY id DESC").fetchone()[0])
+    assert ev["backfill"] == "rules"
+    assert alerts.prepare_digest(con, cfg, tmp_path, now=datetime(2026, 11, 16, 12, tzinfo=timezone.utc)) is None
