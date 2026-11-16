@@ -36,7 +36,7 @@ CREATE TABLE digests (
   vehicle_keys TEXT NOT NULL           -- JSON array
 );
 INSERT INTO "digests" VALUES('2026-11-14','sent','2026-11-14T16:38:21Z','2026-11-15T13:17:45Z','gmail','1a1df5b35f5b976e',1,NULL,'["WP0AC2A94JS175359", "WP0AE2A88RK274909", "WP0AC2A90TS290088", "WP0AE2A81PS280354", "WP0AE2A85RK274320", "WP0CE2A8XSK237262", "WP0AC2A98TS287438", "WP0AC2A92RS263001", "WP0AC2A93TS287668", "WP0CE2A88RK240252", "WP0AE2A84PS280588", "WP0AE2A82PS280136", "WP0AC2A98TS289139", "WP0AC2A94NS268758", "WP0AC2A90JS177190", "WP0AC2A99TS287917", "WP0AE2A87PS281055", "WP0AC2A95TS287588", "WP0AC2A99NS270487", "WP0AE2A80RK274872"]');
-INSERT INTO "digests" VALUES('2026-11-16','pending','2026-11-16T12:23:34Z',NULL,NULL,NULL,0,NULL,'["WP0AE2A88RS274151", "WP0AE2A83RS274025", "WP0AE2A84PS280977", "WP0AE2A83RS274154"]');
+INSERT INTO "digests" VALUES('2026-11-16','sent','2026-11-16T12:23:34Z','2026-11-16T13:20:42Z','gmail','1a1e4844371620bd',1,NULL,'["WP0AE2A88RS274151", "WP0AE2A83RS274025", "WP0AE2A84PS280977", "WP0AE2A83RS274154"]');
 CREATE TABLE evidence (
   id INTEGER PRIMARY KEY,
   vehicle_key TEXT NOT NULL,
@@ -8165,6 +8165,10 @@ INSERT INTO "lifecycle_events" VALUES(2022,'WP0AC2A9XTS287344',1100,'2026-11-16T
 INSERT INTO "lifecycle_events" VALUES(2023,'WP0AC2A93PS270164',1101,'2026-11-16T12:28:23Z','listing_unverified','{"explicit_gone_signals":0,"last_asking":262900.0,"silent_misses":1,"source":"porsche_finder"}');
 INSERT INTO "lifecycle_events" VALUES(2024,'WP0AC2A90JS176993',NULL,'2026-11-16T12:28:23Z','vehicle_unverified','{"last_asking":299900.0,"was":"active"}');
 INSERT INTO "lifecycle_events" VALUES(2025,'WP0AC2A99TS287917',NULL,'2026-11-16T12:28:23Z','category_change','{"from":"lead","summary":"Fails: Under $250,000 (Advertised $364,995 is 46.0% over the cap)","to":"excluded"}');
+INSERT INTO "lifecycle_events" VALUES(2026,'WP0AE2A88RS274151',NULL,'2026-11-16T13:20:42Z','alert_sent','{"channel":"gmail","digest":"2026-11-16"}');
+INSERT INTO "lifecycle_events" VALUES(2027,'WP0AE2A83RS274025',NULL,'2026-11-16T13:20:42Z','alert_sent','{"channel":"gmail","digest":"2026-11-16"}');
+INSERT INTO "lifecycle_events" VALUES(2028,'WP0AE2A84PS280977',NULL,'2026-11-16T13:20:42Z','alert_sent','{"channel":"gmail","digest":"2026-11-16"}');
+INSERT INTO "lifecycle_events" VALUES(2029,'WP0AE2A83RS274154',NULL,'2026-11-16T13:20:42Z','alert_sent','{"channel":"gmail","digest":"2026-11-16"}');
 CREATE TABLE listings (
   id INTEGER PRIMARY KEY,
   source TEXT NOT NULL,
@@ -9563,7 +9567,7 @@ INSERT INTO "meta" VALUES('last_success:marketcheck','2026-11-16T12:20:50Z');
 INSERT INTO "meta" VALUES('baseline_done:marketcheck','1');
 INSERT INTO "meta" VALUES('baseline_at:marketcheck','2026-11-14T03:27:15Z');
 INSERT INTO "meta" VALUES('mc_calls:2026-11','246');
-INSERT INTO "meta" VALUES('last_decode_summary','{"candidates": 81, "budget": 0, "decoded": 0, "empty": 0, "errors": 0, "lift_found": 0, "stopped": "monthly call budget reserved for inventory sweeps"}');
+INSERT INTO "meta" VALUES('last_decode_summary','{"candidates": 80, "budget": 0, "decoded": 0, "empty": 0, "errors": 0, "lift_found": 0, "stopped": "monthly call budget reserved for inventory sweeps"}');
 INSERT INTO "meta" VALUES('mc_calls_seeded','1');
 INSERT INTO "meta" VALUES('mc_trims2','["GT3", "GT3 S/C", "GT3 Touring Package", "GT4 RS", "Spyder RS"]');
 INSERT INTO "meta" VALUES('mc_trims2_at','2026-11-14T04:13:31Z');
@@ -9572,7 +9576,7 @@ INSERT INTO "meta" VALUES('scopes_seen:porsche_finder','["10317", "10340", "1045
 INSERT INTO "meta" VALUES('baseline_done:porsche_finder','1');
 INSERT INTO "meta" VALUES('baseline_at:porsche_finder','2026-11-14T11:46:34Z');
 INSERT INTO "meta" VALUES('last_success:porsche_finder','2026-11-16T12:28:23Z');
-INSERT INTO "meta" VALUES('last_pagecheck_summary','{"enabled": true, "checked": 51, "stopped": null, "results": {"gone": 3, "pdk": 9, "vin_missing": 2, "conflict": 1, "robots": 6, "inconclusive": 2, "blocked": 21, "manual": 7}, "settled": 16, "prices_found": 14, "sold": 1, "gone": 3}');
+INSERT INTO "meta" VALUES('last_pagecheck_summary','{"enabled": true, "checked": 1, "stopped": null, "results": {"error": 1}, "settled": 0, "prices_found": 0, "sold": 0, "gone": 0}');
 CREATE TABLE options (
   listing_id INTEGER NOT NULL REFERENCES listings(id),
   code TEXT, name TEXT NOT NULL, grp TEXT, kind TEXT NOT NULL DEFAULT 'factory_option',
@@ -47160,7 +47164,7 @@ INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A90NS268904-12ba3f99-f397','
 INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A90NS269342-44747d0a-8052','WP0AC2A90NS269342','https://porsche.roimotors.com/certified/Porsche/2022-Porsche-911-b2fabc2cac1801b143f6bbc483877769.htm','2026-11-14T15:06:05Z',-1,'robots',NULL,NULL,NULL,NULL,0);
 INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A91NS268684-8ee51099-8676','WP0AC2A91NS268684','https://www.papingarage.com/inventory/porsche/911/013/','2026-11-14T15:06:05Z',-1,'robots',NULL,NULL,NULL,NULL,0);
 INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A91NS270063-902988d5-a2ea','WP0AC2A91NS270063','http://www.group1auto.com/inventory/certified-used-2022-porsche-911-gt3-rwd-2dr-car-wp0ac2a91ns270063/','2026-11-14T15:06:05Z',-1,'robots',NULL,NULL,NULL,NULL,0);
-INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A91RS263734-09f63c17-295e','WP0AC2A91RS263734','https://www.southeastautoshowroom.com/2024-porsche-911-gt3-touring-sold-c-2086/','2026-11-15T17:14:11Z',403,'blocked',NULL,'{}','gone',NULL,0);
+INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A91RS263734-09f63c17-295e','WP0AC2A91RS263734','https://www.southeastautoshowroom.com/2024-porsche-911-gt3-touring-sold-c-2086/','2026-11-16T20:31:24Z',0,'error','ConnectTimeout: HTTPSConnectionPool(host=''www.southeastautoshowroom.com'', port=443): Max retries exceeded with url: /2024-porsche-911-gt3-touring-sold-c-2086/ (Caused by ConnectTimeoutError(<HTTPSConn','{}','gone',NULL,0);
 INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A92NS268189-2cdf6784-cb67','WP0AC2A92NS268189','https://porsche.roimotors.com/used/Porsche/2022-Porsche-911-f4cde54eac185ff845e3b37251ba95bb.htm','2026-11-14T15:06:05Z',-1,'robots',NULL,NULL,NULL,NULL,0);
 INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A92RS263161-a8e99d1d-814f','WP0AC2A92RS263161','https://www.stradamotorsports.com/used-vehicle-2024-porsche-911-gt3-c-493/','2026-11-14T15:06:05Z',403,'blocked',NULL,NULL,NULL,NULL,0);
 INSERT INTO "page_checks" VALUES('marketcheck:WP0AC2A93NS268329-c039a7da-fe35','WP0AC2A93NS268329','https://www.exoticcarfactory.com/used-vehicle-2022-porsche-911-gt3-coupe-2d-c-424/','2026-11-14T15:06:05Z',403,'blocked',NULL,NULL,NULL,NULL,0);
@@ -101545,6 +101549,7 @@ INSERT INTO "runs" VALUES(12,'2026-11-15T12:26:08Z','2026-11-15T12:26:11Z','ok',
 INSERT INTO "runs" VALUES(13,'2026-11-15T17:14:10Z','2026-11-15T17:14:11Z','failed',1,'{"baseline":true,"rebuild":{"status_changes":0,"vehicles":819},"sales_imported":0,"sources":{}}');
 INSERT INTO "runs" VALUES(14,'2026-11-16T12:20:50Z','2026-11-16T12:20:52Z','ok',0,'{"baseline":false,"rebuild":{"status_changes":15,"vehicles":825},"sales_imported":0,"sources":{"marketcheck":{"lifecycle":{"removed":83,"untouched_due_to_coverage":0,"unverified":47},"new_listings":50,"new_vehicles":6,"new_vehicles_baseline":0,"photos_advertised":0,"photos_captured":22828,"price_changes":3,"seen":760,"status":"ok"}}}');
 INSERT INTO "runs" VALUES(15,'2026-11-16T12:28:23Z','2026-11-16T12:28:25Z','ok',0,'{"baseline":false,"rebuild":{"status_changes":1,"vehicles":826},"sales_imported":0,"sources":{"porsche_finder":{"lifecycle":{"removed":0,"untouched_due_to_coverage":0,"unverified":8},"new_listings":2,"new_vehicles":1,"new_vehicles_baseline":0,"photos_advertised":13149,"photos_captured":13149,"price_changes":3,"seen":391,"status":"ok"}}}');
+INSERT INTO "runs" VALUES(16,'2026-11-16T20:31:22Z','2026-11-16T20:31:24Z','failed',1,'{"baseline":true,"rebuild":{"status_changes":0,"vehicles":826},"sales_imported":0,"sources":{}}');
 CREATE TABLE sales (
   id INTEGER PRIMARY KEY,
   vehicle_key TEXT,                    -- may be NULL when the sold car's VIN is unknown
