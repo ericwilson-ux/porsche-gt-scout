@@ -1,0 +1,311 @@
+{
+ "digest_date": "2026-11-16",
+ "status": "pending",
+ "subject": "[PGT-2026-11-16] 4 new qualifying Porsche GT listings (needs verification)",
+ "recipient": "",
+ "cars": [
+  {
+   "key": "WP0AE2A88RS274151",
+   "vin": "WP0AE2A88RS274151",
+   "title": "2024 718 Cayman GT4 RS",
+   "reason": "New listing",
+   "category": "lead",
+   "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Clean accident history",
+   "checks": [
+    {
+     "label": "Target model",
+     "status": "pass",
+     "provenance": "listing + VIN"
+    },
+    {
+     "label": "Front axle lift",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "Under $225,000",
+     "status": "pass",
+     "provenance": "MarketCheck dealer feed"
+    },
+    {
+     "label": "Clean accident history",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "No documented track use",
+     "status": "pass",
+     "provenance": "listing text scan"
+    }
+   ],
+   "price": 199900.0,
+   "mileage": 7500,
+   "transmission": "pdk",
+   "exterior": "BLUE",
+   "interior": "BLACK",
+   "cpo": false,
+   "cpo_label": "not CPO",
+   "seats": null,
+   "weissach": true,
+   "pccb": null,
+   "seller": "Anderson Automotive",
+   "location": "Grafton, MA",
+   "distance_miles": 1942,
+   "score": 76,
+   "strengths": [
+    "Mileage for its age: 7,500 mi at ~3.1 yrs; your own pace would put it near 14,007 mi",
+    "Exterior colour: BLUE (blue)",
+    "Interior colour: BLACK (black)",
+    "Transmission: PDK"
+   ],
+   "misses": [
+    "Seats: Seat type not documented",
+    "No Weissach Package: Has the Weissach Package",
+    "Seller & documentation: independent dealer",
+    "Distance from Austin, TX: ~1,942 road miles (fly-and-drive or enclosed transport)"
+   ],
+   "otd_total": 216192.44,
+   "deal": {
+    "rating": "good",
+    "delta_pct": -0.0207,
+    "n": 72,
+    "confidence": "moderate",
+    "fair_low": 194983,
+    "fair_high": 211118
+   },
+   "photo": "https://imagescdn.dealercarsearch.com/Media/17797/24500227/639302115446656078.jpg",
+   "photo_count": 28,
+   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A88RS274151",
+   "source_urls": [
+    "https://andersonauto122.com/vdp/24500227/Used-2024-Porsche-718-Cayman-GT4-RS-for-sale-in-North-Grafton-MA-01536"
+   ]
+  },
+  {
+   "key": "WP0AE2A83RS274025",
+   "vin": "WP0AE2A83RS274025",
+   "title": "2024 718 Cayman GT4 RS",
+   "reason": "New listing",
+   "category": "lead",
+   "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Under $225,000, Clean accident history",
+   "checks": [
+    {
+     "label": "Target model",
+     "status": "pass",
+     "provenance": "listing + VIN"
+    },
+    {
+     "label": "Front axle lift",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "Under $225,000",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "Clean accident history",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "No documented track use",
+     "status": "pass",
+     "provenance": "listing text scan"
+    }
+   ],
+   "price": null,
+   "mileage": 7034,
+   "transmission": "pdk",
+   "exterior": "GREY",
+   "interior": null,
+   "cpo": false,
+   "cpo_label": "not CPO",
+   "seats": null,
+   "weissach": null,
+   "pccb": null,
+   "seller": "Mclaren Scottsdale",
+   "location": "Scottsdale, AZ",
+   "distance_miles": 1008,
+   "score": 74,
+   "strengths": [
+    "Mileage for its age: 7,034 mi at ~3.1 yrs; your own pace would put it near 14,007 mi",
+    "Exterior colour: GREY (gray)",
+    "Transmission: PDK"
+   ],
+   "misses": [
+    "Interior colour: Interior not published",
+    "Seats: Seat type not documented",
+    "No Weissach Package: Weissach status not documented",
+    "Seller & documentation: independent dealer"
+   ],
+   "otd_total": null,
+   "deal": {
+    "rating": null,
+    "delta_pct": null,
+    "n": 73,
+    "confidence": "insufficient",
+    "fair_low": null,
+    "fair_high": null
+   },
+   "photo": "https://www.mclarenscottsdale.com/wp-content/themes/aanWordpress/images/ina_l.jpg",
+   "photo_count": 1,
+   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A83RS274025",
+   "source_urls": [
+    "https://www.mclarenscottsdale.com/used-vehicle-2024-porsche-cayman-c-2495/"
+   ]
+  },
+  {
+   "key": "WP0AE2A84PS280977",
+   "vin": "WP0AE2A84PS280977",
+   "title": "2023 718 Cayman GT4 RS",
+   "reason": "New listing",
+   "category": "lead",
+   "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Under $225,000, Clean accident history",
+   "checks": [
+    {
+     "label": "Target model",
+     "status": "pass",
+     "provenance": "listing + VIN"
+    },
+    {
+     "label": "Front axle lift",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "Under $225,000",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "Clean accident history",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "No documented track use",
+     "status": "pass",
+     "provenance": "listing text scan"
+    }
+   ],
+   "price": null,
+   "mileage": 6832,
+   "transmission": "pdk",
+   "exterior": "Grey",
+   "interior": "Race Tex",
+   "cpo": false,
+   "cpo_label": "not CPO",
+   "seats": null,
+   "weissach": null,
+   "pccb": null,
+   "seller": "The Collezione",
+   "location": "Las Vegas, NV",
+   "distance_miles": 1272,
+   "score": 70,
+   "strengths": [
+    "Mileage for its age: 6,832 mi at ~4.1 yrs; your own pace would put it near 18,004 mi",
+    "Exterior colour: Grey (gray)",
+    "Transmission: PDK"
+   ],
+   "misses": [
+    "Interior colour: Race Tex (other) is outside black/beige/tan",
+    "Seats: Seat type not documented",
+    "No Weissach Package: Weissach status not documented",
+    "CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)"
+   ],
+   "otd_total": null,
+   "deal": {
+    "rating": null,
+    "delta_pct": null,
+    "n": 73,
+    "confidence": "insufficient",
+    "fair_low": null,
+    "fair_high": null
+   },
+   "photo": "https://images.app.ridemotive.com/ux385ydqvd82mf9n2967l0e5rbqt",
+   "photo_count": 1,
+   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A84PS280977",
+   "source_urls": [
+    "https://thecollezione.com/inventory/Used-2023-Porsche-718%20Cayman-GT4%20RS-WP0AE2A84PS280977"
+   ]
+  },
+  {
+   "key": "WP0AE2A83RS274154",
+   "vin": "WP0AE2A83RS274154",
+   "title": "2024 718 Cayman GT4 RS",
+   "reason": "New listing",
+   "category": "lead",
+   "eligibility_summary": "Nothing disqualifying, but needs verification: Front axle lift, Clean accident history",
+   "checks": [
+    {
+     "label": "Target model",
+     "status": "pass",
+     "provenance": "listing + VIN"
+    },
+    {
+     "label": "Front axle lift",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "Under $225,000",
+     "status": "pass",
+     "provenance": "dealer feed, last advertised"
+    },
+    {
+     "label": "Clean accident history",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "No documented track use",
+     "status": "pass",
+     "provenance": "listing text scan"
+    }
+   ],
+   "price": 190930.0,
+   "mileage": 1570,
+   "transmission": "pdk",
+   "exterior": "Ruby",
+   "interior": null,
+   "cpo": false,
+   "cpo_label": "not CPO",
+   "seats": null,
+   "weissach": null,
+   "pccb": null,
+   "seller": "Fields Auto Group's",
+   "location": "Orlando, FL",
+   "distance_miles": 1160,
+   "score": 67,
+   "strengths": [
+    "Mileage for its age: 1,570 mi at ~3.1 yrs; your own pace would put it near 14,007 mi",
+    "Transmission: PDK"
+   ],
+   "misses": [
+    "Exterior colour: Ruby (other) is outside white/silver/blue/gray/black",
+    "Interior colour: Interior not published",
+    "Seats: Seat type not documented",
+    "No Weissach Package: Weissach status not documented"
+   ],
+   "otd_total": 205741.81,
+   "deal": {
+    "rating": "great",
+    "delta_pct": -0.1344,
+    "n": 72,
+    "confidence": "moderate",
+    "fair_low": 212433,
+    "fair_high": 227761
+   },
+   "photo": "https://images.dealer.com/autodata/us/large_stockphoto/2024/USD40PRC161E0.jpg",
+   "photo_count": 1,
+   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A83RS274154",
+   "source_urls": [
+    "https://www.fieldspreowned.com/used/Porsche/2024-Porsche-718-Cayman-da058100ac18100891b135ef595f8a35.htm"
+   ]
+  }
+ ],
+ "site_url": "https://ericwilson-ux.github.io/porsche-gt-scout",
+ "html": "<div style=\"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:#0d0d0e;color:#f2f0ea;padding:24px\">\n<div style=\"max-width:640px;margin:0 auto\">\n<div style=\"font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c8ff2e\">GT Scout &middot; 2026-11-16</div>\n<h1 style=\"font-size:24px;margin:6px 0 20px;color:#f2f0ea\">4 new qualifying listings</h1><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://imagescdn.dealercarsearch.com/Media/17797/24500227/639302115446656078.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2024 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$199,900</b> &middot; 7,500 mi &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">BLUE over BLACK<br>Anderson Automotive &middot; Grafton, MA &middot; ~1,942 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $225,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">76<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$216,192</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Good deal (-2.1% vs 72 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 7,500 mi at ~3.1 yrs; your own pace would put it near 14,007 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: BLUE (blue)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: BLACK (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Has the Weissach Package</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,942 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A88RS274151\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 28 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://www.mclarenscottsdale.com/wp-content/themes/aanWordpress/images/ina_l.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2024 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 7,034 mi &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">GREY over ?<br>Mclaren Scottsdale &middot; Scottsdale, AZ &middot; ~1,008 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $225,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">74<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 7,034 mi at ~3.1 yrs; your own pace would put it near 14,007 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: GREY (gray)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Interior not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Weissach status not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A83RS274025\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://images.app.ridemotive.com/ux385ydqvd82mf9n2967l0e5rbqt\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2023 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>n/a</b> &middot; 6,832 mi &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Grey over Race Tex<br>The Collezione &middot; Las Vegas, NV &middot; ~1,272 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Under $225,000</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">70<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">n/a</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Deal quality: not enough comparables yet</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 6,832 mi at ~4.1 yrs; your own pace would put it near 18,004 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Grey (gray)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Race Tex (other) is outside black/beige/tan</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Weissach status not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A84PS280977\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://images.dealer.com/autodata/us/large_stockphoto/2024/USD40PRC161E0.jpg\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2024 718 Cayman GT4 RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$190,930</b> &middot; 1,570 mi &middot; PDK &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Ruby over ?<br>Fields Auto Group&#x27;s &middot; Orlando, FL &middot; ~1,160 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Front axle lift</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $225,000 &middot; dealer feed, last advertised</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">67<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$205,742</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Great deal (-13.4% vs 72 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 1,570 mi at ~3.1 yrs; your own pace would put it near 14,007 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#ffb020;font-size:13px\">&minus; Exterior colour: Ruby (other) is outside white/silver/blue/gray/black</div><div style=\"color:#ffb020;font-size:13px\">&minus; Interior colour: Interior not published</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Weissach status not documented</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A83RS274154\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 1 PHOTOS</a></div>\n</div></div><div style=\"font-size:11px;color:#8b887f\">Sent only on days with newly qualifying cars. Asking prices are not sale prices.\nOut-the-door figures are estimates. <a style=\"color:#8b887f\" href=\"https://ericwilson-ux.github.io/porsche-gt-scout\">Open GT Scout</a></div></div></div>",
+ "text": "[PGT-2026-11-16] 4 new qualifying Porsche GT listings (needs verification)\n\n2024 718 Cayman GT4 RS - $199,900 - 7,500 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Clean accident history\n  BLUE / BLACK | PDK | not CPO\n  Anderson Automotive - Grafton, MA (~1942 mi from Austin)\n  Preference match 76/100 | Est. out-the-door $216,192\n  + Mileage for its age: 7,500 mi at ~3.1 yrs; your own pace would put it near 14,007 mi\n  + Exterior colour: BLUE (blue)\n  + Interior colour: BLACK (black)\n  + Transmission: PDK\n  - Seats: Seat type not documented\n  - No Weissach Package: Has the Weissach Package\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,942 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A88RS274151\n\n2024 718 Cayman GT4 RS - n/a - 7,034 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $225,000, Clean accident history\n  GREY / ? | PDK | not CPO\n  Mclaren Scottsdale - Scottsdale, AZ (~1008 mi from Austin)\n  Preference match 74/100 | Est. out-the-door n/a\n  + Mileage for its age: 7,034 mi at ~3.1 yrs; your own pace would put it near 14,007 mi\n  + Exterior colour: GREY (gray)\n  + Transmission: PDK\n  - Interior colour: Interior not published\n  - Seats: Seat type not documented\n  - No Weissach Package: Weissach status not documented\n  - Seller & documentation: independent dealer\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A83RS274025\n\n2023 718 Cayman GT4 RS - n/a - 6,832 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Under $225,000, Clean accident history\n  Grey / Race Tex | PDK | not CPO\n  The Collezione - Las Vegas, NV (~1272 mi from Austin)\n  Preference match 70/100 | Est. out-the-door n/a\n  + Mileage for its age: 6,832 mi at ~4.1 yrs; your own pace would put it near 18,004 mi\n  + Exterior colour: Grey (gray)\n  + Transmission: PDK\n  - Interior colour: Race Tex (other) is outside black/beige/tan\n  - Seats: Seat type not documented\n  - No Weissach Package: Weissach status not documented\n  - CPO / warranty: Not CPO; ~5 months of factory warranty left (estimate)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A84PS280977\n\n2024 718 Cayman GT4 RS - $190,930 - 1,570 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Front axle lift, Clean accident history\n  Ruby / ? | PDK | not CPO\n  Fields Auto Group's - Orlando, FL (~1160 mi from Austin)\n  Preference match 67/100 | Est. out-the-door $205,742\n  + Mileage for its age: 1,570 mi at ~3.1 yrs; your own pace would put it near 14,007 mi\n  + Transmission: PDK\n  - Exterior colour: Ruby (other) is outside white/silver/blue/gray/black\n  - Interior colour: Interior not published\n  - Seats: Seat type not documented\n  - No Weissach Package: Weissach status not documented\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AE2A83RS274154\n"
+}
