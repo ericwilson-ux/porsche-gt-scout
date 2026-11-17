@@ -1,8 +1,8 @@
 {
  "digest_date": "2026-11-17",
  "status": "pending",
- "subject": "[PGT-2026-11-17] 3 new qualifying Porsche GT listings (needs verification)",
- "recipient": "",
+ "subject": "[PGT-2026-11-17] 5 new qualifying Porsche GT listings (needs verification)",
+ "recipient": "set-via-ALERT_RECIPIENT-secret",
  "cars": [
   {
    "key": "WP0AC2A98NS269945",
@@ -72,15 +72,15 @@
    "otd_total": 268121.19,
    "deal": {
     "rating": "great",
-    "delta_pct": -0.1234,
-    "n": 33,
+    "delta_pct": -0.1224,
+    "n": 34,
     "confidence": "moderate",
-    "fair_low": 280498,
-    "fair_high": 293727
+    "fair_low": 279219,
+    "fair_high": 293177
    },
    "photo": "https://imagedelivery.net/efiOvc-CpuyIHnpA-RGYFQ/5a54d792-b63d-4826-3885-60748a3e9d00/public",
    "photo_count": 9,
-   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A98NS269945",
+   "detail_url": null,
    "source_urls": [
     "https://valley-motors.us/inventory/2022-porsche-911-gt3-gt3-touring/22PRRGT3TOUR"
    ]
@@ -152,15 +152,15 @@
    "otd_total": 236246.19,
    "deal": {
     "rating": "great",
-    "delta_pct": -0.1668,
-    "n": 151,
+    "delta_pct": -0.1667,
+    "n": 154,
     "confidence": "moderate",
-    "fair_low": 255390,
-    "fair_high": 273196
+    "fair_low": 255676,
+    "fair_high": 273484
    },
    "photo": "https://imagedelivery.net/efiOvc-CpuyIHnpA-RGYFQ/d7c27f71-a016-4173-e168-aa659a866c00/public",
    "photo_count": 9,
-   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A96NS269068",
+   "detail_url": null,
    "source_urls": [
     "https://valley-motors.us/inventory/2022-porsche-911-gt3/22PRRGT3BLU"
    ]
@@ -232,21 +232,175 @@
    "otd_total": 236246.19,
    "deal": {
     "rating": "great",
-    "delta_pct": -0.2258,
-    "n": 151,
+    "delta_pct": -0.2249,
+    "n": 154,
     "confidence": "moderate",
-    "fair_low": 275007,
-    "fair_high": 293616
+    "fair_low": 274910,
+    "fair_high": 293519
    },
    "photo": "https://imagedelivery.net/efiOvc-CpuyIHnpA-RGYFQ/db3a6357-229e-40e1-b9a4-f87fbaf0a700/public",
    "photo_count": 9,
-   "detail_url": "https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A91NS268457",
+   "detail_url": null,
    "source_urls": [
     "https://valley-motors.us/inventory/2022-porsche-911-gt3/22PRRGT3BL1"
    ]
+  },
+  {
+   "key": "WP0AC2A99NS268402",
+   "vin": "WP0AC2A99NS268402",
+   "title": "2022 911 GT3",
+   "reason": "New listing",
+   "category": "lead",
+   "eligibility_summary": "Nothing disqualifying, but needs verification: Clean accident history",
+   "checks": [
+    {
+     "label": "Target model",
+     "status": "pass",
+     "provenance": "listing + VIN"
+    },
+    {
+     "label": "Front axle lift",
+     "status": "pass",
+     "provenance": "manufacturer equipment data"
+    },
+    {
+     "label": "Under $250,000",
+     "status": "pass",
+     "provenance": "Porsche Finder"
+    },
+    {
+     "label": "At most 35,000 miles",
+     "status": "pass",
+     "provenance": null
+    },
+    {
+     "label": "Clean accident history",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "No documented track use",
+     "status": "pass",
+     "provenance": "listing text scan"
+    }
+   ],
+   "price": 228900,
+   "mileage": 33642,
+   "transmission": "manual",
+   "exterior": "GT-silver Metallic",
+   "interior": "Leather/Race-Tex Interior in Black with Stitching in GT Silver",
+   "cpo": true,
+   "cpo_label": "Porsche Approved CPO",
+   "seats": "adjustable",
+   "weissach": false,
+   "pccb": true,
+   "seller": "Porsche Southpoint",
+   "location": "Durham, NC",
+   "distance_miles": 1351,
+   "score": 88,
+   "strengths": [
+    "Exterior colour: GT-silver Metallic (silver)",
+    "Interior colour: Leather/Race-Tex Interior in Black with Stitching in GT Silver (black)",
+    "Transmission: 6-speed manual (your slight preference)",
+    "Seats: Adjustable sport seats"
+   ],
+   "misses": [
+    "Distance from Austin, TX: ~1,351 road miles (fly-and-drive or enclosed transport)"
+   ],
+   "otd_total": 246769.94,
+   "deal": {
+    "rating": "overpriced",
+    "delta_pct": 0.109,
+    "n": 40,
+    "confidence": "moderate",
+    "fair_low": 198862,
+    "fair_high": 219944
+   },
+   "photo": "https://images.finder.porsche.com/4ca1cc7e-ad56-5de9-945c-e4d490549a22/640",
+   "photo_count": 6,
+   "detail_url": null,
+   "source_urls": [
+    "https://finder.porsche.com/us/en-US/details/porsche-911-gt3-preowned-24PEL5"
+   ]
+  },
+  {
+   "key": "WP0CE2A83SK238270",
+   "vin": "WP0CE2A83SK238270",
+   "title": "2025 718 Spyder RS",
+   "reason": "New listing",
+   "category": "lead",
+   "eligibility_summary": "Nothing disqualifying, but needs verification: Clean accident history",
+   "checks": [
+    {
+     "label": "Target model",
+     "status": "pass",
+     "provenance": "listing + VIN"
+    },
+    {
+     "label": "Front axle lift",
+     "status": "pass",
+     "provenance": "manufacturer equipment data"
+    },
+    {
+     "label": "Under $225,000",
+     "status": "pass",
+     "provenance": "Porsche Finder"
+    },
+    {
+     "label": "Clean accident history",
+     "status": "unverified",
+     "provenance": null
+    },
+    {
+     "label": "No documented track use",
+     "status": "pass",
+     "provenance": "listing text scan"
+    }
+   ],
+   "price": 224984,
+   "mileage": 980,
+   "transmission": "pdk",
+   "exterior": "Racing Yellow",
+   "interior": "Leather/Race-Tex Interior in Black with Arctic Grey Stitching i.c.w. Weissach Package",
+   "cpo": true,
+   "cpo_label": "Porsche Approved CPO",
+   "seats": null,
+   "weissach": true,
+   "pccb": true,
+   "seller": "Porsche Marin",
+   "location": "Mill Valley, CA",
+   "distance_miles": 1764,
+   "score": 77,
+   "strengths": [
+    "Mileage for its age: 980 mi at ~2.1 yrs; your own pace would put it near 10,009 mi",
+    "Interior colour: Leather/Race-Tex Interior in Black with Arctic Grey Stitching i.c.w. Weissach Package (black)",
+    "Transmission: PDK",
+    "CPO / warranty: Porsche Approved Certified Pre-Owned"
+   ],
+   "misses": [
+    "Exterior colour: Racing Yellow (yellow) is outside white/silver/blue/gray/black",
+    "Seats: Seat type not documented",
+    "No Weissach Package: Has the Weissach Package",
+    "Distance from Austin, TX: ~1,764 road miles (fly-and-drive or enclosed transport)"
+   ],
+   "otd_total": 242316.75,
+   "deal": {
+    "rating": "high",
+    "delta_pct": 0.0432,
+    "n": 55,
+    "confidence": "moderate",
+    "fair_low": 208546,
+    "fair_high": 225446
+   },
+   "photo": "https://images.finder.porsche.com/04330fd2-9fe5-5114-b8e8-bb08b25a36c3/640",
+   "photo_count": 10,
+   "detail_url": null,
+   "source_urls": [
+    "https://finder.porsche.com/us/en-US/details/porsche-718-spyder-rs-preowned-RNDMN7"
+   ]
   }
  ],
- "site_url": "https://ericwilson-ux.github.io/porsche-gt-scout",
- "html": "<div style=\"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:#0d0d0e;color:#f2f0ea;padding:24px\">\n<div style=\"max-width:640px;margin:0 auto\">\n<div style=\"font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c8ff2e\">GT Scout &middot; 2026-11-17</div>\n<h1 style=\"font-size:24px;margin:6px 0 20px;color:#f2f0ea\">3 new qualifying listings</h1><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://imagedelivery.net/efiOvc-CpuyIHnpA-RGYFQ/5a54d792-b63d-4826-3885-60748a3e9d00/public\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2022 911 GT3 Touring</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$249,000</b> &middot; 1,995 mi &middot; MANUAL &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Oslo Blue over Black<br>Valley Motors &middot; Cortland, NY &middot; ~1,710 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; seller statement</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $250,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">73<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$268,121</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Great deal (-12.3% vs 33 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 1,995 mi at ~5.1 yrs; your own pace would put it near 22,012 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Oslo Blue (blue)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: 6-speed manual (your slight preference)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Full bucket seats (acceptable, not preferred)</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; factory warranty likely expired</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,710 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A98NS269945\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 9 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://imagedelivery.net/efiOvc-CpuyIHnpA-RGYFQ/d7c27f71-a016-4173-e168-aa659a866c00/public\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2022 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$219,000</b> &middot; 9,122 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Shark Blue over Black<br>Valley Motors &middot; Cortland, NY &middot; ~1,710 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; seller statement</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $250,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">72<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$236,246</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Great deal (-16.7% vs 151 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 9,122 mi at ~5.1 yrs; your own pace would put it near 22,012 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Shark Blue (blue)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Seats: Adjustable sport seats</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; factory warranty likely expired</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,710 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A96NS269068\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 9 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://imagedelivery.net/efiOvc-CpuyIHnpA-RGYFQ/db3a6357-229e-40e1-b9a4-f87fbaf0a700/public\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2022 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$219,000</b> &middot; 696 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Shark Blue over Black<br>Valley Motors &middot; Cortland, NY &middot; ~1,710 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; seller statement</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $250,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">72<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$236,246</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Great deal (-22.6% vs 151 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 696 mi at ~5.1 yrs; your own pace would put it near 22,012 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Shark Blue (blue)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Seats: Adjustable sport seats</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; factory warranty likely expired</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,710 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A91NS268457\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 9 PHOTOS</a></div>\n</div></div><div style=\"font-size:11px;color:#8b887f\">Sent only on days with newly qualifying cars. Asking prices are not sale prices.\nOut-the-door figures are estimates. <a style=\"color:#8b887f\" href=\"https://ericwilson-ux.github.io/porsche-gt-scout\">Open GT Scout</a></div></div></div>",
- "text": "[PGT-2026-11-17] 3 new qualifying Porsche GT listings (needs verification)\n\n2022 911 GT3 Touring - $249,000 - 1,995 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Clean accident history\n  Oslo Blue / Black | MANUAL | not CPO\n  Valley Motors - Cortland, NY (~1710 mi from Austin)\n  Preference match 73/100 | Est. out-the-door $268,121\n  + Mileage for its age: 1,995 mi at ~5.1 yrs; your own pace would put it near 22,012 mi\n  + Exterior colour: Oslo Blue (blue)\n  + Interior colour: Black (black)\n  + Transmission: 6-speed manual (your slight preference)\n  - Seats: Full bucket seats (acceptable, not preferred)\n  - CPO / warranty: Not CPO; factory warranty likely expired\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,710 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A98NS269945\n\n2022 911 GT3 - $219,000 - 9,122 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Clean accident history\n  Shark Blue / Black | ? | not CPO\n  Valley Motors - Cortland, NY (~1710 mi from Austin)\n  Preference match 72/100 | Est. out-the-door $236,246\n  + Mileage for its age: 9,122 mi at ~5.1 yrs; your own pace would put it near 22,012 mi\n  + Exterior colour: Shark Blue (blue)\n  + Interior colour: Black (black)\n  + Seats: Adjustable sport seats\n  - CPO / warranty: Not CPO; factory warranty likely expired\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,710 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A96NS269068\n\n2022 911 GT3 - $219,000 - 696 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Clean accident history\n  Shark Blue / Black | ? | not CPO\n  Valley Motors - Cortland, NY (~1710 mi from Austin)\n  Preference match 72/100 | Est. out-the-door $236,246\n  + Mileage for its age: 696 mi at ~5.1 yrs; your own pace would put it near 22,012 mi\n  + Exterior colour: Shark Blue (blue)\n  + Interior colour: Black (black)\n  + Seats: Adjustable sport seats\n  - CPO / warranty: Not CPO; factory warranty likely expired\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,710 road miles (fly-and-drive or enclosed transport)\n  https://ericwilson-ux.github.io/porsche-gt-scout/#/v/WP0AC2A91NS268457\n"
+ "site_url": "",
+ "html": "<div style=\"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:#0d0d0e;color:#f2f0ea;padding:24px\">\n<div style=\"max-width:640px;margin:0 auto\">\n<div style=\"font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c8ff2e\">GT Scout &middot; 2026-11-17</div>\n<h1 style=\"font-size:24px;margin:6px 0 20px;color:#f2f0ea\">5 new qualifying listings</h1><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://imagedelivery.net/efiOvc-CpuyIHnpA-RGYFQ/5a54d792-b63d-4826-3885-60748a3e9d00/public\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2022 911 GT3 Touring</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$249,000</b> &middot; 1,995 mi &middot; MANUAL &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Oslo Blue over Black<br>Valley Motors &middot; Cortland, NY &middot; ~1,710 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; seller statement</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $250,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">73<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$268,121</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Great deal (-12.2% vs 34 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 1,995 mi at ~5.1 yrs; your own pace would put it near 22,012 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Oslo Blue (blue)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: 6-speed manual (your slight preference)</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Full bucket seats (acceptable, not preferred)</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; factory warranty likely expired</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,710 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://valley-motors.us/inventory/2022-porsche-911-gt3-gt3-touring/22PRRGT3TOUR\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 9 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://imagedelivery.net/efiOvc-CpuyIHnpA-RGYFQ/d7c27f71-a016-4173-e168-aa659a866c00/public\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2022 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$219,000</b> &middot; 9,122 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Shark Blue over Black<br>Valley Motors &middot; Cortland, NY &middot; ~1,710 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; seller statement</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $250,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">72<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$236,246</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Great deal (-16.7% vs 154 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 9,122 mi at ~5.1 yrs; your own pace would put it near 22,012 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Shark Blue (blue)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Seats: Adjustable sport seats</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; factory warranty likely expired</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,710 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://valley-motors.us/inventory/2022-porsche-911-gt3/22PRRGT3BLU\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 9 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://imagedelivery.net/efiOvc-CpuyIHnpA-RGYFQ/db3a6357-229e-40e1-b9a4-f87fbaf0a700/public\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2022 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$219,000</b> &middot; 696 mi &middot; ? &middot; not CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Shark Blue over Black<br>Valley Motors &middot; Cortland, NY &middot; ~1,710 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; seller statement</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $250,000 &middot; MarketCheck dealer feed</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">72<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$236,246</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Great deal (-22.5% vs 154 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 696 mi at ~5.1 yrs; your own pace would put it near 22,012 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: Shark Blue (blue)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Black (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Seats: Adjustable sport seats</div><div style=\"color:#ffb020;font-size:13px\">&minus; CPO / warranty: Not CPO; factory warranty likely expired</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seller &amp; documentation: independent dealer</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,710 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://valley-motors.us/inventory/2022-porsche-911-gt3/22PRRGT3BL1\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 9 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://images.finder.porsche.com/4ca1cc7e-ad56-5de9-945c-e4d490549a22/640\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2022 911 GT3</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$228,900</b> &middot; 33,642 mi &middot; MANUAL &middot; Porsche Approved CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">GT-silver Metallic over Leather/Race-Tex Interior in Black with Stitching in GT Silver<br>Porsche Southpoint &middot; Durham, NC &middot; ~1,351 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; manufacturer equipment data</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $250,000 &middot; Porsche Finder</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; At most 35,000 miles</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">88<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$246,770</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">Overpriced deal (+10.9% vs 40 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Exterior colour: GT-silver Metallic (silver)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Leather/Race-Tex Interior in Black with Stitching in GT Silver (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: 6-speed manual (your slight preference)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Seats: Adjustable sport seats</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,351 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://finder.porsche.com/us/en-US/details/porsche-911-gt3-preowned-24PEL5\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 6 PHOTOS</a></div>\n</div></div><div style=\"background:#161617;margin:0 0 20px;border:1px solid #2a2a2c\">\n<img src=\"https://images.finder.porsche.com/04330fd2-9fe5-5114-b8e8-bb08b25a36c3/640\" alt=\"\" width=\"640\" style=\"width:100%;display:block;border:0\">\n<div style=\"padding:16px 18px\">\n<div style=\"font-size:11px;letter-spacing:.14em;color:#ffb020;font-weight:700\">LEAD - VERIFY &middot; NEW LISTING</div>\n<div style=\"font-size:20px;font-weight:800;margin:6px 0 2px\">2025 718 Spyder RS</div>\n<div style=\"font-size:15px;color:#f2f0ea\"><b>$224,984</b> &middot; 980 mi &middot; PDK &middot; Porsche Approved CPO</div>\n<div style=\"font-size:13px;color:#b9b6ad;margin:4px 0 10px\">Racing Yellow over Leather/Race-Tex Interior in Black with Arctic Grey Stitching i.c.w. Weissach Package<br>Porsche Marin &middot; Mill Valley, CA &middot; ~1,764 mi from Austin</div>\n<div style=\"margin:0 0 8px\"><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Target model &middot; listing + VIN</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Front axle lift &middot; manufacturer equipment data</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; Under $225,000 &middot; Porsche Finder</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #ffb020;color:#ffb020\">? Clean accident history</span><span style=\"display:inline-block;margin:0 6px 6px 0;padding:3px 8px;font-size:11px;border:1px solid #3a3a3d;color:#b9b6ad\">&#10003; No documented track use &middot; listing text scan</span></div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:6px 0 10px\"><tr>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Preference match</div><div style=\"font-size:22px;font-weight:800;color:#c8ff2e\">77<span style=\"font-size:12px;color:#8b887f\">/100</span></div></td>\n<td style=\"padding-right:22px\"><div style=\"font-size:11px;color:#8b887f;text-transform:uppercase;letter-spacing:.1em\">Est. out-the-door</div><div style=\"font-size:22px;font-weight:800\">$242,317</div></td>\n</tr></table>\n<div style=\"font-size:13px;color:#b9b6ad;margin-bottom:8px\">High deal (+4.3% vs 55 asking comps, moderate confidence)</div>\n<div style=\"color:#b9b6ad;font-size:13px\">+ Mileage for its age: 980 mi at ~2.1 yrs; your own pace would put it near 10,009 mi</div><div style=\"color:#b9b6ad;font-size:13px\">+ Interior colour: Leather/Race-Tex Interior in Black with Arctic Grey Stitching i.c.w. Weissach Package (black)</div><div style=\"color:#b9b6ad;font-size:13px\">+ Transmission: PDK</div><div style=\"color:#b9b6ad;font-size:13px\">+ CPO / warranty: Porsche Approved Certified Pre-Owned</div><div style=\"color:#ffb020;font-size:13px\">&minus; Exterior colour: Racing Yellow (yellow) is outside white/silver/blue/gray/black</div><div style=\"color:#ffb020;font-size:13px\">&minus; Seats: Seat type not documented</div><div style=\"color:#ffb020;font-size:13px\">&minus; No Weissach Package: Has the Weissach Package</div><div style=\"color:#ffb020;font-size:13px\">&minus; Distance from Austin, TX: ~1,764 road miles (fly-and-drive or enclosed transport)</div>\n<div style=\"margin-top:14px\"><a href=\"https://finder.porsche.com/us/en-US/details/porsche-718-spyder-rs-preowned-RNDMN7\" style=\"background:#c8ff2e;color:#0d0d0e;text-decoration:none;font-weight:800;font-size:13px;padding:10px 16px;display:inline-block;letter-spacing:.06em\">VIEW FULL DETAIL &amp; 10 PHOTOS</a></div>\n</div></div><div style=\"font-size:11px;color:#8b887f\">Sent only on days with newly qualifying cars. Asking prices are not sale prices.\nOut-the-door figures are estimates. </div></div></div>",
+ "text": "[PGT-2026-11-17] 5 new qualifying Porsche GT listings (needs verification)\n\n2022 911 GT3 Touring - $249,000 - 1,995 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Clean accident history\n  Oslo Blue / Black | MANUAL | not CPO\n  Valley Motors - Cortland, NY (~1710 mi from Austin)\n  Preference match 73/100 | Est. out-the-door $268,121\n  + Mileage for its age: 1,995 mi at ~5.1 yrs; your own pace would put it near 22,012 mi\n  + Exterior colour: Oslo Blue (blue)\n  + Interior colour: Black (black)\n  + Transmission: 6-speed manual (your slight preference)\n  - Seats: Full bucket seats (acceptable, not preferred)\n  - CPO / warranty: Not CPO; factory warranty likely expired\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,710 road miles (fly-and-drive or enclosed transport)\n  https://valley-motors.us/inventory/2022-porsche-911-gt3-gt3-touring/22PRRGT3TOUR\n\n2022 911 GT3 - $219,000 - 9,122 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Clean accident history\n  Shark Blue / Black | ? | not CPO\n  Valley Motors - Cortland, NY (~1710 mi from Austin)\n  Preference match 72/100 | Est. out-the-door $236,246\n  + Mileage for its age: 9,122 mi at ~5.1 yrs; your own pace would put it near 22,012 mi\n  + Exterior colour: Shark Blue (blue)\n  + Interior colour: Black (black)\n  + Seats: Adjustable sport seats\n  - CPO / warranty: Not CPO; factory warranty likely expired\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,710 road miles (fly-and-drive or enclosed transport)\n  https://valley-motors.us/inventory/2022-porsche-911-gt3/22PRRGT3BLU\n\n2022 911 GT3 - $219,000 - 696 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Clean accident history\n  Shark Blue / Black | ? | not CPO\n  Valley Motors - Cortland, NY (~1710 mi from Austin)\n  Preference match 72/100 | Est. out-the-door $236,246\n  + Mileage for its age: 696 mi at ~5.1 yrs; your own pace would put it near 22,012 mi\n  + Exterior colour: Shark Blue (blue)\n  + Interior colour: Black (black)\n  + Seats: Adjustable sport seats\n  - CPO / warranty: Not CPO; factory warranty likely expired\n  - Seller & documentation: independent dealer\n  - Distance from Austin, TX: ~1,710 road miles (fly-and-drive or enclosed transport)\n  https://valley-motors.us/inventory/2022-porsche-911-gt3/22PRRGT3BL1\n\n2022 911 GT3 - $228,900 - 33,642 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Clean accident history\n  GT-silver Metallic / Leather/Race-Tex Interior in Black with Stitching in GT Silver | MANUAL | Porsche Approved CPO\n  Porsche Southpoint - Durham, NC (~1351 mi from Austin)\n  Preference match 88/100 | Est. out-the-door $246,770\n  + Exterior colour: GT-silver Metallic (silver)\n  + Interior colour: Leather/Race-Tex Interior in Black with Stitching in GT Silver (black)\n  + Transmission: 6-speed manual (your slight preference)\n  + Seats: Adjustable sport seats\n  - Distance from Austin, TX: ~1,351 road miles (fly-and-drive or enclosed transport)\n  https://finder.porsche.com/us/en-US/details/porsche-911-gt3-preowned-24PEL5\n\n2025 718 Spyder RS - $224,984 - 980 mi\n  New listing | LEAD: Nothing disqualifying, but needs verification: Clean accident history\n  Racing Yellow / Leather/Race-Tex Interior in Black with Arctic Grey Stitching i.c.w. Weissach Package | PDK | Porsche Approved CPO\n  Porsche Marin - Mill Valley, CA (~1764 mi from Austin)\n  Preference match 77/100 | Est. out-the-door $242,317\n  + Mileage for its age: 980 mi at ~2.1 yrs; your own pace would put it near 10,009 mi\n  + Interior colour: Leather/Race-Tex Interior in Black with Arctic Grey Stitching i.c.w. Weissach Package (black)\n  + Transmission: PDK\n  + CPO / warranty: Porsche Approved Certified Pre-Owned\n  - Exterior colour: Racing Yellow (yellow) is outside white/silver/blue/gray/black\n  - Seats: Seat type not documented\n  - No Weissach Package: Has the Weissach Package\n  - Distance from Austin, TX: ~1,764 road miles (fly-and-drive or enclosed transport)\n  https://finder.porsche.com/us/en-US/details/porsche-718-spyder-rs-preowned-RNDMN7\n"
 }
