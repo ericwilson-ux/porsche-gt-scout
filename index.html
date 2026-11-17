@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>GT Scout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=919f57695a">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#/" aria-label="GT Scout inventory"><span class="brand-mark" aria-hidden="true"></span>GT&nbsp;Scout</a>
+  <nav class="nav" aria-label="Sections">
+    <a href="#/" data-nav="inventory">Inventory</a>
+    <a href="#/compare" data-nav="compare">Compare <span id="cmpCount" class="count"></span></a>
+    <a href="#/market" data-nav="market">Market</a>
+    <a href="#/archive" data-nav="archive">Archive</a>
+    <a href="#/sources" data-nav="sources">Sources</a>
+  </nav>
+  <a class="fresh" id="fresh" href="#/sources" title="Data freshness">Loading</a>
+</header>
+<div id="stale" class="stale" hidden></div>
+<main id="app" tabindex="-1"><p class="loading">Loading inventory</p></main>
+<div id="lightbox" class="lightbox" hidden></div>
+<dialog id="otdDialog" class="dialog"></dialog>
+<div id="tip" class="tip" hidden></div>
+<script src="app.js?v=919f57695a"></script>
+</body>
+</html>
